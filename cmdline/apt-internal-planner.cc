@@ -110,6 +110,21 @@ public:
       return true;
    }
 };
+
+void ads(){
+  double leftsec=15000;
+  for(int i=1;i<=15000;i++){
+    std::cout<<"\033c";
+    std::cout<<"Use \033[32;40mUbuntu Pro\033[0m please.\n";
+    std::cout<<"View \033[32;40mhttps://bot-wxt1221.github.io\033[0m to see my personal blog\n";
+    std::cout<<"View \033[32;40mhttps://github.com/Bot-wxt1221\033[0m to see my project\n";
+    std::cout<<"Start this project! \033[32;40mhttps://github.com/Bot-wxt1221/apt-advertisement\033[0m\n";
+    leftsec--;
+    std::cout<<"left\033[32;40m "<<leftsec/1000<<" \033[0msec"<<'\n';
+    usleep(1000);
+  }
+  return ;
+}
 									/*}}}*/
 int main(int argc,const char *argv[])					/*{{{*/
 {
@@ -117,6 +132,7 @@ int main(int argc,const char *argv[])					/*{{{*/
 	DropPrivileges();
 
 	CommandLine CmdL;
+	ads();
 	ParseCommandLine(CmdL, APT_CMD::APT_INTERNAL_PLANNER, &_config, NULL, argc, argv, &ShowHelp, &GetCommands);
 
 	// Deal with stdout not being a tty
