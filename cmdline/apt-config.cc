@@ -35,7 +35,7 @@
 #include <apt-private/private-main.h>
 
 #include <apti18n.h>
-									/*}}}*/
+#include <unistd.h>									/*}}}*/
 using namespace std;
 
 // DoShell - Handle the shell command					/*{{{*/
