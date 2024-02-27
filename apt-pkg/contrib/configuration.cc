@@ -27,12 +27,12 @@
 #include <apt-pkg/strutl.h>
 #include <apt-pkg/string_view.h>
 
-#include <ctype.h>
+#include <cctype>
+#include <cstddef>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <regex.h>
-#include <stddef.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 #include <algorithm>
 #include <array>
@@ -858,7 +858,7 @@ bool ReadConfigFile(Configuration &Conf,const string &FName,bool const &AsSectio
 
    int CurLine = 0;
    bool InComment = false;
-   while (F.Eof() == false)
+   while (F.Eof() == false && F.Failed() == false)
    {
       // The raw input line.
       std::string Input;

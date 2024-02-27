@@ -13,7 +13,7 @@
    &apt-email;
    &apt-product;
    <!-- The last update date -->
-   <date>2023-07-20T00:00:00Z</date>
+   <date>2023-12-28T00:00:00Z</date>
  </refentryinfo>
  
  <refmeta>
@@ -154,7 +154,8 @@
      </para></listitem>
      </varlistentry>
 
-
+     <varlistentry><term><option>showsrc, depends, rdepends, policy</option> (summarised in &apt-cache;)</term><listitem><simpara></simpara></listitem></varlistentry>
+     <varlistentry><term><option>source, build-dep, download, changelog, clean, distclean, autoclean</option> (summarised in &apt-get;)</term><listitem><simpara></simpara></listitem></varlistentry>
    </variablelist>
  </refsect1>
 
