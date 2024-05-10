@@ -49,6 +49,13 @@
      </varlistentry>
 
      <varlistentry>
+      <term><option>--audit</option></term>
+      <listitem><para>Show audit (and notice) messages. This overrides the quiet option, but only for notice messages, not progress ones.
+     </para>
+     </listitem>
+     </varlistentry>
+
+     <varlistentry>
       <term><option>-c</option></term>
       <term><option>--config-file</option></term>
      <listitem><para>Configuration File; Specify a configuration file to use. 
@@ -67,6 +74,16 @@
       configuration option. The syntax is <option>-o Foo::Bar=bar</option>.
       <option>-o</option> and <option>--option</option> can be used multiple
       times to set different options.
+     </para>
+     </listitem>
+     </varlistentry>
+
+     <varlistentry>
+      <term><option>--no-color</option></term>
+      <term><option>--color</option></term>
+<listitem><para>Turn colors on or off. Colors are on by default on supported terminals for &apt; and
+can also be disabled using the <envar>NO_COLOR</envar> or <envar>APT_NO_COLOR</envar> environment variables,
+or further configured by the <option>APT::Color</option> configuration option and scope, see &apt-conf; for information on that.
      </para>
      </listitem>
      </varlistentry>

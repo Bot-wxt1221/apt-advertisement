@@ -184,7 +184,8 @@ static bool addArgumentsAPTGet(std::vector<CommandLine::Args> &Args, char const 
       addArg(0, "show-progress", "DpkgPM::Progress", 0);
       addArg('f', "fix-broken", "APT::Get::Fix-Broken", 0);
       addArg(0, "purge", "APT::Get::Purge", 0);
-      addArg('V',"verbose-versions","APT::Get::Show-Versions",0);
+      addArg('V',"verbose-versions", "APT::Get::Show-Versions",0);
+      addArg(0, "list-columns", "APT::Get::List-Columns", 0);
       addArg(0, "autoremove", "APT::Get::AutomaticRemove", 0);
       addArg(0, "auto-remove", "APT::Get::AutomaticRemove", 0);
       addArg(0, "reinstall", "APT::Get::ReInstall", 0);
@@ -245,10 +246,8 @@ static bool addArgumentsAPTGet(std::vector<CommandLine::Args> &Args, char const 
    }
    else if (CmdMatches("clean", "autoclean", "auto-clean", "distclean", "dist-clean", "check", "download", "changelog") ||
 	    CmdMatches("markauto", "unmarkauto")) // deprecated commands
-      ;
-   else if (CmdMatches("moo"))
-      addArg(0, "color", "APT::Moo::Color", 0);
-
+   {
+   }
    if (CmdMatches("install", "reinstall", "remove", "purge", "upgrade", "dist-upgrade",
 	    "dselect-upgrade", "autoremove", "auto-remove", "autopurge", "check",
 	    "clean", "autoclean", "auto-clean", "distclean", "dist-clean",
@@ -408,7 +407,9 @@ std::vector<CommandLine::Args> getCommandArgs(APT_CMD const Program, char const 
    addArg('h', "help", "help", 0);
    addArg('v', "version", "version", 0);
    // general options
+   addArg(0, "color", "APT::Color", 0);
    addArg('q', "quiet", "quiet", CommandLine::IntLevel);
+   addArg(0, "audit", "APT::Audit", 0);
    addArg('q', "silent", "quiet", CommandLine::IntLevel);
    addArg('c', "config-file", 0, CommandLine::ConfigFile);
    addArg('o', "option", 0, CommandLine::ArbItem);
@@ -480,10 +481,15 @@ static bool ShowCommonHelp(APT_CMD const Binary, CommandLine &CmdL, std::vector<
 static void BinarySpecificConfiguration(char const * const Binary)	/*{{{*/
 {
    std::string const binary = flNotDir(Binary);
+   if (binary == "apt-cdrom" || binary == "apt-config")
+   {
+      _config->CndSet("Binary::apt-cdrom::APT::Internal::OpProgress::EraseLines", false);
+   }
    if (binary == "apt" || binary == "apt-config")
    {
-      if (getenv("NO_COLOR") == nullptr)
-         _config->CndSet("Binary::apt::APT::Color", true);
+      if (getenv("NO_COLOR") == nullptr && getenv("APT_NO_COLOR") == nullptr)
+	 _config->CndSet("Binary::apt::APT::Color", true);
+      _config->CndSet("Binary::apt::APT::Output-Version", 30);
       _config->CndSet("Binary::apt::APT::Cache::Show::Version", 2);
       _config->CndSet("Binary::apt::APT::Cache::AllVersions", false);
       _config->CndSet("Binary::apt::APT::Cache::ShowVirtuals", true);
@@ -596,10 +602,12 @@ unsigned short DispatchCommandLine(CommandLine &CmdL, std::vector<CommandLine::D
 
    // Print any errors or warnings found during parsing
    bool const Errors = _error->PendingError();
-   if (_config->FindI("quiet",0) > 0)
+   if (_config->FindB("APT::Audit"))
+      _error->DumpErrors(GlobalError::AUDIT);
+   else if (_config->FindI("quiet",0) > 0)
       _error->DumpErrors();
    else
-      _error->DumpErrors(GlobalError::DEBUG);
+      _error->DumpErrors(GlobalError::NOTICE);
    if (returned == false)
       return 100;
    return Errors == true ? 100 : 0;

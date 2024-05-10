@@ -20,6 +20,7 @@
 #include <apt-pkg/prettyprinters.h>
 #include <apt-pkg/strutl.h>
 #include <apt-pkg/upgrade.h>
+#include <apt-pkg/version.h>
 
 #include <algorithm>
 #include <cstdlib>
@@ -28,6 +29,8 @@
 #include <map>
 #include <set>
 #include <vector>
+#include <langinfo.h>
+#include <sys/statvfs.h>
 
 #include <apt-private/acqprogress.h>
 #include <apt-private/private-cachefile.h>
@@ -139,8 +142,10 @@ struct WarnUsrMerge {
    }
 };
 #endif
+static void ShowWeakDependencies(CacheFile &Cache);
 bool InstallPackages(CacheFile &Cache, APT::PackageVector &HeldBackPackages, bool ShwKept, bool Ask, bool Safety, std::string const &Hook, CommandLine const &CmdL)
 {
+   auto outVer = _config->FindI("APT::Output-Version");
 #ifdef REQUIRE_MERGED_USR
    WarnUsrMerge warnUsrMerge(Cache);
 #endif
@@ -210,31 +215,39 @@ bool InstallPackages(CacheFile &Cache, APT::PackageVector &HeldBackPackages, boo
 	 return false;
    }
 
-   APT::PackageVector PhasingPackages;
-   APT::PackageVector NotPhasingHeldBackPackages;
-   for (auto const &Pkg : HeldBackPackages)
-   {
-      if (Cache->PhasingApplied(Pkg))
-	 PhasingPackages.push_back(Pkg);
-      else
-	 NotPhasingHeldBackPackages.push_back(Pkg);
-   }
-
    // Show all the various warning indicators
-   ShowDel(c1out,Cache);
+   if (_config->FindI("APT::Output-Version") < 30)
+      ShowDel(c1out,Cache);
+   if (_config->FindI("APT::Output-Version") >= 30 && _config->FindB("APT::Get::Show-Upgraded",true) == true)
+      ShowUpgraded(c1out,Cache);
    ShowNew(c1out,Cache);
+   if (_config->FindI("APT::Output-Version") >= 30)
+      ShowWeakDependencies(Cache);
    if (ShwKept == true)
    {
+      APT::PackageVector PhasingPackages;
+      APT::PackageVector NotPhasingHeldBackPackages;
+      for (auto const &Pkg : HeldBackPackages)
+      {
+	 if (Cache->PhasingApplied(Pkg))
+	    PhasingPackages.push_back(Pkg);
+	 else
+	    NotPhasingHeldBackPackages.push_back(Pkg);
+      }
+
       ShowPhasing(c1out, Cache, PhasingPackages);
       ShowKept(c1out, Cache, NotPhasingHeldBackPackages);
       if (not PhasingPackages.empty() && not NotPhasingHeldBackPackages.empty())
 	 _error->Notice("Some packages may have been kept back due to phasing.");
    }
    bool const Hold = not ShowHold(c1out,Cache);
-   if (_config->FindB("APT::Get::Show-Upgraded",true) == true)
+   if (_config->FindI("APT::Output-Version") < 30 && _config->FindB("APT::Get::Show-Upgraded",true) == true)
       ShowUpgraded(c1out,Cache);
    bool const Downgrade = !ShowDowngraded(c1out,Cache);
 
+   // Show removed packages last
+   if (_config->FindI("APT::Output-Version") >= 30)
+      ShowDel(c1out,Cache);
    bool Essential = false;
    if (_config->FindB("APT::Get::Download-Only",false) == false)
         Essential = !ShowEssential(c1out,Cache);
@@ -312,27 +325,88 @@ bool InstallPackages(CacheFile &Cache, APT::PackageVector &HeldBackPackages, boo
       if (DebBytes != FetchBytes)
 	 //TRANSLATOR: The required space between number and unit is already included
 	 // in the replacement strings, so %sB will be correctly translate in e.g. 1,5 MB
-	 ioprintf(c1out,_("Need to get %sB/%sB of archives.\n"),
+	 ioprintf(c1out,outVer < 30 ? _("Need to get %sB/%sB of archives.\n") : _("  Download size: %sB / %sB\n"),
 	       SizeToStr(FetchBytes).c_str(),SizeToStr(DebBytes).c_str());
       else if (DebBytes != 0)
 	 //TRANSLATOR: The required space between number and unit is already included
 	 // in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
-	 ioprintf(c1out,_("Need to get %sB of archives.\n"),
+	 ioprintf(c1out,outVer < 30 ? _("Need to get %sB of archives.\n") : _("  Download size: %sB\n"),
 	       SizeToStr(DebBytes).c_str());
    }
 
    // Size delta
    if (Cache->UsrSize() >= 0)
+   {
       //TRANSLATOR: The required space between number and unit is already included
       // in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
-      ioprintf(c1out,_("After this operation, %sB of additional disk space will be used.\n"),
-	       SizeToStr(Cache->UsrSize()).c_str());
+      if (outVer < 30)
+	 ioprintf(c1out, _("After this operation, %sB of additional disk space will be used.\n"),
+		  SizeToStr(Cache->UsrSize()).c_str());
+      else
+      {
+	 struct statvfs st;
+	 if (statvfs(_config->FindDir("Dir::Usr").c_str(), &st) == 0)
+	 {
+	    struct statvfs st_boot;
+	    double BootSize = 0;
+	    double InitrdSize = 0;
+	    if (statvfs(_config->FindDir("Dir::Boot").c_str(), &st_boot) == 0 && st_boot.f_fsid != st.f_fsid)
+	       BootSize = Cache->BootSize(false);
+	    else
+	       InitrdSize = Cache->BootSize(true); /* initrd only, adding to /usr space */
+
+	    ioprintf(c1out, "  ");
+	    // TRANSLATOR: The required space between number and unit is already included
+	    //  in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
+	    ioprintf(c1out, _("Space needed: %sB / %sB available\n"),
+		     SizeToStr(Cache->UsrSize() + InitrdSize).c_str(), SizeToStr((st.f_bsize * st.f_bavail)).c_str());
+
+	    if (Cache->UsrSize() > 0 && static_cast<unsigned long long>(Cache->UsrSize()) > (st.f_bsize * st.f_bavail))
+	    {
+	       // TRANSLATOR: The required space between number and unit is already included
+	       //  in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
+	       _error->Warning(_("More space needed than available: %sB > %sB, installation may fail"),
+			       SizeToStr(Cache->UsrSize()).c_str(),
+			       SizeToStr((st.f_bsize * st.f_bavail)).c_str());
+	    }
+	    if (BootSize != 0)
+	    {
+	       bool Unicode = strcmp(nl_langinfo(CODESET), "UTF-8") == 0;
+	       ioprintf(c1out,   Unicode ? "  └─ " : "   - ");
+	       // TRANSLATOR: The required space between number and unit is already included
+	       //  in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB -
+	       //  The first %s is the location of the boot directory (determined from Dir::Boot),
+	       //  and it tells the space being needed there.
+	       //  (We have two spaces to align with parent "space needed:"for /boot)
+	       ioprintf(c1out, _("in %s:  %sB / %sB available\n"),
+			_config->FindFile("Dir::Boot").c_str(), SizeToStr(BootSize).c_str(), SizeToStr((st_boot.f_bsize * st_boot.f_bavail)).c_str());
+	       if (BootSize > (st_boot.f_bsize * st_boot.f_bavail))
+		  // TRANSLATOR: The required space between number and unit is already included
+		  //  in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
+		  //  The first %s is the location of the boot directory (determined from Dir::Boot)
+		  _error->Warning(_("More space needed in %s than available: %sB > %sB, installation may fail"),
+				  _config->FindFile("Dir::Boot").c_str(),
+				  SizeToStr(BootSize).c_str(),
+				  SizeToStr((st_boot.f_bsize * st_boot.f_bavail)).c_str());
+	    }
+	 }
+	 else
+	 {
+	    // TRANSLATOR: The required space between number and unit is already included
+	    //  in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
+	    ioprintf(c1out, "  ");
+	    ioprintf(c1out, _("Space needed: %sB\n"), SizeToStr(Cache->UsrSize()).c_str());
+	 }
+      }
+   }
    else
       //TRANSLATOR: The required space between number and unit is already included
       // in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
-      ioprintf(c1out,_("After this operation, %sB disk space will be freed.\n"),
+      ioprintf(c1out,outVer < 30 ? _("After this operation, %sB disk space will be freed.\n") : _("  Freed space: %sB\n"),
 	       SizeToStr(-1*Cache->UsrSize()).c_str());
 
+   if (outVer >= 30)
+      ioprintf(c1out,"\n");
    if (DownloadAllowed)
       if (CheckFreeSpaceBeforeDownload(_config->FindDir("Dir::Cache::Archives"), (FetchBytes - FetchPBytes)) == false)
 	 return false;
@@ -368,7 +442,9 @@ bool InstallPackages(CacheFile &Cache, APT::PackageVector &HeldBackPackages, boo
 	 if (_config->FindI("quiet",0) < 2 &&
 	     _config->FindB("APT::Get::Assume-Yes",false) == false)
 	 {
-	    if (YnPrompt(_("Do you want to continue?")) == false)
+	    // YnPrompt shows all warnings before prompting, so ask stronger and default to N if we have any.
+	    auto Default = outVer < 30 ? true : _error->empty();
+	    if (not YnPrompt(outVer < 30 ? _("Do you want to continue?") : (Default ? _("Continue?") : _("Continue anyway?")), Default))
 	    {
 	       c2out << _("Abort.") << std::endl;
 	       exit(1);
@@ -545,12 +621,14 @@ bool DoAutomaticRemove(CacheFile &Cache)
 	 for (APT::PackageSet::iterator Pkg = tooMuch.begin();
 	      Pkg != tooMuch.end(); ++Pkg)
 	 {
-	    APT::PackageSet too;
-	    too.insert(*Pkg);
-	    for (pkgCache::PrvIterator Prv = Cache[Pkg].CandidateVerIter(Cache).ProvidesList();
-		 Prv.end() == false; ++Prv)
-	       too.insert(Prv.ParentPkg());
-	    for (APT::PackageSet::const_iterator P = too.begin(); P != too.end(); ++P)
+	    auto const PkgCand = Cache[Pkg].CandidateVerIter(Cache);
+	    if (unlikely(PkgCand.end()))
+	       continue;
+	    std::vector<std::pair<pkgCache::PkgIterator, char const *>> too;
+	    too.emplace_back(*Pkg, PkgCand.VerStr());
+	    for (pkgCache::PrvIterator Prv = PkgCand.ProvidesList(); not Prv.end(); ++Prv)
+	       too.emplace_back(Prv.ParentPkg(), Prv.ProvideVersion());
+	    for (auto const &[P, PVerStr] : too)
 	    {
 	       for (pkgCache::DepIterator R = P.RevDependsList();
 		    R.end() == false; ++R)
@@ -575,6 +653,11 @@ bool DoAutomaticRemove(CacheFile &Cache)
 		 }
 		 else // ignore dependency from a non-candidate version
 		    continue;
+		 if (R->Version != 0)
+		 {
+		    if (not Cache->VS().CheckDep(PVerStr, R->CompareOp, R.TargetVer()))
+		       continue;
+		 }
 		 if (Debug == true)
 		    std::clog << "Save " << APT::PrettyPkg(Cache, Pkg) << " as another installed package depends on it: " << APT::PrettyPkg(Cache, RP) << std::endl;
 		 Cache->MarkInstall(Pkg, false, 0, false);
@@ -609,6 +692,16 @@ bool DoAutomaticRemove(CacheFile &Cache)
    // if we don't remove them, we should show them!
    if (doAutoRemove == false && autoRemoveCount != 0)
    {
+      std::string note;
+      std::string autocmd = "apt autoremove";
+      if (getenv("SUDO_USER") != nullptr)
+      {
+	 auto const envsudocmd = getenv("SUDO_COMMAND");
+	 auto const envshell = getenv("SHELL");
+	 if (envsudocmd == nullptr || envshell == nullptr || strcmp(envsudocmd, envshell) != 0)
+	    autocmd = "sudo " + autocmd;
+      }
+      strprintf(note, P_("Use '%s' to remove it.", "Use '%s' to remove them.", autoRemoveCount), autocmd.c_str());
       if (smallList == false)
       {
 	 // trigger marking now so that the package list is correct
@@ -618,21 +711,14 @@ bool DoAutomaticRemove(CacheFile &Cache)
 	          "The following packages were automatically installed and are no longer required:",
 	          autoRemoveCount), Universe,
 	       [&Cache](pkgCache::PkgIterator const &Pkg) { return (*Cache)[Pkg].Garbage == true && (*Cache)[Pkg].Delete() == false; },
-	       &PrettyFullName, CandidateVersion(&Cache));
+	       &PrettyFullName, CandidateVersion(&Cache), "", note);
       }
       else
+      {
 	 ioprintf(c1out, P_("%lu package was automatically installed and is no longer required.\n",
 	          "%lu packages were automatically installed and are no longer required.\n", autoRemoveCount), autoRemoveCount);
-      std::string autocmd = "apt autoremove";
-      if (getenv("SUDO_USER") != nullptr)
-      {
-	 auto const envsudocmd = getenv("SUDO_COMMAND");
-	 auto const envshell = getenv("SHELL");
-	 if (envsudocmd == nullptr || envshell == nullptr || strcmp(envsudocmd, envshell) != 0)
-	    autocmd = "sudo " + autocmd;
+	 c1out << note << std::endl;
       }
-      ioprintf(c1out, P_("Use '%s' to remove it.", "Use '%s' to remove them.", autoRemoveCount), autocmd.c_str());
-      c1out << std::endl;
    }
    return true;
 }
@@ -903,6 +989,99 @@ struct PkgIsExtraInstalled {
 	return std::find(verset->begin(), verset->end(), Cand) == verset->end();
    }
 };
+/* Print out a list of suggested and recommended packages */
+static void ShowWeakDependencies(CacheFile &Cache)
+{
+   std::list<std::string> Recommends, Suggests, SingleRecommends, SingleSuggests;
+   SortedPackageUniverse Universe(Cache);
+   for (auto const &Pkg: Universe)
+   {
+      /* Just look at the ones we want to install */
+      if ((*Cache)[Pkg].NewInstall() == false)
+	continue;
+
+      // get the recommends/suggests for the candidate ver
+      pkgCache::VerIterator CV = (*Cache)[Pkg].CandidateVerIter(*Cache);
+      for (pkgCache::DepIterator D = CV.DependsList(); D.end() == false; )
+      {
+	 pkgCache::DepIterator Start;
+	 pkgCache::DepIterator End;
+	 D.GlobOr(Start,End); // advances D
+	 if (Start->Type != pkgCache::Dep::Recommends && Start->Type != pkgCache::Dep::Suggests)
+	    continue;
+
+	 {
+	    // Skip if we already saw this
+	    std::string target;
+	    for (pkgCache::DepIterator I = Start; I != D; ++I)
+	    {
+	       if (target.empty() == false)
+		  target.append(" | ");
+	       target.append(I.TargetPkg().FullName(true));
+	    }
+	    std::list<std::string> &Type = Start->Type == pkgCache::Dep::Recommends ? SingleRecommends : SingleSuggests;
+	    if (std::find(Type.begin(), Type.end(), target) != Type.end())
+	       continue;
+	    Type.push_back(target);
+	 }
+
+	 std::list<std::string> OrList;
+	 bool foundInstalledInOrGroup = false;
+	 for (pkgCache::DepIterator I = Start; I != D; ++I)
+	 {
+	    {
+	       // satisfying package is installed and not marked for deletion
+	       APT::VersionList installed = APT::VersionList::FromDependency(Cache, I, APT::CacheSetHelper::INSTALLED);
+	       if (std::find_if(installed.begin(), installed.end(),
+			[&Cache](pkgCache::VerIterator const &Ver) { return Cache[Ver.ParentPkg()].Delete() == false; }) != installed.end())
+	       {
+		  foundInstalledInOrGroup = true;
+		  break;
+	       }
+	    }
+
+	    {
+	       // satisfying package is upgraded to/new install
+	       APT::VersionList upgrades = APT::VersionList::FromDependency(Cache, I, APT::CacheSetHelper::CANDIDATE);
+	       if (std::find_if(upgrades.begin(), upgrades.end(),
+			[&Cache](pkgCache::VerIterator const &Ver) { return Cache[Ver.ParentPkg()].Upgrade(); }) != upgrades.end())
+	       {
+		  foundInstalledInOrGroup = true;
+		  break;
+	       }
+	    }
+
+	    if (OrList.empty())
+	       OrList.push_back(I.TargetPkg().FullName(true));
+	    else
+	       OrList.push_back("| " + I.TargetPkg().FullName(true));
+	 }
+
+	 if(foundInstalledInOrGroup == false)
+	 {
+	    std::list<std::string> &Type = Start->Type == pkgCache::Dep::Recommends ? Recommends : Suggests;
+	    std::move(OrList.begin(), OrList.end(), std::back_inserter(Type));
+	 }
+      }
+   }
+   auto always_true = [](std::string const&) { return true; };
+   auto string_ident = [](std::string const&str) { return str; };
+   auto verbose_show_candidate =
+      [&Cache](std::string str)
+      {
+	 if (APT::String::Startswith(str, "| "))
+	    str.erase(0, 2);
+	 pkgCache::PkgIterator const Pkg = Cache->FindPkg(str);
+	 if (Pkg.end() == true)
+	    return "";
+	 return (*Cache)[Pkg].CandVersion;
+      };
+   ShowList(c1out,_("Suggested packages:"), Suggests,
+	 always_true, string_ident, verbose_show_candidate);
+   ShowList(c1out,_("Recommended packages:"), Recommends,
+	 always_true, string_ident, verbose_show_candidate);
+}
+
 bool DoInstall(CommandLine &CmdL)
 {
    CacheFile Cache;
@@ -933,101 +1112,14 @@ bool DoInstall(CommandLine &CmdL)
    /* Print out a list of packages that are going to be installed extra
       to what the user asked */
    SortedPackageUniverse Universe(Cache);
-   if (Cache->InstCount() != verset[MOD_INSTALL].size())
+   if (_config->FindI("APT::Output-Version") < 30 && Cache->InstCount() != verset[MOD_INSTALL].size())
       ShowList(c1out, _("The following additional packages will be installed:"), Universe,
 	    PkgIsExtraInstalled(&Cache, &verset[MOD_INSTALL]),
-	    &PrettyFullName, CandidateVersion(&Cache));
+	    &PrettyFullName, CandidateVersion(&Cache), "action::install-dependencies");
 
    /* Print out a list of suggested and recommended packages */
-   {
-      std::list<std::string> Recommends, Suggests, SingleRecommends, SingleSuggests;
-      for (auto const &Pkg: Universe)
-      {
-	 /* Just look at the ones we want to install */
-	 if ((*Cache)[Pkg].Install() == false)
-	   continue;
-
-	 // get the recommends/suggests for the candidate ver
-	 pkgCache::VerIterator CV = (*Cache)[Pkg].CandidateVerIter(*Cache);
-	 for (pkgCache::DepIterator D = CV.DependsList(); D.end() == false; )
-	 {
-	    pkgCache::DepIterator Start;
-	    pkgCache::DepIterator End;
-	    D.GlobOr(Start,End); // advances D
-	    if (Start->Type != pkgCache::Dep::Recommends && Start->Type != pkgCache::Dep::Suggests)
-	       continue;
-
-	    {
-	       // Skip if we already saw this
-	       std::string target;
-	       for (pkgCache::DepIterator I = Start; I != D; ++I)
-	       {
-		  if (target.empty() == false)
-		     target.append(" | ");
-		  target.append(I.TargetPkg().FullName(true));
-	       }
-	       std::list<std::string> &Type = Start->Type == pkgCache::Dep::Recommends ? SingleRecommends : SingleSuggests;
-	       if (std::find(Type.begin(), Type.end(), target) != Type.end())
-		  continue;
-	       Type.push_back(target);
-	    }
-
-	    std::list<std::string> OrList;
-	    bool foundInstalledInOrGroup = false;
-	    for (pkgCache::DepIterator I = Start; I != D; ++I)
-	    {
-	       {
-		  // satisfying package is installed and not marked for deletion
-		  APT::VersionList installed = APT::VersionList::FromDependency(Cache, I, APT::CacheSetHelper::INSTALLED);
-		  if (std::find_if(installed.begin(), installed.end(),
-			   [&Cache](pkgCache::VerIterator const &Ver) { return Cache[Ver.ParentPkg()].Delete() == false; }) != installed.end())
-		  {
-		     foundInstalledInOrGroup = true;
-		     break;
-		  }
-	       }
-
-	       {
-		  // satisfying package is upgraded to/new install
-		  APT::VersionList upgrades = APT::VersionList::FromDependency(Cache, I, APT::CacheSetHelper::CANDIDATE);
-		  if (std::find_if(upgrades.begin(), upgrades.end(),
-			   [&Cache](pkgCache::VerIterator const &Ver) { return Cache[Ver.ParentPkg()].Upgrade(); }) != upgrades.end())
-		  {
-		     foundInstalledInOrGroup = true;
-		     break;
-		  }
-	       }
-
-	       if (OrList.empty())
-		  OrList.push_back(I.TargetPkg().FullName(true));
-	       else
-		  OrList.push_back("| " + I.TargetPkg().FullName(true));
-	    }
-
-	    if(foundInstalledInOrGroup == false)
-	    {
-	       std::list<std::string> &Type = Start->Type == pkgCache::Dep::Recommends ? Recommends : Suggests;
-	       std::move(OrList.begin(), OrList.end(), std::back_inserter(Type));
-	    }
-	 }
-      }
-      auto always_true = [](std::string const&) { return true; };
-      auto string_ident = [](std::string const&str) { return str; };
-      auto verbose_show_candidate =
-	 [&Cache](std::string str)
-	 {
-	    if (APT::String::Startswith(str, "| "))
-	       str.erase(0, 2);
-	    pkgCache::PkgIterator const Pkg = Cache->FindPkg(str);
-	    if (Pkg.end() == true)
-	       return "";
-	    return (*Cache)[Pkg].CandVersion;
-	 };
-      ShowList(c1out,_("Suggested packages:"), Suggests,
-	    always_true, string_ident, verbose_show_candidate);
-      ShowList(c1out,_("Recommended packages:"), Recommends,
-	    always_true, string_ident, verbose_show_candidate);
-   }
+   if (_config->FindI("APT::Output-Version") < 30)
+      ShowWeakDependencies(Cache);
 
    RunJsonHook("AptCli::Hooks::Install", "org.debian.apt.hooks.install.pre-prompt", CmdL.FileList, Cache);
 

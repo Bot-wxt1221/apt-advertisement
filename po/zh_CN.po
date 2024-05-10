@@ -10,14 +10,14 @@
 # Carlos Z.F. Liu <carlosliu@users.sourceforge.net>, 2004, 2006.
 # Aron Xu <happyaron.xu@gmail.com>, 2009, 2010.
 # Mo Zhou <cdluminate@gmail.com>, 2014, 2015, 2016, 2017, 2019.
-# Boyuan Yang <073plan@gmail.com>, 2018, 2020, 2022.
+# Boyuan Yang <073plan@gmail.com>, 2018, 2020, 2022, 2024.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: apt 2.5.3\n"
+"Project-Id-Version: apt 2.9.1\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2024-02-28 18:50+0000\n"
-"PO-Revision-Date: 2022-10-05 17:20-0400\n"
+"POT-Creation-Date: 2024-04-22 17:39+0000\n"
+"PO-Revision-Date: 2024-04-16 13:15-0400\n"
 "Last-Translator: Boyuan Yang <073plan@gmail.com>\n"
 "Language-Team: Chinese (simplified) <debian-l10n-chinese@lists.debian.org>\n"
 "Language: zh_CN\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 2.4.3\n"
 
 #: apt-pkg/acquire-item.cc
 msgid ""
@@ -225,6 +225,13 @@ msgstr ""
 #, c-format
 msgid "Failed to fetch %s  %s"
 msgstr "无法下载 %s  %s"
+
+#: apt-pkg/acquire-item.cc
+#, c-format
+msgid ""
+"Repositories should provide a clear-signed InRelease file, but none found at "
+"%s."
+msgstr ""
 
 #: apt-pkg/acquire-item.cc
 #, c-format
@@ -642,6 +649,30 @@ msgstr "语法错误 %s:%u：clean 指令需要一个选项树作为参数"
 msgid "Syntax error %s:%u: Extra junk at end of file"
 msgstr "语法错误 %s:%u：文件尾部有多余的无意义的数据"
 
+#. TRANSLATOR: This is a warning level displayed before the message
+#: apt-pkg/contrib/error.cc
+msgid "Error:"
+msgstr ""
+
+#. TRANSLATOR: This is a warning level displayed before the message
+#: apt-pkg/contrib/error.cc
+msgid "Warning:"
+msgstr ""
+
+#. TRANSLATOR: This is a warning level displayed before the message
+#: apt-pkg/contrib/error.cc
+msgid "Notice:"
+msgstr ""
+
+#: apt-pkg/contrib/error.cc
+msgid "Audit:"
+msgstr ""
+
+#. TRANSLATOR: This is a warning level displayed before the message
+#: apt-pkg/contrib/error.cc
+msgid "Debug:"
+msgstr ""
+
 #: apt-pkg/contrib/extracttar.cc
 #, c-format
 msgid "Cannot find a configured compressor for '%s'"
@@ -772,7 +803,7 @@ msgstr "无法创建子进程的 IPC 管道"
 
 #: apt-pkg/contrib/fileutl.cc
 msgid "Failed to exec compressor "
-msgstr "无法执行压缩程序"
+msgstr "无法执行压缩程序 "
 
 #: apt-pkg/contrib/fileutl.cc
 #, c-format
@@ -811,7 +842,7 @@ msgstr "同步文件出错"
 #: apt-pkg/contrib/fileutl.cc
 #, c-format
 msgid "Unable to mkstemp %s"
-msgstr "无法建立临时文件(mkstemp) %s "
+msgstr "无法建立临时文件(mkstemp) %s"
 
 #: apt-pkg/contrib/fileutl.cc
 #, c-format
@@ -838,7 +869,7 @@ msgstr "无法关闭 mmap"
 
 #: apt-pkg/contrib/mmap.cc
 msgid "Unable to synchronize mmap"
-msgstr "无法同步 mmap "
+msgstr "无法同步 mmap"
 
 #: apt-pkg/contrib/mmap.cc
 #, c-format
@@ -1151,7 +1182,7 @@ msgstr "操作在完成之前被打断"
 
 #: apt-pkg/deb/dpkgpm.cc
 msgid "No apport report written because MaxReports is reached already"
-msgstr "由于已经达到 MaxReports 限制，没有写入 apport 报告。"
+msgstr "由于已经达到 MaxReports 限制，没有写入 apport 报告"
 
 #. check if its not a follow up error
 #: apt-pkg/deb/dpkgpm.cc
@@ -1168,13 +1199,13 @@ msgstr "因为错误消息指示这是由于上一个问题导致的错误，没
 msgid ""
 "No apport report written because the error message indicates a disk full "
 "error"
-msgstr "因为错误消息指示这是由于磁盘已满，没有写入 apport 报告。"
+msgstr "因为错误消息指示这是由于磁盘已满，没有写入 apport 报告"
 
 #: apt-pkg/deb/dpkgpm.cc
 msgid ""
 "No apport report written because the error message indicates a out of memory "
 "error"
-msgstr "因为错误消息指示这是由于内存不足，没有写入 apport 报告。"
+msgstr "因为错误消息指示这是由于内存不足，没有写入 apport 报告"
 
 #: apt-pkg/deb/dpkgpm.cc
 msgid ""
@@ -1185,7 +1216,7 @@ msgstr "错误信息显示本地系统有一些问题，因此没有写入 appor
 #: apt-pkg/deb/dpkgpm.cc
 msgid ""
 "No apport report written because the error message indicates a dpkg I/O error"
-msgstr "因为错误消息指示这是一个 dpkg I/O 错误，没有写入 apport 报告。"
+msgstr "因为错误消息指示这是一个 dpkg I/O 错误，没有写入 apport 报告"
 
 #: apt-pkg/depcache.cc
 msgid "Building dependency tree"
@@ -1649,7 +1680,7 @@ msgstr "虚拟软件包 %s 由下面的软件包提供：\n"
 
 #: apt-private/private-cacheset.cc
 msgid " [Installed]"
-msgstr "[已安装]"
+msgstr " [已安装]"
 
 #: apt-private/private-cacheset.cc
 msgid " [Not candidate version]"
@@ -1811,13 +1842,14 @@ msgid ""
 "Unmerged usr is no longer supported, use usrmerge to convert to a merged-usr "
 "system."
 msgstr ""
+"系统 usr 未合并的布局已不再受到支持。请使用 usrmerge 工具将系统转换为 merged-"
+"usr 布局。"
 
 #. TRANSLATORS: %s is a url to a page describing merged-usr (bookworm release notes)
 #: apt-private/private-install.cc
-#, fuzzy, c-format
-#| msgid "Selected %s for removal.\n"
+#, c-format
 msgid "See %s for more details."
-msgstr "选中 %s 以待卸载。\n"
+msgstr "更多细节请参阅 %s。"
 
 #: apt-private/private-install.cc
 msgid ""
@@ -1862,12 +1894,22 @@ msgstr "内部错误，排序未完成"
 msgid "How odd... The sizes didn't match, email apt@packages.debian.org"
 msgstr "怪了……文件大小不符，请发邮件给 apt@packages.debian.org 吧"
 
+#: apt-private/private-install.cc
+#, c-format
+msgid "  Download size: %sB / %sB\n"
+msgstr "  下载大小：%sB / %sB\n"
+
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement strings, so %sB will be correctly translate in e.g. 1,5 MB
 #: apt-private/private-install.cc
 #, c-format
 msgid "Need to get %sB/%sB of archives.\n"
 msgstr "需要下载 %sB/%sB 的归档。\n"
+
+#: apt-private/private-install.cc
+#, c-format
+msgid "  Download size: %sB\n"
+msgstr "  下载大小：%sB\n"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
@@ -1876,12 +1918,53 @@ msgstr "需要下载 %sB/%sB 的归档。\n"
 msgid "Need to get %sB of archives.\n"
 msgstr "需要下载 %sB 的归档。\n"
 
-#. TRANSLATOR: The required space between number and unit is already included
-#. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
 #: apt-private/private-install.cc
 #, c-format
 msgid "After this operation, %sB of additional disk space will be used.\n"
 msgstr "解压缩后会消耗 %sB 的额外空间。\n"
+
+#. TRANSLATOR: The required space between number and unit is already included
+#. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
+#: apt-private/private-install.cc
+#, c-format
+msgid "Space needed: %sB / %sB available\n"
+msgstr "所需的空间：%sB / %sB 可用\n"
+
+#. TRANSLATOR: The required space between number and unit is already included
+#. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
+#: apt-private/private-install.cc
+#, c-format
+msgid "More space needed than available: %sB > %sB, installation may fail"
+msgstr "所需的空间超出了可用空间：%sB > %sB，安装可能失败"
+
+#. TRANSLATOR: The required space between number and unit is already included
+#. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB -
+#. The first %s is the location of the boot directory (determined from Dir::Boot),
+#. and it tells the space being needed there.
+#. (We have two spaces to align with parent "space needed:"for /boot)
+#: apt-private/private-install.cc
+#, c-format
+msgid "in %s:  %sB / %sB available\n"
+msgstr "在 %s 中：%sB / %sB 可用\n"
+
+#. TRANSLATOR: The required space between number and unit is already included
+#. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
+#. The first %s is the location of the boot directory (determined from Dir::Boot)
+#: apt-private/private-install.cc
+#, c-format
+msgid ""
+"More space needed in %s than available: %sB > %sB, installation may fail"
+msgstr "在 %s 中，所需的空间超出了可用空间：%sB > %sB，安装可能失败"
+
+#: apt-private/private-install.cc
+#, c-format
+msgid "Space needed: %sB\n"
+msgstr "所需的空间：%sB\n"
+
+#: apt-private/private-install.cc
+#, c-format
+msgid "  Freed space: %sB\n"
+msgstr "  将释放的空间：%sB\n"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
@@ -1899,6 +1982,14 @@ msgid ""
 "Removing essential system-critical packages is not permitted. This might "
 "break the system."
 msgstr "不允许移除系统必需的关键软件包。这么做可能损坏系统。"
+
+#: apt-private/private-install.cc
+msgid "Continue anyway?"
+msgstr "仍然继续吗？"
+
+#: apt-private/private-install.cc
+msgid "Continue?"
+msgstr "是否继续？"
 
 #: apt-private/private-install.cc cmdline/apt-mark.cc
 msgid "Do you want to continue?"
@@ -1956,6 +2047,12 @@ msgid "Internal Error, AutoRemover broke stuff"
 msgstr "内部错误，自动卸载工具坏事了"
 
 #: apt-private/private-install.cc
+#, c-format
+msgid "Use '%s' to remove it."
+msgid_plural "Use '%s' to remove them."
+msgstr[0] "使用'%s'来卸载它(它们)。"
+
+#: apt-private/private-install.cc
 msgid ""
 "The following package was automatically installed and is no longer required:"
 msgid_plural ""
@@ -1971,22 +2068,16 @@ msgid_plural ""
 msgstr[0] "%lu 个自动安装的的软件包现在已不再需要了。\n"
 
 #: apt-private/private-install.cc
-#, c-format
-msgid "Use '%s' to remove it."
-msgid_plural "Use '%s' to remove them."
-msgstr[0] "使用'%s'来卸载它(它们)。"
-
-#: apt-private/private-install.cc
-msgid "The following additional packages will be installed:"
-msgstr "将会同时安装下列软件："
-
-#: apt-private/private-install.cc
 msgid "Suggested packages:"
 msgstr "建议安装："
 
 #: apt-private/private-install.cc
 msgid "Recommended packages:"
 msgstr "推荐安装："
+
+#: apt-private/private-install.cc
+msgid "The following additional packages will be installed:"
+msgstr "将会同时安装下列软件："
 
 #: apt-private/private-install.cc
 #, c-format
@@ -2117,18 +2208,40 @@ msgid "The following packages have unmet dependencies:"
 msgstr "下列软件包有未满足的依赖关系："
 
 #: apt-private/private-output.cc
+msgid "Unsatisfied dependencies:"
+msgstr "无法满足的依赖关系："
+
+#: apt-private/private-output.cc
 msgid "The following NEW packages will be installed:"
 msgstr "下列【新】软件包将被安装："
+
+#: apt-private/private-output.cc
+msgid "Installing:"
+msgstr "将要安装："
+
+#: apt-private/private-output.cc
+msgid "Installing dependencies:"
+msgstr "将要安装的依赖："
+
+#: apt-private/private-output.cc
+msgid "REMOVING:"
+msgstr "【将要卸载】："
 
 #: apt-private/private-output.cc
 msgid "The following packages will be REMOVED:"
 msgstr "下列软件包将被【卸载】："
 
 #: apt-private/private-output.cc
-#, fuzzy
-#| msgid "The following packages have been kept back:"
 msgid "The following upgrades have been deferred due to phasing:"
-msgstr "下列软件包的版本将保持不变："
+msgstr "下列软件包新版本的升级因阶段更新而被推迟："
+
+#: apt-private/private-output.cc
+msgid "Not upgrading yet due to phasing:"
+msgstr "因阶段更新暂不升级："
+
+#: apt-private/private-output.cc
+msgid "Not upgrading:"
+msgstr "暂不升级："
 
 #: apt-private/private-output.cc
 msgid "The following packages have been kept back:"
@@ -2139,8 +2252,20 @@ msgid "The following packages will be upgraded:"
 msgstr "下列软件包将被升级："
 
 #: apt-private/private-output.cc
+msgid "Upgrading:"
+msgstr "将被升级："
+
+#: apt-private/private-output.cc
+msgid "DOWNGRADING:"
+msgstr "【将被降级】："
+
+#: apt-private/private-output.cc
 msgid "The following packages will be DOWNGRADED:"
 msgstr "下列软件包将被【降级】："
+
+#: apt-private/private-output.cc
+msgid "Changing held packages:"
+msgstr "将改变原先被要求版本不变的软件包："
 
 #: apt-private/private-output.cc
 msgid "The following held packages will be changed:"
@@ -2160,9 +2285,18 @@ msgstr ""
 "请勿尝试，除非您确实知道您在做什么！"
 
 #: apt-private/private-output.cc
+msgid "Summary:"
+msgstr "摘要："
+
+#: apt-private/private-output.cc
 #, c-format
 msgid "%lu upgraded, %lu newly installed, "
 msgstr "升级了 %lu 个软件包，新安装了 %lu 个软件包，"
+
+#: apt-private/private-output.cc
+#, c-format
+msgid "Upgrading: %lu, Installing: %lu, "
+msgstr "升级：%lu，安装：%lu，"
 
 #: apt-private/private-output.cc
 #, c-format
@@ -2171,13 +2305,28 @@ msgstr "重新安装了 %lu 个软件包，"
 
 #: apt-private/private-output.cc
 #, c-format
+msgid "Reinstalling: %lu, "
+msgstr "重新安装：%lu，"
+
+#: apt-private/private-output.cc
+#, c-format
 msgid "%lu downgraded, "
 msgstr "降级了 %lu 个软件包，"
 
 #: apt-private/private-output.cc
 #, c-format
+msgid "Downgrading: %lu, "
+msgstr "降级：%lu，"
+
+#: apt-private/private-output.cc
+#, c-format
 msgid "%lu to remove and %lu not upgraded.\n"
 msgstr "要卸载 %lu 个软件包，有 %lu 个软件包未被升级。\n"
+
+#: apt-private/private-output.cc
+#, c-format
+msgid "Removing: %lu, Not Upgrading: %lu\n"
+msgstr "卸载：%lu，不升级：%lu\n"
 
 #: apt-private/private-output.cc
 #, c-format
@@ -2446,7 +2595,7 @@ msgstr "您应当优先考虑使用 %s 而非直接把账户信息直接写在 %
 #: apt-private/private-update.cc
 #, c-format
 msgid "Missing Signed-By in the %s entry for '%s'"
-msgstr ""
+msgstr "对‘%2$s’在 %1$s 一项中缺失了 Signed-By"
 
 #: apt-private/private-update.cc
 #, c-format
@@ -3040,10 +3189,8 @@ msgid "remove packages"
 msgstr "移除软件包"
 
 #: cmdline/apt.cc
-#, fuzzy
-#| msgid "Remove automatically all unused packages"
 msgid "automatically remove all unused packages"
-msgstr "卸载所有自动安装且不再使用的软件包"
+msgstr "自动卸载所有不再使用的软件包"
 
 #. system wide stuff
 #: cmdline/apt.cc
@@ -3459,7 +3606,7 @@ msgid ""
 "cannot be used to add new CD-ROMs"
 msgstr ""
 "请使用 apt-cdrom，通过它可以让 APT 识别该盘片。apt-get update 不能被用来加入"
-"新的盘片。"
+"新的盘片"
 
 #: methods/cdrom.cc
 msgid "Wrong CD-ROM"
@@ -3507,7 +3654,7 @@ msgstr "无法为 %s 创建套接字(f=%u t=%u p=%u)"
 #: methods/connect.cc
 #, c-format
 msgid "Cannot initiate the connection to %s:%s (%s)."
-msgstr "无法发起与 %s:%s (%s) 的连接"
+msgstr "无法发起与 %s:%s (%s) 的连接。"
 
 #: methods/connect.cc methods/ftp.cc methods/rsh.cc
 msgid "Failed"
@@ -3701,6 +3848,11 @@ msgstr "查询"
 msgid "Unable to invoke "
 msgstr "无法调用 "
 
+#: methods/gpgv.cc
+#, c-format
+msgid "untrusted public key algorithm: %s"
+msgstr "不受信任的公钥算法：%s"
+
 #. TRANSLATORS: %s is a single techy word like 'NODATA'
 #: methods/gpgv.cc
 #, c-format
@@ -3736,10 +3888,9 @@ msgstr ""
 
 #. TRANSLATORS: The second %s is the reason and is untranslated for repository owners.
 #: methods/gpgv.cc
-#, fuzzy, c-format
-#| msgid "Signature by key %s uses weak digest algorithm (%s)"
+#, c-format
 msgid "Signature by key %s uses weak algorithm (%s)"
-msgstr "密钥 %s 生成的数字签名使用了弱安全性摘要算法(%s)"
+msgstr "密钥 %s 生成的数字签名使用了弱安全性的算法（%s）"
 
 #: methods/gpgv.cc
 msgid "The following signatures were invalid:\n"
@@ -3765,7 +3916,7 @@ msgstr "写入文件出错"
 
 #: methods/http.cc
 msgid "Select failed"
-msgstr "select 调用出错"
+msgstr "Select 调用出错"
 
 #: methods/http.cc
 msgid "Connection timed out"
@@ -3782,6 +3933,16 @@ msgstr "连接被永久关闭"
 #: methods/store.cc
 msgid "Empty files can't be valid archives"
 msgstr "空文件不是有效归档"
+
+#, fuzzy, c-format
+#~| msgid "  Installed: "
+#~ msgid "  Installed size: %sB\n"
+#~ msgstr "  已安装："
+
+#, fuzzy
+#~| msgid "The following held packages will be changed:"
+#~ msgid "Changing held packages:Changing held packages:"
+#~ msgstr "下列被要求保持版本不变的软件包将被改变："
 
 #~ msgid "Yes, do as I say!"
 #~ msgstr "是，按我说的做！"

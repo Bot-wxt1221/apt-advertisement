@@ -5,15 +5,15 @@
 #
 # This file originally stated:
 # This file is put in the public domain.
-# Miroslav Kure <kurem@debian.cz>, 2004-2023.
+# Miroslav Kure <kurem@debian.cz>, 2004-2024.
 #
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: apt 2.5.6\n"
+"Project-Id-Version: apt 2.9.0\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2024-02-28 18:50+0000\n"
-"PO-Revision-Date: 2023-02-10 12:58+0100\n"
+"POT-Creation-Date: 2024-04-22 17:39+0000\n"
+"PO-Revision-Date: 2024-04-13 22:12+0200\n"
 "Last-Translator: Miroslav Kure <kurem@debian.cz>\n"
 "Language-Team: Czech <debian-l10n-czech@lists.debian.org>\n"
 "Language: cs\n"
@@ -82,7 +82,7 @@ msgstr "Repositář „%s“ nabízí pouze slabé zabezpečení."
 #: apt-pkg/acquire-item.cc ftparchive/writer.cc
 #, c-format
 msgid "Failed to readlink %s"
-msgstr "Nelze přečíst link %s"
+msgstr "Nelze přečíst odkaz %s"
 
 #: apt-pkg/acquire-item.cc ftparchive/cachedb.cc methods/rred.cc
 #, c-format
@@ -236,6 +236,13 @@ msgstr ""
 #, c-format
 msgid "Failed to fetch %s  %s"
 msgstr "Selhalo stažení %s  %s"
+
+#: apt-pkg/acquire-item.cc
+#, c-format
+msgid ""
+"Repositories should provide a clear-signed InRelease file, but none found at "
+"%s."
+msgstr ""
 
 #: apt-pkg/acquire-item.cc
 #, c-format
@@ -662,6 +669,30 @@ msgstr ""
 #, c-format
 msgid "Syntax error %s:%u: Extra junk at end of file"
 msgstr "Syntaktická chyba %s:%u: Na konci souboru je zbytečné smetí"
+
+#. TRANSLATOR: This is a warning level displayed before the message
+#: apt-pkg/contrib/error.cc
+msgid "Error:"
+msgstr ""
+
+#. TRANSLATOR: This is a warning level displayed before the message
+#: apt-pkg/contrib/error.cc
+msgid "Warning:"
+msgstr ""
+
+#. TRANSLATOR: This is a warning level displayed before the message
+#: apt-pkg/contrib/error.cc
+msgid "Notice:"
+msgstr ""
+
+#: apt-pkg/contrib/error.cc
+msgid "Audit:"
+msgstr ""
+
+#. TRANSLATOR: This is a warning level displayed before the message
+#: apt-pkg/contrib/error.cc
+msgid "Debug:"
+msgstr ""
 
 #: apt-pkg/contrib/extracttar.cc
 #, c-format
@@ -1855,13 +1886,14 @@ msgid ""
 "Unmerged usr is no longer supported, use usrmerge to convert to a merged-usr "
 "system."
 msgstr ""
+"Nesloučený adresář usr již není podporován, převeďte systém na sloučený "
+"nástrojem usrmerge."
 
 #. TRANSLATORS: %s is a url to a page describing merged-usr (bookworm release notes)
 #: apt-private/private-install.cc
-#, fuzzy, c-format
-#| msgid "Selected %s for removal.\n"
+#, c-format
 msgid "See %s for more details."
-msgstr "%s byl vybrán pro odstranění.\n"
+msgstr "Více informací naleznete na %s."
 
 #: apt-private/private-install.cc
 msgid ""
@@ -1901,12 +1933,17 @@ msgstr ""
 
 #: apt-private/private-install.cc
 msgid "Internal error, Ordering didn't finish"
-msgstr "Vnitřní chyba, třídění nedoběhlo do konce"
+msgstr "Vnitřní chyba, řazení nedoběhlo do konce"
 
 #: apt-private/private-install.cc
 msgid "How odd... The sizes didn't match, email apt@packages.debian.org"
 msgstr ""
 "Jak podivné… velikosti nesouhlasí, ohlaste to na apt@packages.debian.org"
+
+#: apt-private/private-install.cc
+#, c-format
+msgid "  Download size: %sB / %sB\n"
+msgstr "  Stáhne se: %sB / %sB\n"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement strings, so %sB will be correctly translate in e.g. 1,5 MB
@@ -1915,6 +1952,11 @@ msgstr ""
 msgid "Need to get %sB/%sB of archives.\n"
 msgstr "Nutno stáhnout %sB/%sB archivů.\n"
 
+#: apt-private/private-install.cc
+#, c-format
+msgid "  Download size: %sB\n"
+msgstr "  Stáhne se: %sB\n"
+
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
 #: apt-private/private-install.cc
@@ -1922,12 +1964,53 @@ msgstr "Nutno stáhnout %sB/%sB archivů.\n"
 msgid "Need to get %sB of archives.\n"
 msgstr "Nutno stáhnout %sB archivů.\n"
 
-#. TRANSLATOR: The required space between number and unit is already included
-#. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
 #: apt-private/private-install.cc
 #, c-format
 msgid "After this operation, %sB of additional disk space will be used.\n"
 msgstr "Po této operaci bude na disku použito dalších %sB.\n"
+
+#. TRANSLATOR: The required space between number and unit is already included
+#. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
+#: apt-private/private-install.cc
+#, c-format
+msgid "Space needed: %sB / %sB available\n"
+msgstr ""
+
+#. TRANSLATOR: The required space between number and unit is already included
+#. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
+#: apt-private/private-install.cc
+#, c-format
+msgid "More space needed than available: %sB > %sB, installation may fail"
+msgstr ""
+
+#. TRANSLATOR: The required space between number and unit is already included
+#. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB -
+#. The first %s is the location of the boot directory (determined from Dir::Boot),
+#. and it tells the space being needed there.
+#. (We have two spaces to align with parent "space needed:"for /boot)
+#: apt-private/private-install.cc
+#, c-format
+msgid "in %s:  %sB / %sB available\n"
+msgstr ""
+
+#. TRANSLATOR: The required space between number and unit is already included
+#. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
+#. The first %s is the location of the boot directory (determined from Dir::Boot)
+#: apt-private/private-install.cc
+#, c-format
+msgid ""
+"More space needed in %s than available: %sB > %sB, installation may fail"
+msgstr ""
+
+#: apt-private/private-install.cc
+#, c-format
+msgid "Space needed: %sB\n"
+msgstr ""
+
+#: apt-private/private-install.cc
+#, c-format
+msgid "  Freed space: %sB\n"
+msgstr "  Uvolněné místo: %sB\n"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
@@ -1947,6 +2030,16 @@ msgid ""
 msgstr ""
 "Odstranění nezbytných systémově-kritických balíků není povoleno. Může to "
 "rozbít systém."
+
+#: apt-private/private-install.cc
+#, fuzzy
+#| msgid "Continue?"
+msgid "Continue anyway?"
+msgstr "Pokračovat?"
+
+#: apt-private/private-install.cc
+msgid "Continue?"
+msgstr "Pokračovat?"
 
 #: apt-private/private-install.cc cmdline/apt-mark.cc
 msgid "Do you want to continue?"
@@ -2014,6 +2107,14 @@ msgid "Internal Error, AutoRemover broke stuff"
 msgstr "Vnitřní chyba, AutoRemover pokazil věci"
 
 #: apt-private/private-install.cc
+#, c-format
+msgid "Use '%s' to remove it."
+msgid_plural "Use '%s' to remove them."
+msgstr[0] "Pro jeho odstranění použijte „%s“."
+msgstr[1] "Pro jejich odstranění použijte „%s“."
+msgstr[2] "Pro jejich odstranění použijte „%s“."
+
+#: apt-private/private-install.cc
 msgid ""
 "The following package was automatically installed and is no longer required:"
 msgid_plural ""
@@ -2035,24 +2136,16 @@ msgstr[1] "%lu balíky byly nainstalovány automaticky a již nejsou potřeba.\n
 msgstr[2] "%lu balíků bylo nainstalováno automaticky a již nejsou potřeba.\n"
 
 #: apt-private/private-install.cc
-#, c-format
-msgid "Use '%s' to remove it."
-msgid_plural "Use '%s' to remove them."
-msgstr[0] "Pro jeho odstranění použijte „%s“."
-msgstr[1] "Pro jejich odstranění použijte „%s“."
-msgstr[2] "Pro jejich odstranění použijte „%s“."
-
-#: apt-private/private-install.cc
-msgid "The following additional packages will be installed:"
-msgstr "Následující dodatečné balíky budou instalovány:"
-
-#: apt-private/private-install.cc
 msgid "Suggested packages:"
 msgstr "Navrhované balíky:"
 
 #: apt-private/private-install.cc
 msgid "Recommended packages:"
 msgstr "Doporučované balíky:"
+
+#: apt-private/private-install.cc
+msgid "The following additional packages will be installed:"
+msgstr "Následující dodatečné balíky budou instalovány:"
 
 #: apt-private/private-install.cc
 #, c-format
@@ -2188,18 +2281,40 @@ msgid "The following packages have unmet dependencies:"
 msgstr "Následující balíky mají nesplněné závislosti:"
 
 #: apt-private/private-output.cc
+msgid "Unsatisfied dependencies:"
+msgstr "Nesplněné závislosti:"
+
+#: apt-private/private-output.cc
 msgid "The following NEW packages will be installed:"
 msgstr "Následující NOVÉ balíky budou nainstalovány:"
+
+#: apt-private/private-output.cc
+msgid "Installing:"
+msgstr "K instalaci:"
+
+#: apt-private/private-output.cc
+msgid "Installing dependencies:"
+msgstr "Instalace závislostí:"
+
+#: apt-private/private-output.cc
+msgid "REMOVING:"
+msgstr "K ODSTRANĚNÍ:"
 
 #: apt-private/private-output.cc
 msgid "The following packages will be REMOVED:"
 msgstr "Následující balíky budou ODSTRANĚNY:"
 
 #: apt-private/private-output.cc
-#, fuzzy
-#| msgid "The following packages have been kept back:"
 msgid "The following upgrades have been deferred due to phasing:"
-msgstr "Následující balíky jsou podrženy v aktuální verzi:"
+msgstr "Následující aktualizace jsou odloženy kvůli fázování:"
+
+#: apt-private/private-output.cc
+msgid "Not upgrading yet due to phasing:"
+msgstr "Zatím neaktualizováno kvůli fázování:"
+
+#: apt-private/private-output.cc
+msgid "Not upgrading:"
+msgstr "Neaktualizováno:"
 
 #: apt-private/private-output.cc
 msgid "The following packages have been kept back:"
@@ -2210,8 +2325,20 @@ msgid "The following packages will be upgraded:"
 msgstr "Následující balíky budou aktualizovány:"
 
 #: apt-private/private-output.cc
+msgid "Upgrading:"
+msgstr "K aktualizaci:"
+
+#: apt-private/private-output.cc
+msgid "DOWNGRADING:"
+msgstr "K DEGRADACI:"
+
+#: apt-private/private-output.cc
 msgid "The following packages will be DOWNGRADED:"
 msgstr "Následující balíky budou DEGRADOVÁNY:"
+
+#: apt-private/private-output.cc
+msgid "Changing held packages:"
+msgstr "Změna podržených balíků:"
 
 #: apt-private/private-output.cc
 msgid "The following held packages will be changed:"
@@ -2231,9 +2358,18 @@ msgstr ""
 "Pokud přesně nevíte, co děláte, NEDĚLEJTE to!"
 
 #: apt-private/private-output.cc
+msgid "Summary:"
+msgstr "Souhrn:"
+
+#: apt-private/private-output.cc
 #, c-format
 msgid "%lu upgraded, %lu newly installed, "
 msgstr "%lu aktualizováno, %lu nově instalováno, "
+
+#: apt-private/private-output.cc
+#, c-format
+msgid "Upgrading: %lu, Installing: %lu, "
+msgstr "Aktualizací: %lu, Instalací: %lu, "
 
 #: apt-private/private-output.cc
 #, c-format
@@ -2242,13 +2378,28 @@ msgstr "%lu přeinstalováno, "
 
 #: apt-private/private-output.cc
 #, c-format
+msgid "Reinstalling: %lu, "
+msgstr "Přeinstalací: %lu, "
+
+#: apt-private/private-output.cc
+#, c-format
 msgid "%lu downgraded, "
 msgstr "%lu degradováno, "
 
 #: apt-private/private-output.cc
 #, c-format
+msgid "Downgrading: %lu, "
+msgstr "Degradací: %lu, "
+
+#: apt-private/private-output.cc
+#, c-format
 msgid "%lu to remove and %lu not upgraded.\n"
 msgstr "%lu k odstranění a %lu neaktualizováno.\n"
+
+#: apt-private/private-output.cc
+#, c-format
+msgid "Removing: %lu, Not Upgrading: %lu\n"
+msgstr "Odstranění: %lu, Neaktualizovaných: %lu\n"
 
 #: apt-private/private-output.cc
 #, c-format
@@ -2522,7 +2673,7 @@ msgstr ""
 #: apt-private/private-update.cc
 #, c-format
 msgid "Missing Signed-By in the %s entry for '%s'"
-msgstr ""
+msgstr "Chybí Signed-By v %s pro „%s“"
 
 #: apt-private/private-update.cc
 #, c-format
@@ -3796,6 +3947,11 @@ msgstr "Dotaz"
 msgid "Unable to invoke "
 msgstr "Nelze vyvolat "
 
+#: methods/gpgv.cc
+#, c-format
+msgid "untrusted public key algorithm: %s"
+msgstr "nedůvěryhodný algoritmus veřejného klíče: %s"
+
 #. TRANSLATORS: %s is a single techy word like 'NODATA'
 #: methods/gpgv.cc
 #, c-format
@@ -3833,8 +3989,7 @@ msgstr ""
 
 #. TRANSLATORS: The second %s is the reason and is untranslated for repository owners.
 #: methods/gpgv.cc
-#, fuzzy, c-format
-#| msgid "Signature by key %s uses weak digest algorithm (%s)"
+#, c-format
 msgid "Signature by key %s uses weak algorithm (%s)"
 msgstr "Podpis klíčem %s používá slabý algoritmus (%s)"
 
@@ -3881,6 +4036,10 @@ msgstr "Spojení bylo předčasně ukončeno"
 #: methods/store.cc
 msgid "Empty files can't be valid archives"
 msgstr "Prázdné soubory nejsou platnými archivy"
+
+#, c-format
+#~ msgid "  Installed size: %sB\n"
+#~ msgstr "  Velikost po instalaci: %sB\n"
 
 #~ msgid "Yes, do as I say!"
 #~ msgstr "Ano, udělej to tak, jak říkám!"
@@ -4286,9 +4445,6 @@ msgstr "Prázdné soubory nejsou platnými archivy"
 
 #~ msgid "Ignore unavailable target release '%s' of package '%s'"
 #~ msgstr "Ignoruje se nedostupné vydání „%s“ balíku „%s“"
-
-#~ msgid "Downloading %s %s"
-#~ msgstr "Stahuje se %s %s"
 
 #~ msgid "This is not a valid DEB archive, it has no '%s', '%s' or '%s' member"
 #~ msgstr "Toto není platný DEB archiv, neobsahuje část „%s“, „%s“ ani „%s“"

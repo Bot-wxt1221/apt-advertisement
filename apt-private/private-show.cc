@@ -1,6 +1,7 @@
 // Includes								/*{{{*/
 #include <config.h>
 
+#include <apt-pkg/aptconfiguration.h>
 #include <apt-pkg/cachefile.h>
 #include <apt-pkg/cacheset.h>
 #include <apt-pkg/cmndline.h>
@@ -32,6 +33,8 @@
 
 #include <apti18n.h>
 									/*}}}*/
+
+using APT::Configuration::color;
 
 pkgRecords::Parser &LookupParser(pkgRecords &Recs, pkgCache::VerIterator const &V, pkgCache::VerFileIterator &Vf) /*{{{*/
 {
@@ -271,7 +274,8 @@ static bool DisplayRecordV2(pkgCacheFile &CacheFile, pkgRecords &Recs, /*{{{*/
    RW.push_back(pkgTagSection::Tag::Remove("Description"));
    RW.push_back(pkgTagSection::Tag::Remove("Description-md5"));
    // improve
-   RW.push_back(pkgTagSection::Tag::Rewrite("Package", V.ParentPkg().FullName(true)));
+   RW.push_back(pkgTagSection::Tag::Rewrite("Package", color("Show::Package", V.ParentPkg().FullName(true))));
+
    RW.push_back(pkgTagSection::Tag::Rewrite("Installed-Size", installed_size));
    RW.push_back(pkgTagSection::Tag::Remove("Size"));
    RW.push_back(pkgTagSection::Tag::Rewrite("Download-Size", package_size));
@@ -282,7 +286,7 @@ static bool DisplayRecordV2(pkgCacheFile &CacheFile, pkgRecords &Recs, /*{{{*/
 
    FileFd stdoutfd;
    if (stdoutfd.OpenDescriptor(STDOUT_FILENO, FileFd::WriteOnly, false) == false ||
-	 Tags.Write(stdoutfd, TFRewritePackageOrder, RW) == false || stdoutfd.Close() == false)
+       Tags.Write(stdoutfd, pkgTagSection::WRITE_HUMAN, TFRewritePackageOrder, RW) == false || stdoutfd.Close() == false)
       return _error->Error("Internal Error, Unable to parse a package record");
 
    // write the description
@@ -291,7 +295,7 @@ static bool DisplayRecordV2(pkgCacheFile &CacheFile, pkgRecords &Recs, /*{{{*/
    if (Desc.end() == false)
    {
       pkgRecords::Parser &P = Recs.Lookup(Desc.FileList());
-      out << "Description: " << P.LongDesc();
+      out << color("Show::Field", "Description: ") << P.LongDesc();
    }
 
    // write a final newline (after the description)
@@ -442,14 +446,22 @@ bool ShowSrcPackage(CommandLine &CmdL)					/*{{{*/
    std::set<std::string> seen;
    for (const char **I = CmdL.FileList + 1; *I != 0; I++)
    {
+      const char *pkgname = *I;
       SrcRecs.Restart();
 
       pkgSrcRecords::Parser *Parse;
       bool found_this = false;
-      while ((Parse = SrcRecs.Find(*I,false)) != 0) {
+      bool only_source = _config->FindB("APT::Cache::Only-Source", false);
+      if (APT::String::Startswith(pkgname, "src:"))
+      {
+	 only_source = true;
+	 pkgname += 4;
+      }
+      while ((Parse = SrcRecs.Find(pkgname, false)) != 0)
+      {
 	 // SrcRecs.Find() will find both binary and source names
-	 if (_config->FindB("APT::Cache::Only-Source", false) == true)
-	    if (Parse->Package() != *I)
+	 if (only_source)
+	    if (Parse->Package() != pkgname)
 	       continue;
          std::string sha1str = Sha1FromString(Parse->AsStr());
          if (std::find(seen.begin(), seen.end(), sha1str) == seen.end())

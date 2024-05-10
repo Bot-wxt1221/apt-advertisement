@@ -26,7 +26,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt 2.7.2\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2024-02-28 18:50+0000\n"
+"POT-Creation-Date: 2024-04-22 17:39+0000\n"
 "PO-Revision-Date: 2023-07-13 19:58+0200\n"
 "Last-Translator: Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>\n"
 "Language-Team: Romanian <debian-l10n-romanian@lists.debian.org>\n"
@@ -263,6 +263,13 @@ msgstr ""
 #, c-format
 msgid "Failed to fetch %s  %s"
 msgstr "Eșec la aducerea lui %s  %s"
+
+#: apt-pkg/acquire-item.cc
+#, c-format
+msgid ""
+"Repositories should provide a clear-signed InRelease file, but none found at "
+"%s."
+msgstr ""
 
 #: apt-pkg/acquire-item.cc
 #, c-format
@@ -721,6 +728,30 @@ msgstr ""
 #, c-format
 msgid "Syntax error %s:%u: Extra junk at end of file"
 msgstr "Eroare de sintaxă %s:%u: deșeuri suplimentare la sfârșitul fișierului"
+
+#. TRANSLATOR: This is a warning level displayed before the message
+#: apt-pkg/contrib/error.cc
+msgid "Error:"
+msgstr ""
+
+#. TRANSLATOR: This is a warning level displayed before the message
+#: apt-pkg/contrib/error.cc
+msgid "Warning:"
+msgstr ""
+
+#. TRANSLATOR: This is a warning level displayed before the message
+#: apt-pkg/contrib/error.cc
+msgid "Notice:"
+msgstr ""
+
+#: apt-pkg/contrib/error.cc
+msgid "Audit:"
+msgstr ""
+
+#. TRANSLATOR: This is a warning level displayed before the message
+#: apt-pkg/contrib/error.cc
+msgid "Debug:"
+msgstr ""
 
 #: apt-pkg/contrib/extracttar.cc
 #, c-format
@@ -1461,8 +1492,8 @@ msgstr ""
 "din cauza unei bucle conflict/pre-dependență (Conflicts/Pre-Depends). Acest "
 "lucru este adesea rău, dar dacă doriți cu adevărat să o faceți, activați "
 "opțiunea „APT::Force-LoopBreak” rulând comanda «apt-get -u -o APT::Force-"
-"LoopBreak=1» sau manual, adăugând linia »APT::Force-LoopBreak "
-"\"true\";« (fără săgeți) în fișierul „/etc/apt/apt.conf”."
+"LoopBreak=1» sau manual, adăugând linia »APT::Force-LoopBreak \"true\";« "
+"(fără săgeți) în fișierul „/etc/apt/apt.conf”."
 
 #: apt-pkg/pkgcache.cc
 msgid "Empty package cache"
@@ -2042,12 +2073,24 @@ msgstr ""
 "Ce ciudat... Dimensiunile nu se potrivesc, trimiteți un mesaj la "
 "apt@packages.debian.org"
 
+#: apt-private/private-install.cc
+#, fuzzy, c-format
+#| msgid "Download Failed"
+msgid "  Download size: %sB / %sB\n"
+msgstr "Descărcarea a eșuat"
+
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement strings, so %sB will be correctly translate in e.g. 1,5 MB
 #: apt-private/private-install.cc
 #, c-format
 msgid "Need to get %sB/%sB of archives.\n"
 msgstr "Este nevoie să descărcați %so/%so de arhive.\n"
+
+#: apt-private/private-install.cc
+#, fuzzy, c-format
+#| msgid "Download Failed"
+msgid "  Download size: %sB\n"
+msgstr "Descărcarea a eșuat"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
@@ -2056,12 +2099,54 @@ msgstr "Este nevoie să descărcați %so/%so de arhive.\n"
 msgid "Need to get %sB of archives.\n"
 msgstr "Este nevoie să descărcați %so de arhive.\n"
 
-#. TRANSLATOR: The required space between number and unit is already included
-#. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
 #: apt-private/private-install.cc
 #, c-format
 msgid "After this operation, %sB of additional disk space will be used.\n"
 msgstr "După această operație vor fi folosiți din disc încă %so.\n"
+
+#. TRANSLATOR: The required space between number and unit is already included
+#. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
+#: apt-private/private-install.cc
+#, c-format
+msgid "Space needed: %sB / %sB available\n"
+msgstr ""
+
+#. TRANSLATOR: The required space between number and unit is already included
+#. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
+#: apt-private/private-install.cc
+#, c-format
+msgid "More space needed than available: %sB > %sB, installation may fail"
+msgstr ""
+
+#. TRANSLATOR: The required space between number and unit is already included
+#. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB -
+#. The first %s is the location of the boot directory (determined from Dir::Boot),
+#. and it tells the space being needed there.
+#. (We have two spaces to align with parent "space needed:"for /boot)
+#: apt-private/private-install.cc
+#, c-format
+msgid "in %s:  %sB / %sB available\n"
+msgstr ""
+
+#. TRANSLATOR: The required space between number and unit is already included
+#. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
+#. The first %s is the location of the boot directory (determined from Dir::Boot)
+#: apt-private/private-install.cc
+#, c-format
+msgid ""
+"More space needed in %s than available: %sB > %sB, installation may fail"
+msgstr ""
+
+#: apt-private/private-install.cc
+#, c-format
+msgid "Space needed: %sB\n"
+msgstr ""
+
+#: apt-private/private-install.cc
+#, fuzzy, c-format
+#| msgid "Stored label: %s\n"
+msgid "  Freed space: %sB\n"
+msgstr "Etichetă memorată: %s \n"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
@@ -2083,6 +2168,14 @@ msgid ""
 msgstr ""
 "Eliminarea pachetelor esențiale, cruciale ale sistemului nu este permisă. "
 "Acest lucru ar putea deteriora sistemul."
+
+#: apt-private/private-install.cc
+msgid "Continue anyway?"
+msgstr ""
+
+#: apt-private/private-install.cc
+msgid "Continue?"
+msgstr ""
 
 #: apt-private/private-install.cc cmdline/apt-mark.cc
 msgid "Do you want to continue?"
@@ -2165,6 +2258,14 @@ msgid "Internal Error, AutoRemover broke stuff"
 msgstr "Eroare internă, AutoRemover() a deteriorat anumite lucruri"
 
 #: apt-private/private-install.cc
+#, c-format
+msgid "Use '%s' to remove it."
+msgid_plural "Use '%s' to remove them."
+msgstr[0] "Folosiți «%s» pentru a-l elimina."
+msgstr[1] "Folosiți «%s» pentru a le elimina."
+msgstr[2] "Folosiți «%s» pentru a le elimina."
+
+#: apt-private/private-install.cc
 msgid ""
 "The following package was automatically installed and is no longer required:"
 msgid_plural ""
@@ -2186,24 +2287,16 @@ msgstr[1] "%lu pachete au fost instalate automat și nu mai sunt necesare:\n"
 msgstr[2] "%lu de pachete au fost instalate automat și nu mai sunt necesare:\n"
 
 #: apt-private/private-install.cc
-#, c-format
-msgid "Use '%s' to remove it."
-msgid_plural "Use '%s' to remove them."
-msgstr[0] "Folosiți «%s» pentru a-l elimina."
-msgstr[1] "Folosiți «%s» pentru a le elimina."
-msgstr[2] "Folosiți «%s» pentru a le elimina."
-
-#: apt-private/private-install.cc
-msgid "The following additional packages will be installed:"
-msgstr "Următoarele pachete adiționale vor fi instalate:"
-
-#: apt-private/private-install.cc
 msgid "Suggested packages:"
 msgstr "Pachete sugerate:"
 
 #: apt-private/private-install.cc
 msgid "Recommended packages:"
 msgstr "Pachete recomandate:"
+
+#: apt-private/private-install.cc
+msgid "The following additional packages will be installed:"
+msgstr "Următoarele pachete adiționale vor fi instalate:"
 
 #: apt-private/private-install.cc
 #, c-format
@@ -2341,8 +2434,30 @@ msgid "The following packages have unmet dependencies:"
 msgstr "Următoarele pachete au dependențe neîndeplinite:"
 
 #: apt-private/private-output.cc
+#, fuzzy
+#| msgid "satisfy dependency strings"
+msgid "Unsatisfied dependencies:"
+msgstr "efectuează operațiile pentru satisfacerea lanțurilor de dependențe"
+
+#: apt-private/private-output.cc
 msgid "The following NEW packages will be installed:"
 msgstr "Următoarele pachete NOI vor fi instalate:"
+
+#: apt-private/private-output.cc
+#, fuzzy
+#| msgid "Installing %s"
+msgid "Installing:"
+msgstr "Se instalează %s"
+
+#: apt-private/private-output.cc
+#, fuzzy
+#| msgid "Total dependencies: "
+msgid "Installing dependencies:"
+msgstr "Total dependențe: "
+
+#: apt-private/private-output.cc
+msgid "REMOVING:"
+msgstr ""
 
 #: apt-private/private-output.cc
 msgid "The following packages will be REMOVED:"
@@ -2355,6 +2470,16 @@ msgid "The following upgrades have been deferred due to phasing:"
 msgstr "Următoarele pachete au fost reținute:"
 
 #: apt-private/private-output.cc
+#, fuzzy
+#| msgid "The following packages have been kept back:"
+msgid "Not upgrading yet due to phasing:"
+msgstr "Următoarele pachete au fost reținute:"
+
+#: apt-private/private-output.cc
+msgid "Not upgrading:"
+msgstr ""
+
+#: apt-private/private-output.cc
 msgid "The following packages have been kept back:"
 msgstr "Următoarele pachete au fost reținute:"
 
@@ -2363,8 +2488,22 @@ msgid "The following packages will be upgraded:"
 msgstr "Următoarele pachete vor fi ÎNNOITE:"
 
 #: apt-private/private-output.cc
+msgid "Upgrading:"
+msgstr ""
+
+#: apt-private/private-output.cc
+msgid "DOWNGRADING:"
+msgstr ""
+
+#: apt-private/private-output.cc
 msgid "The following packages will be DOWNGRADED:"
 msgstr "Următoarele pachete vor fi RETROGRADATE:"
+
+#: apt-private/private-output.cc
+#, fuzzy
+#| msgid "Pinned packages:"
+msgid "Changing held packages:"
+msgstr "Pachete marcate:"
 
 #: apt-private/private-output.cc
 msgid "The following held packages will be changed:"
@@ -2384,14 +2523,30 @@ msgstr ""
 "Acest lucru NU trebuie făcut decât dacă știți exact ceea ce faceți!"
 
 #: apt-private/private-output.cc
+msgid "Summary:"
+msgstr ""
+
+#: apt-private/private-output.cc
 #, c-format
 msgid "%lu upgraded, %lu newly installed, "
 msgstr "%lu înnoit(e), %lu nou instalat(e), "
 
 #: apt-private/private-output.cc
+#, fuzzy, c-format
+#| msgid "Installing %s"
+msgid "Upgrading: %lu, Installing: %lu, "
+msgstr "Se instalează %s"
+
+#: apt-private/private-output.cc
 #, c-format
 msgid "%lu reinstalled, "
 msgstr "%lu reinstalat(e), "
+
+#: apt-private/private-output.cc
+#, fuzzy, c-format
+#| msgid "Installing %s"
+msgid "Reinstalling: %lu, "
+msgstr "Se instalează %s"
 
 #: apt-private/private-output.cc
 #, c-format
@@ -2400,8 +2555,18 @@ msgstr "%lu retrogragradat(e), "
 
 #: apt-private/private-output.cc
 #, c-format
+msgid "Downgrading: %lu, "
+msgstr ""
+
+#: apt-private/private-output.cc
+#, c-format
 msgid "%lu to remove and %lu not upgraded.\n"
 msgstr "%lu de eliminat și %lu neactualizat(e).\n"
+
+#: apt-private/private-output.cc
+#, c-format
+msgid "Removing: %lu, Not Upgrading: %lu\n"
+msgstr ""
 
 #: apt-private/private-output.cc
 #, c-format
@@ -4011,6 +4176,11 @@ msgstr "Interogare"
 msgid "Unable to invoke "
 msgstr "Nu s-a putut invoca "
 
+#: methods/gpgv.cc
+#, c-format
+msgid "untrusted public key algorithm: %s"
+msgstr ""
+
 #. TRANSLATORS: %s is a single techy word like 'NODATA'
 #: methods/gpgv.cc
 #, c-format
@@ -4102,6 +4272,16 @@ msgstr "Conexiune închisă prematur"
 #: methods/store.cc
 msgid "Empty files can't be valid archives"
 msgstr "Fișierele goale nu pot fi arhive valide"
+
+#, fuzzy, c-format
+#~| msgid "  Installed: "
+#~ msgid "  Installed size: %sB\n"
+#~ msgstr "  Instalat: "
+
+#, fuzzy
+#~| msgid "The following held packages will be changed:"
+#~ msgid "Changing held packages:Changing held packages:"
+#~ msgstr "Următoarele pachete ținute vor fi schimbate:"
 
 #~ msgid "Yes, do as I say!"
 #~ msgstr "Da, fă cum îți spun!"

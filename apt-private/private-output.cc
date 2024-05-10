@@ -1,6 +1,7 @@
 // Include files							/*{{{*/
 #include <config.h>
 
+#include <apt-pkg/aptconfiguration.h>
 #include <apt-pkg/cachefile.h>
 #include <apt-pkg/configuration.h>
 #include <apt-pkg/depcache.h>
@@ -30,6 +31,7 @@
 									/*}}}*/
 
 using namespace std;
+using APT::Configuration::color;
 
 std::ostream c0out(0);
 std::ostream c1out(0);
@@ -86,7 +88,7 @@ bool InitOutput(std::basic_streambuf<char> * const out)			/*{{{*/
       SigWinch(0);
    }
 
-   if (isatty(STDOUT_FILENO) == 0 || not _config->FindB("APT::Color", true) || getenv("NO_COLOR") != nullptr)
+   if (isatty(STDOUT_FILENO) == 0 || not _config->FindB("APT::Color", true) || getenv("NO_COLOR") != nullptr || getenv("APT_NO_COLOR") != nullptr)
    {
       _config->Set("APT::Color", false);
       _config->Set("APT::Color::Highlight", "");
@@ -94,6 +96,7 @@ bool InitOutput(std::basic_streambuf<char> * const out)			/*{{{*/
    } else {
       // Colors
       _config->CndSet("APT::Color::Highlight", "\x1B[32m");
+      _config->CndSet("APT::Color::Bold", "\x1B[1m");
       _config->CndSet("APT::Color::Neutral", "\x1B[0m");
       
       _config->CndSet("APT::Color::Red", "\x1B[31m");
@@ -103,6 +106,14 @@ bool InitOutput(std::basic_streambuf<char> * const out)			/*{{{*/
       _config->CndSet("APT::Color::Magenta", "\x1B[35m");
       _config->CndSet("APT::Color::Cyan", "\x1B[36m");
       _config->CndSet("APT::Color::White", "\x1B[37m");
+
+      _config->CndSet("APT::Color::Action::Upgrade", "green");
+      _config->CndSet("APT::Color::Action::Install", "green");
+      _config->CndSet("APT::Color::Action::Install-Dependencies", "green");
+      _config->CndSet("APT::Color::Action::Downgrade", "yellow");
+      _config->CndSet("APT::Color::Action::Remove", "red");
+      _config->CndSet("APT::Color::Show::Field", "\x1B[1m");
+      _config->CndSet("APT::Color::Show::Package", "\x1B[32m");
    }
 
    return true;
@@ -302,8 +313,8 @@ void ListSingleVersion(pkgCacheFile &CacheFile, pkgRecords &records,	/*{{{*/
    else if (V.ParentPkg()->CurrentState == pkgCache::State::ConfigFiles)
       StatusStr = _("[residual-config]");
    output = SubstVar(output, "${apt:Status}", StatusStr);
-   output = SubstVar(output, "${color:highlight}", _config->Find("APT::Color::Highlight", ""));
-   output = SubstVar(output, "${color:neutral}", _config->Find("APT::Color::Neutral", ""));
+   output = SubstVar(output, "${color:highlight}", color("Highlight"));
+   output = SubstVar(output, "${color:neutral}", color("Neutral"));
    output = SubstVar(output, "${Description}", GetShortDescription(CacheFile, records, P));
    if (output.find("${LongDescription}") != string::npos)
       output = SubstVar(output, "${LongDescription}", GetLongDescription(CacheFile, records, P));
@@ -314,6 +325,83 @@ void ListSingleVersion(pkgCacheFile &CacheFile, pkgRecords &records,	/*{{{*/
       output.erase(output.length() - 1);
 
    out << output;
+}
+									/*}}}*/
+// ShowWithColumns - Show a list in the style of ls			/*{{{*/
+// ---------------------------------------------------------------------
+/* This prints out a vector of strings with the given indent and in as
+   many columns as will fit the screen width.
+   
+   The output looks like:
+  abiword                debootstrap                  gir1.2-upowerglib-1.0
+  abiword-common         dh-make                      google-chrome-beta
+  abiword-plugin-grammar dmeventd                     gstreamer1.0-clutter-3.0
+  binfmt-support         dmsetup                      hostname
+  console-setup          evolution-data-server        iproute2
+  console-setup-linux    evolution-data-server-common
+  coreutils              ffmpeg
+ */
+struct columnInfo
+{
+   bool ValidLen;
+   size_t LineWidth;
+   vector<size_t> RemainingWidths;
+};
+void ShowWithColumns(ostream &out, vector<string> const &List, size_t Indent, size_t ScreenWidth)
+{
+   constexpr size_t MinColumnWidth = 2;
+   constexpr size_t ColumnSpace = 2;
+
+   size_t const ListSize = List.size();
+   size_t const MaxScreenCols = (ScreenWidth - Indent) /
+         MinColumnWidth;
+   size_t const MaxNumCols = min(MaxScreenCols, ListSize);
+
+   vector<columnInfo> ColumnInfo(MaxNumCols);
+   for (size_t I = 0; I < MaxNumCols; ++I) {
+      ColumnInfo[I].ValidLen = true;
+      ColumnInfo[I].LineWidth = (I + 1) * MinColumnWidth;
+      ColumnInfo[I].RemainingWidths.resize(I + 1, MinColumnWidth);
+   }
+
+   for (size_t I = 0; I < ListSize; ++I) {
+      for (size_t J = 0; J < MaxNumCols; ++J) {
+         auto& Col = ColumnInfo[J];
+         if (!Col.ValidLen)
+            continue;
+
+         size_t Idx = I / ((ListSize + J) / (J + 1));
+         size_t RealColLen = List[I].size() + (Idx == J ? 0 : ColumnSpace);
+         if (Col.RemainingWidths[Idx] < RealColLen) {
+            Col.LineWidth += RealColLen - Col.RemainingWidths[Idx];
+            Col.RemainingWidths[Idx] = RealColLen;
+            Col.ValidLen = Col.LineWidth < ScreenWidth;
+         }
+      }
+   }
+   size_t NumCols = MaxNumCols;
+   while (NumCols > 1 && !ColumnInfo[NumCols - 1].ValidLen)
+      --NumCols;
+
+   size_t NumRows = ListSize / NumCols + (ListSize % NumCols != 0);
+   auto const &LineFormat = ColumnInfo[NumCols - 1];
+   for (size_t Row = 0; Row < NumRows; ++Row) {
+      size_t Col = 0;
+      size_t I = Row;
+      out << string(Indent, ' ');
+      while (true) {
+         out << List[I];
+
+         size_t CurLen = List[I].size();
+         size_t MaxLen = LineFormat.RemainingWidths[Col++];
+         I += NumRows;
+         if (I >= ListSize)
+            break;
+
+         out << string(MaxLen - CurLen, ' ');
+      }
+      out << endl;
+   }
 }
 									/*}}}*/
 // ShowBroken - Debugging aide						/*{{{*/
@@ -447,8 +535,10 @@ void ShowBroken(ostream &out, CacheFile &Cache, bool const Now)
 {
    if (Cache->BrokenCount() == 0)
       return;
-
-   out << _("The following packages have unmet dependencies:") << endl;
+   if (_config->FindI("APT::Output-Version") < 30)
+      out << _("The following packages have unmet dependencies:") << endl;
+   else
+      out << _("Unsatisfied dependencies:") << endl;
    SortedPackageUniverse Universe(Cache);
    for (auto const &Pkg: Universe)
       ShowBrokenPackage(out, &Cache, Pkg, Now);
@@ -458,7 +548,10 @@ void ShowBroken(ostream &out, pkgCacheFile &Cache, bool const Now)
    if (Cache->BrokenCount() == 0)
       return;
 
-   out << _("The following packages have unmet dependencies:") << endl;
+   if (_config->FindI("APT::Output-Version") < 30)
+      out << _("The following packages have unmet dependencies:") << endl;
+   else
+      out << _("Unsatisfied dependencies:") << endl;
    APT::PackageUniverse Universe(Cache);
    for (auto const &Pkg: Universe)
       ShowBrokenPackage(out, &Cache, Pkg, Now);
@@ -468,17 +561,33 @@ void ShowBroken(ostream &out, pkgCacheFile &Cache, bool const Now)
 void ShowNew(ostream &out,CacheFile &Cache)
 {
    SortedPackageUniverse Universe(Cache);
-   ShowList(out,_("The following NEW packages will be installed:"), Universe,
-	 [&Cache](pkgCache::PkgIterator const &Pkg) { return Cache[Pkg].NewInstall(); },
+   if (_config->FindI("APT::Output-Version") < 30) {
+      ShowList(out,_("The following NEW packages will be installed:"), Universe,
+	    [&Cache](pkgCache::PkgIterator const &Pkg) { return Cache[Pkg].NewInstall(); },
+	    &PrettyFullName,
+	    CandidateVersion(&Cache),
+	    "action::install");
+      return;
+   }
+
+   ShowList(out,_("Installing:"), Universe,
+	 [&Cache](pkgCache::PkgIterator const &Pkg) { return Cache[Pkg].NewInstall() && (Cache[Pkg].Flags & pkgCache::Flag::Auto) == 0; },
 	 &PrettyFullName,
-	 CandidateVersion(&Cache));
+	 CandidateVersion(&Cache),
+	 "action::install");
+   ShowList(out,_("Installing dependencies:"), Universe,
+	 [&Cache](pkgCache::PkgIterator const &Pkg) { return Cache[Pkg].NewInstall() && Cache[Pkg].Flags & pkgCache::Flag::Auto;},
+	 &PrettyFullName,
+	 CandidateVersion(&Cache),
+	 "action::install-dependencies");
 }
 									/*}}}*/
 // ShowDel - Show packages to delete					/*{{{*/
 void ShowDel(ostream &out,CacheFile &Cache)
 {
    SortedPackageUniverse Universe(Cache);
-   ShowList(out,_("The following packages will be REMOVED:"), Universe,
+   auto title = _config->FindI("APT::Output-Version") < 30 ? _("The following packages will be REMOVED:") : _("REMOVING:");
+   ShowList(out,title, Universe,
 	 [&Cache](pkgCache::PkgIterator const &Pkg) { return Cache[Pkg].Delete(); },
 	 [&Cache](pkgCache::PkgIterator const &Pkg)
 	 {
@@ -487,14 +596,18 @@ void ShowDel(ostream &out,CacheFile &Cache)
 	       str.append("*");
 	    return str;
 	 },
-	 CandidateVersion(&Cache));
+	 CandidateVersion(&Cache),
+	 "action::remove");
 }
 									/*}}}*/
 // ShowPhasing - Show packages kept due to phasing			/*{{{*/
 void ShowPhasing(ostream &out, CacheFile &Cache, APT::PackageVector const &HeldBackPackages)
 {
    SortedPackageUniverse Universe(Cache);
-   ShowList(out, _("The following upgrades have been deferred due to phasing:"), HeldBackPackages,
+   auto title = _config->FindI("APT::Output-Version") < 30
+	       ? _("The following upgrades have been deferred due to phasing:")
+	       : _("Not upgrading yet due to phasing:");
+   ShowList(out, title, HeldBackPackages,
 	    &AlwaysTrue,
 	    &PrettyFullName,
 	    CurrentToCandidateVersion(&Cache));
@@ -504,7 +617,8 @@ void ShowPhasing(ostream &out, CacheFile &Cache, APT::PackageVector const &HeldB
 void ShowKept(ostream &out,CacheFile &Cache, APT::PackageVector const &HeldBackPackages)
 {
    SortedPackageUniverse Universe(Cache);
-   ShowList(out,_("The following packages have been kept back:"), HeldBackPackages,
+   auto title = _config->FindI("APT::Output-Version") < 30 ? _("The following packages have been kept back:") : _("Not upgrading:");
+   ShowList(out, title, HeldBackPackages,
 	 &AlwaysTrue,
 	 &PrettyFullName,
 	 CurrentToCandidateVersion(&Cache));
@@ -514,13 +628,15 @@ void ShowKept(ostream &out,CacheFile &Cache, APT::PackageVector const &HeldBackP
 void ShowUpgraded(ostream &out,CacheFile &Cache)
 {
    SortedPackageUniverse Universe(Cache);
-   ShowList(out,_("The following packages will be upgraded:"), Universe,
+   auto title = _config->FindI("APT::Output-Version") < 30 ? _("The following packages will be upgraded:") : _("Upgrading:");
+   ShowList(out, title, Universe,
 	 [&Cache](pkgCache::PkgIterator const &Pkg)
 	 {
 	    return Cache[Pkg].Upgrade() == true && Cache[Pkg].NewInstall() == false;
 	 },
 	 &PrettyFullName,
-	 CurrentToCandidateVersion(&Cache));
+	 CurrentToCandidateVersion(&Cache),
+	 "action::upgrade");
 }
 									/*}}}*/
 // ShowDowngraded - Show downgraded packages				/*{{{*/
@@ -529,20 +645,23 @@ void ShowUpgraded(ostream &out,CacheFile &Cache)
 bool ShowDowngraded(ostream &out,CacheFile &Cache)
 {
    SortedPackageUniverse Universe(Cache);
-   return ShowList(out,_("The following packages will be DOWNGRADED:"), Universe,
+   auto title = _config->FindI("APT::Output-Version") < 30 ? _("The following packages will be DOWNGRADED:") : _("DOWNGRADING:");
+   return ShowList(out, title, Universe,
 	 [&Cache](pkgCache::PkgIterator const &Pkg)
 	 {
 	    return Cache[Pkg].Downgrade() == true && Cache[Pkg].NewInstall() == false;
 	 },
 	 &PrettyFullName,
-	 CurrentToCandidateVersion(&Cache));
+	 CurrentToCandidateVersion(&Cache),
+	 "action::downgrade");
 }
 									/*}}}*/
 // ShowHold - Show held but changed packages				/*{{{*/
 bool ShowHold(ostream &out,CacheFile &Cache)
 {
    SortedPackageUniverse Universe(Cache);
-   return ShowList(out,_("The following held packages will be changed:"), Universe,
+   auto title = _config->FindI("APT::Output-Version") < 30 ? _("The following held packages will be changed:") : _("Changing held packages:");
+   return ShowList(out, title, Universe,
 	 [&Cache](pkgCache::PkgIterator const &Pkg)
 	 {
 	    return Pkg->SelectedState == pkgCache::State::Hold &&
@@ -621,7 +740,7 @@ bool ShowEssential(ostream &out,CacheFile &Cache)
    }
    return ShowList(out,_("WARNING: The following essential packages will be removed.\n"
 			 "This should NOT be done unless you know exactly what you are doing!"),
-	 pkglist, &AlwaysTrue, withdue, &EmptyString);
+	 pkglist, &AlwaysTrue, withdue, &EmptyString, "action::remove");
 }
 									/*}}}*/
 // Stats - Show some statistics						/*{{{*/
@@ -633,6 +752,7 @@ void Stats(ostream &out, pkgDepCache &Dep, APT::PackageVector const &HeldBackPac
    unsigned long Downgrade = 0;
    unsigned long Install = 0;
    unsigned long ReInstall = 0;
+   auto outVer = _config->FindI("APT::Output-Version");
    for (pkgCache::PkgIterator I = Dep.PkgBegin(); I.end() == false; ++I)
    {
       if (Dep[I].NewInstall() == true)
@@ -649,21 +769,27 @@ void Stats(ostream &out, pkgDepCache &Dep, APT::PackageVector const &HeldBackPac
       if (Dep[I].Delete() == false && (Dep[I].iFlags & pkgDepCache::ReInstall) == pkgDepCache::ReInstall)
 	 ReInstall++;
    }   
-
-   ioprintf(out,_("%lu upgraded, %lu newly installed, "),
+   if (outVer >= 30) {
+      ioprintf(out, _("Summary:"));
+      ioprintf(out, "\n  ");
+   }
+   ioprintf(out,outVer < 30 ? _("%lu upgraded, %lu newly installed, ") : _("Upgrading: %lu, Installing: %lu, "),
 	    Upgrade,Install);
    
    if (ReInstall != 0)
-      ioprintf(out,_("%lu reinstalled, "),ReInstall);
+      ioprintf(out,outVer < 30 ? _("%lu reinstalled, ") : _("Reinstalling: %lu, "),ReInstall);
    if (Downgrade != 0)
-      ioprintf(out,_("%lu downgraded, "),Downgrade);
+      ioprintf(out,outVer < 30 ? _("%lu downgraded, ") : _("Downgrading: %lu, "),Downgrade);
 
-   ioprintf(out,_("%lu to remove and %lu not upgraded.\n"),
+   ioprintf(out, outVer < 30 ? _("%lu to remove and %lu not upgraded.\n") : _("Removing: %lu, Not Upgrading: %lu\n"),
 	    Dep.DelCount(), HeldBackPackages.size());
-   
-   if (Dep.BadCount() != 0)
+
+   if (Dep.BadCount() != 0) {
+      if (outVer >= 30)
+	 ioprintf(out, "  ");
       ioprintf(out,_("%lu not fully installed or removed.\n"),
 	       Dep.BadCount());
+   }
 }
 									/*}}}*/
 // YnPrompt - Yes No Prompt.						/*{{{*/
@@ -676,10 +802,12 @@ bool YnPrompt(char const * const Question, bool const Default, bool const ShowGl
    // if we ask interactively, show warnings/notices before the question
    if (ShowGlobalErrors == true && AssumeYes == false && AssumeNo == false)
    {
-      if (_config->FindI("quiet",0) > 0)
+      if (_config->FindB("APT::Audit"))
+	 _error->DumpErrors(c2o, GlobalError::AUDIT);
+      else if (_config->FindI("quiet",0) > 0)
 	 _error->DumpErrors(c2o);
       else
-	 _error->DumpErrors(c2o, GlobalError::DEBUG);
+	 _error->DumpErrors(c2o, GlobalError::NOTICE);
    }
 
    c2o << Question << std::flush;

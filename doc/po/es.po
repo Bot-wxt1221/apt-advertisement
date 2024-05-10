@@ -38,7 +38,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt-doc 1.0.5\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2024-03-22 10:14+0000\n"
+"POT-Creation-Date: 2024-04-22 17:38+0000\n"
 "PO-Revision-Date: 2014-07-04 01:31+0200\n"
 "Last-Translator: Omar Campagne <ocampagne@gmail.com>\n"
 "Language-Team: Debian l10n Spanish <debian-l10n-spanish@lists.debian.org>\n"
@@ -175,6 +175,33 @@ msgstr ""
 
 #. type: Plain text
 #: apt.ent
+#, fuzzy, no-wrap
+#| msgid ""
+#| "     <varlistentry>\n"
+#| "      <term><option>-v</option></term>\n"
+#| "      <term><option>--version</option></term>\n"
+#| "      <listitem><para>Show the program version.\n"
+#| "     </para>\n"
+#| "     </listitem>\n"
+#| "     </varlistentry>\n"
+msgid ""
+"     <varlistentry>\n"
+"      <term><option>--audit</option></term>\n"
+"      <listitem><para>Show audit (and notice) messages. This overrides the quiet option, but only for notice messages, not progress ones.\n"
+"     </para>\n"
+"     </listitem>\n"
+"     </varlistentry>\n"
+msgstr ""
+"     <varlistentry>\n"
+"      <term><option>-v</option></term>\n"
+"      <term><option>--version</option></term>\n"
+"      <listitem><para>Muestra la versión del programa.\n"
+"     </para>\n"
+"     </listitem>\n"
+"     </varlistentry>\n"
+
+#. type: Plain text
+#: apt.ent
 #, no-wrap
 msgid ""
 "     <varlistentry>\n"
@@ -206,7 +233,19 @@ msgstr ""
 
 #. type: Plain text
 #: apt.ent
-#, no-wrap
+#, fuzzy, no-wrap
+#| msgid ""
+#| "     <varlistentry>\n"
+#| "      <term><option>-o</option></term>\n"
+#| "      <term><option>--option</option></term>\n"
+#| "     <listitem><para>Set a Configuration Option; This will set an arbitrary\n"
+#| "      configuration option. The syntax is <option>-o Foo::Bar=bar</option>.\n"
+#| "      <option>-o</option> and <option>--option</option> can be used multiple\n"
+#| "      times to set different options.\n"
+#| "     </para>\n"
+#| "     </listitem>\n"
+#| "     </varlistentry>\n"
+#| "\">\n"
 msgid ""
 "     <varlistentry>\n"
 "      <term><option>-o</option></term>\n"
@@ -215,6 +254,44 @@ msgid ""
 "      configuration option. The syntax is <option>-o Foo::Bar=bar</option>.\n"
 "      <option>-o</option> and <option>--option</option> can be used multiple\n"
 "      times to set different options.\n"
+"     </para>\n"
+"     </listitem>\n"
+"     </varlistentry>\n"
+msgstr ""
+"     <varlistentry>\n"
+"      <term><option>-o</option></term>\n"
+"      <term><option>--option</option></term>\n"
+"     <listitem><para>Define una opción de configuración: Esto definirá una opción\n"
+"      arbitraria de configuración. La sintaxis es <option>-o Algo::Cosa=cosa</option>.\n"
+"      <option>-o</option> y <option>--option</option> se pueden usar varias\n"
+"      veces para definir diferentes opciones.\n"
+"     </para>\n"
+"     </listitem>\n"
+"     </varlistentry>\n"
+"\">\n"
+
+#. type: Plain text
+#: apt.ent
+#, fuzzy, no-wrap
+#| msgid ""
+#| "     <varlistentry>\n"
+#| "      <term><option>-o</option></term>\n"
+#| "      <term><option>--option</option></term>\n"
+#| "     <listitem><para>Set a Configuration Option; This will set an arbitrary\n"
+#| "      configuration option. The syntax is <option>-o Foo::Bar=bar</option>.\n"
+#| "      <option>-o</option> and <option>--option</option> can be used multiple\n"
+#| "      times to set different options.\n"
+#| "     </para>\n"
+#| "     </listitem>\n"
+#| "     </varlistentry>\n"
+#| "\">\n"
+msgid ""
+"     <varlistentry>\n"
+"      <term><option>--no-color</option></term>\n"
+"      <term><option>--color</option></term>\n"
+"<listitem><para>Turn colors on or off. Colors are on by default on supported terminals for &apt; and\n"
+"can also be disabled using the <envar>NO_COLOR</envar> or <envar>APT_NO_COLOR</envar> environment variables,\n"
+"or further configured by the <option>APT::Color</option> configuration option and scope, see &apt-conf; for information on that.\n"
 "     </para>\n"
 "     </listitem>\n"
 "     </varlistentry>\n"
@@ -1780,6 +1857,21 @@ msgstr ""
 #: apt-get.8.xml
 #, fuzzy
 #| msgid ""
+#| "Re-install packages that are already installed and at the newest "
+#| "version.  Configuration Item: <literal>APT::Get::ReInstall</literal>."
+msgid ""
+"Display package lists without arranging them in columns. By default, package "
+"lists are printed in the style of the \"ls\" command.  Configuration Item: "
+"<literal>APT::Get::List-Columns</literal>."
+msgstr ""
+"Reinstala los paquetes ya instalados, incluso si son la última versión "
+"disponible del paquete. Opción de configuración: <literal>APT::Get::"
+"ReInstall</literal>."
+
+#. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
+#: apt-get.8.xml
+#, fuzzy
+#| msgid ""
 #| "This option controls the architecture packages are built for by "
 #| "<command>apt-get source --compile</command> and how cross-"
 #| "builddependencies are satisfied. By default is it not set which means "
@@ -2681,16 +2773,6 @@ msgstr ""
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
 #: apt-cache.8.xml
-#, fuzzy
-#| msgid ""
-#| "<literal>dotty</literal> takes a list of packages on the command line and "
-#| "generates output suitable for use by dotty from the <ulink url=\"http://"
-#| "www.research.att.com/sw/tools/graphviz/\">GraphViz</ulink> package. The "
-#| "result will be a set of nodes and edges representing the relationships "
-#| "between the packages. By default the given packages will trace out all "
-#| "dependent packages; this can produce a very large graph.  To limit the "
-#| "output to only the packages listed on the command line, set the "
-#| "<literal>APT::Cache::GivenOnly</literal> option."
 msgid ""
 "<literal>dotty</literal> takes a list of packages on the command line and "
 "generates output suitable for use by dotty from the <ulink url=\"https://"
@@ -4549,6 +4631,53 @@ msgstr ""
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
 #: apt.conf.5.xml
 msgid ""
+"This scope defines colors and styles. The basic colors supported are "
+"<option>red</option>, <option>green</option>, <option>yellow</option>, "
+"<option>blue</option>, <option>magenta</option>, <option>cyan</option>, and "
+"<option>white</option>."
+msgstr ""
+
+#. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
+#: apt.conf.5.xml
+msgid ""
+"The subscope <option>action</option> defines the colors for package lists in "
+"<option>install</option> and similar commands. The following options may be "
+"set: <option>APT::Color::Action::Upgrade</option>, <option>APT::Color::"
+"Action::Install</option>, <option>APT::Color::Action::Install-Dependencies</"
+"option>, <option>APT::Color::Action::Downgrade</option>, <option>APT::Color::"
+"Action::Remove</option>; corresponding to their lists in the &apt; output."
+msgstr ""
+
+#. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
+#: apt.conf.5.xml
+msgid ""
+"Each color may reference one or more other color options by name, relative "
+"to <option>APT::Color</option>. Their escape sequences will be combined."
+msgstr ""
+
+#. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><informalexample><programlisting>
+#: apt.conf.5.xml
+#, no-wrap
+msgid ""
+"APT::Color::Bold \"\\x1B[1m\";\n"
+"APT::Color::Action::Install \"cyan\";\n"
+"APT::Color::Action::Upgrade \"bold action::install\";\n"
+"        "
+msgstr ""
+
+#. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
+#: apt.conf.5.xml
+msgid ""
+"Colors may be turned on or off completely by setting <option>APT::Color</"
+"option> to <option>yes</option> or <option>no</option>, by utilizing "
+"<envar>NO_COLOR</envar> or <envar>APT_NO_COLOR</envar> environment "
+"variables, or using the <option>--color</option>, <option>--no-color</"
+"option> command-line options."
+msgstr ""
+
+#. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
+#: apt.conf.5.xml
+msgid ""
 "This scope defines which compression formats are supported, how compression "
 "and decompression can be performed if support for this format isn't built "
 "into apt directly and a cost-value indicating how costly it is to compress "
@@ -4870,9 +4999,9 @@ msgid ""
 "&sources-list; entries by using the <option>Date-Max-Future</option> option "
 "there."
 msgstr ""
-"El periodo (en segundos) a partir de la creación del fichero "
-"«Release» (indicado en la cabecera <literal>Date</literal>) durante el cual "
-"se considerará válida. Si el fichero «Release» incluye una cabecera "
+"El periodo (en segundos) a partir de la creación del fichero «Release» "
+"(indicado en la cabecera <literal>Date</literal>) durante el cual se "
+"considerará válida. Si el fichero «Release» incluye una cabecera "
 "<literal>Valid-Until</literal>, la fecha más temprana se utilizará como la "
 "fecha de vencimiento. El valor predefinido es <literal>0</literal>, esto es, "
 "sin límite de tiempo. Las opciones de configuración específicas al archivo "
@@ -4933,9 +5062,9 @@ msgid ""
 "achieved for specific &sources-list; entries by using the <option>Valid-"
 "Until-Max</option> option there."
 msgstr ""
-"El periodo (en segundos) a partir de la creación del fichero "
-"«Release» (indicado en la cabecera <literal>Date</literal>) durante el cual "
-"se considerará válida. Si el fichero «Release» incluye una cabecera "
+"El periodo (en segundos) a partir de la creación del fichero «Release» "
+"(indicado en la cabecera <literal>Date</literal>) durante el cual se "
+"considerará válida. Si el fichero «Release» incluye una cabecera "
 "<literal>Valid-Until</literal>, la fecha más temprana se utilizará como la "
 "fecha de vencimiento. El valor predefinido es <literal>0</literal>, esto es, "
 "sin límite de tiempo. Las opciones de configuración específicas al archivo "
@@ -6665,10 +6794,10 @@ msgid ""
 "replaceable></command> or <command>apt-get upgrade</command> is executed."
 msgstr ""
 "Generalmente, la versión instalada del paquete (prioridad 100) no es tan "
-"reciente como la disponible a través de las fuentes en «&sources-"
-"list;» (prioridad 500 o 990). En este caso, el paquete se actualizará al "
-"ejecutar <command>apt-get install <replaceable>paquete</replaceable></"
-"command> o <command>apt-get upgrade</command>."
+"reciente como la disponible a través de las fuentes en «&sources-list;» "
+"(prioridad 500 o 990). En este caso, el paquete se actualizará al ejecutar "
+"<command>apt-get install <replaceable>paquete</replaceable></command> o "
+"<command>apt-get upgrade</command>."
 
 #. type: Content of: <refentry><refsect1><refsect2><para>
 #: apt_preferences.5.xml

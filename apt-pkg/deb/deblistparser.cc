@@ -608,7 +608,7 @@ const char *debListParser::ParseDepends(const char *Start, const char *Stop,
    {
       // Skip the '('
       for (I++; I != Stop && isspace_ascii(*I) != 0 ; I++);
-      if (I + 3 >= Stop)
+      if (I + 3 > Stop)
 	 return 0;
       I = ConvertRelation(I,Op);
       
@@ -887,7 +887,7 @@ bool debListParser::ParseProvides(pkgCache::VerIterator &Ver)
    bool const barbarianArch = not APT::Configuration::checkArchitecture(Arch);
    const char *Start;
    const char *Stop;
-   if (Section.Find(pkgTagSection::Key::Provides,Start,Stop) == true)
+   if (Section.Find(pkgTagSection::Key::Provides,Start,Stop) && Start != Stop)
    {
       StringView Package;
       StringView Version;
