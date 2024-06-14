@@ -12,7 +12,7 @@ before_script:
     - rm -f /etc/dpkg/dpkg.cfg.d/excludes
     - apt-get update
     - apt-get install --no-install-recommends -qq build-essential expect sudo ccache moreutils adduser
-    - adduser --home /home/travis travis --quiet --disabled-login --gecos ""
+    - adduser --home /home/travis travis --quiet --disabled-login --gecos "" --shell /bin/sh
     - chmod 755 /root
     - chmod -R o+rwX $PWD
     - ./prepare-release travis-ci
@@ -28,6 +28,15 @@ test as root:
   script:
     - CTEST_OUTPUT_ON_FAILURE=1 ninja -C build test
     - unbuffer ./test/integration/run-tests -q -j 4
+
+test solver3:
+  stage: test
+  variables:
+    APT_CMAKE_BUILD_OPTIONS: '-DWITH_DOC=OFF -DUSE_NLS=OFF'
+    DEB_BUILD_PROFILES: 'nodoc'
+  script:
+    - CTEST_OUTPUT_ON_FAILURE=1 ninja -C build test
+    - unbuffer ./test/integration/run-tests -q -j 4 --solver 3.0 --skip solver3.broken
 
 test as user:
   image: i386/debian:testing
