@@ -104,8 +104,8 @@ class Solver
       return verStates[V->ID];
    }
 
-   std::vector<char> verObsolete;
-   bool Obsolete(pkgCache::VerIterator ver);
+   std::vector<char> pkgObsolete;
+   bool Obsolete(pkgCache::PkgIterator pkg);
 
    // \brief Heap of the remaining work.
    //
@@ -218,6 +218,16 @@ struct APT::Solver::Reason
    map_pointer<pkgCache::Version> Ver() const
    {
       return IsVersion ? map_pointer<pkgCache::Version>{(uint32_t)MapPtr} : 0;
+   }
+   // \brief Return the package iterator if storing a package, or an empty one
+   pkgCache::PkgIterator Pkg(pkgCache &cache) const
+   {
+      return IsVersion ? pkgCache::PkgIterator() : pkgCache::PkgIterator(cache, cache.PkgP + Pkg());
+   }
+   // \brief Return the version iterator if storing a package, or an empty end.
+   pkgCache::VerIterator Ver(pkgCache &cache) const
+   {
+      return IsVersion ? pkgCache::VerIterator(cache, cache.VerP + Ver()) : pkgCache::VerIterator();
    }
    // \brief Check if there is no reason.
    bool empty() const
