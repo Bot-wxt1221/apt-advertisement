@@ -4,7 +4,7 @@
 /* ######################################################################
 
    Configuration Class
-   
+
    This class provides a configuration file and command line parser
    for a tree-oriented configuration environment. All runtime configuration
    is stored in here.
@@ -25,7 +25,6 @@
 #include <apt-pkg/fileutl.h>
 #include <apt-pkg/macros.h>
 #include <apt-pkg/strutl.h>
-#include <apt-pkg/string_view.h>
 
 #include <cctype>
 #include <cstddef>
@@ -56,12 +55,14 @@ Configuration *_config = new Configuration;
    but a Cnf-member – but that would need ABI breaks and stuff and for now
    that really is an apt-dev-only tool, so it isn't that bad that it is
    unusable and allaround a bit strange */
-enum class APT_HIDDEN ConfigType { UNDEFINED, INT, BOOL, STRING, STRING_OR_BOOL, STRING_OR_LIST, FILE, DIR, LIST, PROGRAM_PATH = FILE };
+enum class APT_HIDDEN ConfigType { INVALID, UNDEFINED, INT, BOOL, STRING, STRING_OR_BOOL, STRING_OR_LIST, FILE, DIR, LIST, PROGRAM_PATH = FILE };
 APT_HIDDEN std::unordered_map<std::string, ConfigType> apt_known_config {};
+APT_HIDDEN std::vector<std::pair<std::string, ConfigType>> apt_known_config_patterns {};
 static std::string getConfigTypeString(ConfigType const type)		/*{{{*/
 {
    switch (type)
    {
+      case ConfigType::INVALID: return "INVALID";
       case ConfigType::UNDEFINED: return "UNDEFINED";
       case ConfigType::INT: return "INT";
       case ConfigType::BOOL: return "BOOL";
@@ -95,6 +96,8 @@ static ConfigType getConfigType(std::string const &type)		/*{{{*/
       return ConfigType::STRING_OR_LIST;
    else if (type == "<PROGRAM_PATH>")
       return ConfigType::PROGRAM_PATH;
+   else if (type == "<INVALID>")
+      return ConfigType::INVALID;
    return ConfigType::UNDEFINED;
 }
 									/*}}}*/
@@ -102,59 +105,86 @@ static ConfigType getConfigType(std::string const &type)		/*{{{*/
 static void checkFindConfigOptionTypeInternal(std::string name, ConfigType const type)
 {
    std::transform(name.begin(), name.end(), name.begin(), ::tolower);
-   auto known = apt_known_config.find(name);
-   if (known == apt_known_config.cend())
+   bool found = false;
+   ConfigType expectedType = ConfigType::INVALID;
+   if (auto const known = apt_known_config.find(name); known != apt_known_config.cend())
    {
-      auto const rcolon = name.rfind(':');
-      if (rcolon != std::string::npos)
-      {
-	 known = apt_known_config.find(name.substr(0, rcolon) + ":*");
-	 if (known == apt_known_config.cend())
-	 {
-	    auto const parts = StringSplit(name, "::");
-	    size_t psize = parts.size();
-	    if (psize > 1)
-	    {
-	       for (size_t max = psize; max != 1; --max)
-	       {
-		  std::ostringstream os;
-		  std::copy(parts.begin(), parts.begin() + max, std::ostream_iterator<std::string>(os, "::"));
-		  os << "**";
-		  known = apt_known_config.find(os.str());
-		  if (known != apt_known_config.cend() && known->second == ConfigType::UNDEFINED)
-		     return;
-	       }
-	       for (size_t max = psize - 1; max != 1; --max)
-	       {
-		  std::ostringstream os;
-		  std::copy(parts.begin(), parts.begin() + max - 1, std::ostream_iterator<std::string>(os, "::"));
-		  os << "*::";
-		  std::copy(parts.begin() + max + 1, parts.end() - 1, std::ostream_iterator<std::string>(os, "::"));
-		  os << *(parts.end() - 1);
-		  known = apt_known_config.find(os.str());
-		  if (known != apt_known_config.cend())
-		     break;
-	       }
-	    }
-	 }
-      }
+      found = true;
+      expectedType = known->second;
    }
-   if (known == apt_known_config.cend())
+   else
+      for (auto const &known : apt_known_config_patterns)
+      {
+	 std::string_view n{name};
+	 std::string_view k{known.first};
+	 do
+	 {
+	    if (auto star = k.find('*'); star != std::string_view::npos)
+	    {
+	       if (auto nextstar = star + 1; k.length() > nextstar && k[nextstar] == '*')
+		  star -= 3;
+	       if (n.compare(0, star, k, 0, star) != 0)
+		  break;
+	       n.remove_prefix(star);
+	       k.remove_prefix(star + 1);
+	    }
+	    else if (k == n)
+	    {
+	       n = {};
+	       break;
+	    }
+	    else
+	       break;
+
+	    if (k.empty())
+	    {
+	       if (n.find("::") == std::string_view::npos)
+		  n = {};
+	       break;
+	    }
+	    if (k == "::**")
+	    {
+	       if (known.second == ConfigType::UNDEFINED)
+		  return;
+	       n = {};
+	       break;
+	    }
+	    if (k.compare(0, 2, "::") == 0)
+	    {
+	       auto const colons = n.find("::");
+	       if (colons == std::string_view::npos)
+		  break;
+	       n.remove_prefix(colons);
+	    }
+	    else
+	       break;
+	 } while (not n.empty());
+	 if (not n.empty())
+	    continue;
+	 found = true;
+	 expectedType = known.second;
+	 break;
+      }
+
+   if (not found)
       _error->Warning("Using unknown config option »%s« of type %s",
 	    name.c_str(), getConfigTypeString(type).c_str());
-   else if (known->second != type)
+   else if (expectedType != type)
    {
-      if (known->second == ConfigType::DIR && type == ConfigType::FILE)
+      if (expectedType == ConfigType::INVALID)
+	 _error->Warning("Using invalid config option »%s« as a type %s",
+	       name.c_str(), getConfigTypeString(type).c_str());
+      if (expectedType == ConfigType::DIR && type == ConfigType::FILE)
 	 ; // implementation detail
-      else if (type == ConfigType::STRING && (known->second == ConfigType::FILE || known->second == ConfigType::DIR))
+      else if (type == ConfigType::STRING && (expectedType == ConfigType::FILE || expectedType == ConfigType::DIR))
 	 ; // TODO: that might be an error or not, we will figure this out later
-      else if (known->second == ConfigType::STRING_OR_BOOL && (type == ConfigType::BOOL || type == ConfigType::STRING))
+      else if (expectedType == ConfigType::STRING_OR_BOOL && (type == ConfigType::BOOL || type == ConfigType::STRING))
 	 ;
-      else if (known->second == ConfigType::STRING_OR_LIST && (type == ConfigType::LIST || type == ConfigType::STRING))
+      else if (expectedType == ConfigType::STRING_OR_LIST && (type == ConfigType::LIST || type == ConfigType::STRING))
 	 ;
       else
 	 _error->Warning("Using config option »%s« of type %s as a type %s",
-	       name.c_str(), getConfigTypeString(known->second).c_str(), getConfigTypeString(type).c_str());
+	       name.c_str(), getConfigTypeString(expectedType).c_str(), getConfigTypeString(type).c_str());
    }
 }
 static void checkFindConfigOptionType(char const * const name, ConfigType const type)
@@ -167,6 +197,7 @@ static void checkFindConfigOptionType(char const * const name, ConfigType const 
 static bool LoadConfigurationIndex(std::string const &filename)		/*{{{*/
 {
    apt_known_config.clear();
+   apt_known_config_patterns.clear();
    if (filename.empty())
       return true;
    Configuration Idx;
@@ -182,7 +213,10 @@ static bool LoadConfigurationIndex(std::string const &filename)		/*{{{*/
       {
 	 std::string fulltag = Top->FullTag();
 	 std::transform(fulltag.begin(), fulltag.end(), fulltag.begin(), ::tolower);
-	 apt_known_config.emplace(std::move(fulltag), getConfigType(Top->Value));
+	 if (fulltag.find("::*") == std::string::npos)
+	    apt_known_config.emplace(std::move(fulltag), getConfigType(Top->Value));
+	 else
+	    apt_known_config_patterns.emplace_back(std::move(fulltag), getConfigType(Top->Value));
       }
 
       if (Top->Child != nullptr)
@@ -219,7 +253,7 @@ Configuration::~Configuration()
 {
    if (ToFree == false)
       return;
-   
+
    Item *Top = Root;
    for (; Top != 0;)
    {
@@ -228,13 +262,13 @@ Configuration::~Configuration()
 	 Top = Top->Child;
 	 continue;
       }
-            
+
       while (Top != 0 && Top->Next == 0)
       {
 	 Item *Parent = Top->Parent;
 	 delete Top;
 	 Top = Parent;
-      }      
+      }
       if (Top != 0)
       {
 	 Item *Next = Top->Next;
@@ -246,7 +280,7 @@ Configuration::~Configuration()
 									/*}}}*/
 // Configuration::Lookup - Lookup a single item				/*{{{*/
 // ---------------------------------------------------------------------
-/* This will lookup a single item by name below another item. It is a 
+/* This will lookup a single item by name below another item. It is a
    helper function for the main lookup function */
 Configuration::Item *Configuration::Lookup(Item *Head,const char *S,
 					   unsigned long const &Len,bool const &Create)
@@ -254,7 +288,7 @@ Configuration::Item *Configuration::Lookup(Item *Head,const char *S,
    int Res = 1;
    Item *I = Head->Child;
    Item **Last = &Head->Child;
-   
+
    // Empty strings match nothing. They are used for lists.
    if (Len != 0)
    {
@@ -264,12 +298,12 @@ Configuration::Item *Configuration::Lookup(Item *Head,const char *S,
    }
    else
       for (; I != 0; Last = &I->Next, I = I->Next);
-      
+
    if (Res == 0)
       return I;
    if (Create == false)
       return 0;
-   
+
    I = new Item;
    I->Tag.assign(S,Len);
    I->Next = *Last;
@@ -286,7 +320,7 @@ Configuration::Item *Configuration::Lookup(const char *Name,bool const &Create)
 {
    if (Name == 0)
       return Root->Child;
-   
+
    const char *Start = Name;
    const char *End = Start + strlen(Name);
    const char *TagEnd = Name;
@@ -298,9 +332,9 @@ Configuration::Item *Configuration::Lookup(const char *Name,bool const &Create)
 	 Itm = Lookup(Itm,Start,TagEnd - Start,Create);
 	 if (Itm == 0)
 	    return 0;
-	 TagEnd = Start = TagEnd + 2;	 
+	 TagEnd = Start = TagEnd + 2;
       }
-   }   
+   }
 
    // This must be a trailing ::, we create unique items in a list
    if (End - Start == 0)
@@ -308,7 +342,7 @@ Configuration::Item *Configuration::Lookup(const char *Name,bool const &Create)
       if (Create == false)
 	 return 0;
    }
-   
+
    Itm = Lookup(Itm,Start,End - Start,Create);
    return Itm;
 }
@@ -327,7 +361,7 @@ string Configuration::Find(const char *Name,const char *Default) const
       else
 	 return Default;
    }
-   
+
    return Itm->Value;
 }
 									/*}}}*/
@@ -440,12 +474,12 @@ int Configuration::FindI(const char *Name,int const &Default) const
    const Item *Itm = Lookup(Name);
    if (Itm == 0 || Itm->Value.empty() == true)
       return Default;
-   
+
    char *End;
    int Res = strtol(Itm->Value.c_str(),&End,0);
    if (End == Itm->Value.c_str())
       return Default;
-   
+
    return Res;
 }
 									/*}}}*/
@@ -458,7 +492,7 @@ bool Configuration::FindB(const char *Name,bool const &Default) const
    const Item *Itm = Lookup(Name);
    if (Itm == 0 || Itm->Value.empty() == true)
       return Default;
-   
+
    return StringToBool(Itm->Value,Default);
 }
 									/*}}}*/
@@ -479,19 +513,19 @@ string Configuration::FindAny(const char *Name,const char *Default) const
    switch (type)
    {
       // file
-      case 'f': 
+      case 'f':
       return FindFile(key.c_str(), Default);
-      
+
       // directory
-      case 'd': 
+      case 'd':
       return FindDir(key.c_str(), Default);
-      
+
       // bool
-      case 'b': 
+      case 'b':
       return FindB(key, Default) ? "true" : "false";
-      
+
       // int
-      case 'i': 
+      case 'i':
       {
 	 char buf[16];
 	 snprintf(buf, sizeof(buf)-1, "%d", FindI(key, Default ? atoi(Default) : 0 ));
@@ -590,7 +624,7 @@ void Configuration::Clear(string const &Name, string const &Value)
 	 I = I->Next;
       }
    }
-     
+
 }
 									/*}}}*/
 // Configuration::Clear - Clear everything				/*{{{*/
@@ -611,7 +645,7 @@ void Configuration::Clear()
 void Configuration::Clear(string const &Name)
 {
    Item *Top = Lookup(Name.c_str(),false);
-   if (Top == 0) 
+   if (Top == 0)
       return;
 
    Top->Value.clear();
@@ -631,11 +665,11 @@ void Configuration::Clear(string const &Name)
 	 Item *Tmp = Top;
 	 Top = Top->Parent;
 	 delete Tmp;
-	 
+
 	 if (Top == Stop)
 	    return;
       }
-      
+
       Item *Tmp = Top;
       if (Top != 0)
 	 Top = Top->Next;
@@ -827,10 +861,10 @@ string Configuration::Item::FullTag(const Item *Stop) const
 // ReadConfigFile - Read a configuration file				/*{{{*/
 // ---------------------------------------------------------------------
 /* The configuration format is very much like the named.conf format
-   used in bind8, in fact this routine can parse most named.conf files. 
-   Sectional config files are like bind's named.conf where there are 
+   used in bind8, in fact this routine can parse most named.conf files.
+   Sectional config files are like bind's named.conf where there are
    sections like 'zone "foo.org" { .. };' This causes each section to be
-   added in with a tag like "zone::foo.org" instead of being split 
+   added in with a tag like "zone::foo.org" instead of being split
    tag/value. AsSectional enables Sectional parsing.*/
 static void leaveCurrentScope(std::stack<std::string> &Stack, std::string &ParentTag)
 {
@@ -873,13 +907,13 @@ bool ReadConfigFile(Configuration &Conf,const string &FName,bool const &AsSectio
 
       // Now strip comments; if the whole line is contained in a
       // comment, skip this line.
-      APT::StringView Line{Input.data(), Input.size()};
+      std::string_view Line{Input.data(), Input.size()};
 
       // continued Multi line comment
       if (InComment)
       {
 	 size_t end = Line.find("*/");
-	 if (end != APT::StringView::npos)
+	 if (end != std::string_view::npos)
 	 {
 	    Line.remove_prefix(end + 2);
 	    InComment = false;
@@ -891,7 +925,7 @@ bool ReadConfigFile(Configuration &Conf,const string &FName,bool const &AsSectio
       // Discard single line comments
       {
 	 size_t start = 0;
-	 while ((start = Line.find("//", start)) != APT::StringView::npos)
+	 while ((start = Line.find("//", start)) != std::string_view::npos)
 	 {
 	    if (std::count(Line.begin(), Line.begin() + start, '"') % 2 != 0)
 	    {
@@ -901,10 +935,10 @@ bool ReadConfigFile(Configuration &Conf,const string &FName,bool const &AsSectio
 	    Line.remove_suffix(Line.length() - start);
 	    break;
 	 }
-	 using APT::operator""_sv;
-	 constexpr std::array<APT::StringView, 3> magicComments { "clear"_sv, "include"_sv, "x-apt-configure-index"_sv };
+	 using std::literals::operator""sv;
+	 constexpr std::array<std::string_view, 3> magicComments { "clear"sv, "include"sv, "x-apt-configure-index"sv };
 	 start = 0;
-	 while ((start = Line.find('#', start)) != APT::StringView::npos)
+	 while ((start = Line.find('#', start)) != std::string_view::npos)
 	 {
 	    if (std::count(Line.begin(), Line.begin() + start, '"') % 2 != 0 ||
 		std::any_of(magicComments.begin(), magicComments.end(), [&](auto const m) { return Line.compare(start+1, m.length(), m) == 0; }))
@@ -922,7 +956,7 @@ bool ReadConfigFile(Configuration &Conf,const string &FName,bool const &AsSectio
       Fragment.reserve(Line.length());
       {
 	 size_t start = 0;
-	 while ((start = Line.find("/*", start)) != APT::StringView::npos)
+	 while ((start = Line.find("/*", start)) != std::string_view::npos)
 	 {
 	    if (std::count(Line.begin(), Line.begin() + start, '"') % 2 != 0)
 	    {
@@ -931,9 +965,9 @@ bool ReadConfigFile(Configuration &Conf,const string &FName,bool const &AsSectio
 	    }
 	    Fragment.append(Line.data(), start);
 	    auto const end = Line.find("*/", start + 2);
-	    if (end == APT::StringView::npos)
+	    if (end == std::string_view::npos)
 	    {
-	       Line.clear();
+	       Line = {};
 	       InComment = true;
 	       break;
 	    }

@@ -3,17 +3,17 @@
 /* ######################################################################
 
    Fast scanner for RFC-822 type header information
-   
+
    This parser handles Debian package files (and others). Their form is
    RFC-822 type header fields in groups separated by a blank line.
-   
+
    The parser reads the file and provides methods to step linearly
    over it or to jump to a pre-recorded start point and read that record.
-   
+
    A second class is used to perform pre-parsing of the record. It works
-   by indexing the start of each header field and providing lookup 
+   by indexing the start of each header field and providing lookup
    functions for header fields.
-   
+
    ##################################################################### */
 									/*}}}*/
 #ifndef PKGLIB_TAGFILE_H
@@ -67,8 +67,8 @@ class APT_PUBLIC pkgTagSection
    inline bool operator !=(const pkgTagSection &rhs) {return Section != rhs.Section;};
 
    // TODO: Remove internally
-   std::string FindS(APT::StringView sv) const { return Find(sv).to_string(); }
-   std::string FindRawS(APT::StringView sv) const { return FindRaw(sv).to_string(); };
+   std::string FindS(APT::StringView sv) const { return std::string{Find(sv)}; }
+   std::string FindRawS(APT::StringView sv) const { return std::string{FindRaw(sv)}; };
 
    // Functions for lookup with a perfect hash function
    enum class Key;
@@ -120,7 +120,7 @@ class APT_PUBLIC pkgTagSection
     * @return \b true if section end was found, \b false otherwise.
     *  Beware that internal state will be inconsistent if \b false is returned!
     */
-   APT_MUSTCHECK bool Scan(const char *Start, unsigned long MaxLength, bool const Restart = true);
+   [[nodiscard]] bool Scan(const char *Start, unsigned long MaxLength, bool const Restart = true);
 
    inline unsigned long size() const {return Stop - Section;};
    void Trim();
@@ -150,11 +150,17 @@ class APT_PUBLIC pkgTagSection
       std::string Name;
       std::string Data;
 
+#if APT_PKG_ABI > 600
+      static Tag Remove(std::string_view Name);
+      static Tag Rename(std::string_view OldName, std::string_view NewName);
+      static Tag Rewrite(std::string_view Name, std::string_view Data);
+#else
       static Tag Remove(std::string const &Name);
       static Tag Rename(std::string const &OldName, std::string const &NewName);
       static Tag Rewrite(std::string const &Name, std::string const &Data);
+#endif
       private:
-      Tag(ActionType const Action, std::string const &Name, std::string const &Data) :
+      Tag(ActionType const Action, std::string_view Name, std::string_view Data) :
 	 Action(Action), Name(Name), Data(Data) {}
    };
 
@@ -201,11 +207,11 @@ public:
       SUPPORT_COMMENTS = 1 << 0,
    };
 
-   void Init(FileFd * const F, pkgTagFile::Flags const Flags, unsigned long long Size = 32*1024);
-   void Init(FileFd * const F,unsigned long long const Size = 32*1024);
+   void Init(FileFd * const F, pkgTagFile::Flags const Flags, unsigned long long Size = APT_BUFFER_SIZE);
+   void Init(FileFd * const F,unsigned long long const Size = APT_BUFFER_SIZE);
 
-   pkgTagFile(FileFd * const F, pkgTagFile::Flags const Flags, unsigned long long Size = 32*1024);
-   pkgTagFile(FileFd * const F,unsigned long long Size = 32*1024);
+   pkgTagFile(FileFd * const F, pkgTagFile::Flags const Flags, unsigned long long Size = APT_BUFFER_SIZE);
+   pkgTagFile(FileFd * const F,unsigned long long Size = APT_BUFFER_SIZE);
    virtual ~pkgTagFile();
 };
 

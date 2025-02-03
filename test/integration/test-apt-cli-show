@@ -28,6 +28,10 @@ setupaptarchive
 
 APTARCHIVE=$(readlink -f ./aptarchive)
 
+testfailureequal "N: Unable to locate package :
+N: Unable to locate package :
+E: No packages found" apt show :
+
 # note that we do not display Description-md5 with the "apt" cmd
 # and also show some additional fields that are calculated
 testsuccessequal "Package: foo
@@ -53,6 +57,9 @@ SHA256: 0000000000000000000000000000000000000000000000000000000000000000
 Download-Size: 42 B
 APT-Manual-Installed: yes
 APT-Sources: file:$APTARCHIVE unstable/main all Packages
+APT-Pin: 500
+APT-Candidate: yes
+APT-Release: a=unstable,n=sid,c=main,b=all
 Description: Some description
  That has multiple lines
 " apt show foo --full

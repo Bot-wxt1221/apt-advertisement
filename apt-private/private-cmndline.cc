@@ -192,6 +192,7 @@ static bool addArgumentsAPTGet(std::vector<CommandLine::Args> &Args, char const 
       addArg(0, "solver", "APT::Solver", CommandLine::HasArg);
       addArg(0, "strict-pinning", "APT::Solver::Strict-Pinning", 0);
       addArg(0, "planner", "APT::Planner", CommandLine::HasArg);
+      addArg(0, "comment", "APT::History::Comment", CommandLine::HasArg);
       addArg('U', "update", "APT::Update", 0);
       if (CmdMatches("upgrade"))
       {
@@ -353,6 +354,8 @@ static bool addArgumentsAPT(std::vector<CommandLine::Args> &Args, char const * c
       addArg(0,"manual-installed","APT::Cmd::Manual-Installed",0);
       addArg('v', "verbose", "APT::Cmd::List-Include-Summary", 0);
       addArg('a', "all-versions", "APT::Cmd::All-Versions", 0);
+      addArg('t', "target-release", "APT::Default-Release", CommandLine::HasArg);
+      addArg('t', "default-release", "APT::Default-Release", CommandLine::HasArg);
       addArg('S', "snapshot", "APT::Snapshot", CommandLine::HasArg);
    }
    else if (CmdMatches("show") || CmdMatches("info"))
@@ -506,6 +509,7 @@ static void BinarySpecificConfiguration(char const * const Binary)	/*{{{*/
       _config->CndSet("Binary::apt::APT::Keep-Downloaded-Packages", false);
       _config->CndSet("Binary::apt::APT::Get::Update::InteractiveReleaseInfoChanges", true);
       _config->CndSet("Binary::apt::APT::Cmd::Pattern-Only", true);
+      _config->CndSet("Binary::apt::Pager", true);
 
       if (isatty(STDIN_FILENO))
          _config->CndSet("Binary::apt::Dpkg::Lock::Timeout", -1);

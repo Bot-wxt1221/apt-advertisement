@@ -4,8 +4,12 @@ Depends: libapt-pkg-dev, pkg-config, g++
 
 Tests: run-tests
 Restrictions: allow-stderr
-Depends: @, @builddeps@, dpkg (>= 1.20.8), fakeroot, wget, stunnel4, lsof, db-util,
-         gnupg (>= 2) | gnupg2, gnupg1 | gnupg (<< 2),
-         gpgv (>= 2) | gpgv2, gpgv1 | gpgv (<< 2),
+Depends: @, @builddeps@, dpkg (>= 1.20.8), expect, fakeroot, wget, stunnel4, lsof, db-util,
+         gpgv,
+         gpgv-sq,
+         sq (>= 0.40),
+         sqv,
+         moreutils,
+         jq,
          libfile-fcntllock-perl, python3-apt, aptitude,
-         valgrind, gdb-minimal | gdb
+         valgrind-if-available [!armhf !ppc64el], gdb

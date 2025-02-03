@@ -14,6 +14,8 @@
 
 #include <iostream>
 #include <string>
+#include <unordered_map>
+#include <vector>
 
 class APT_PUBLIC AcqTextStatus : public pkgAcquireStatus
 {
@@ -22,22 +24,22 @@ class APT_PUBLIC AcqTextStatus : public pkgAcquireStatus
    size_t LastLineLength;
    unsigned long ID;
    unsigned long Quiet;
+   std::unordered_map<unsigned long, std::vector<std::string>> IgnoredErrorTexts;
 
    APT_HIDDEN void clearLastLine();
    APT_HIDDEN void AssignItemID(pkgAcquire::ItemDesc &Itm);
 
    public:
+   bool ReleaseInfoChanges(metaIndex const *LastRelease, metaIndex const *CurrentRelease, std::vector<ReleaseInfoChange> &&Changes) override;
+   bool MediaChange(std::string Media, std::string Drive) override;
+   void IMSHit(pkgAcquire::ItemDesc &Itm) override;
+   void Fetch(pkgAcquire::ItemDesc &Itm) override;
+   void Done(pkgAcquire::ItemDesc &Itm) override;
+   void Fail(pkgAcquire::ItemDesc &Itm) override;
+   void Start() override;
+   void Stop() override;
 
-   virtual bool ReleaseInfoChanges(metaIndex const * const LastRelease, metaIndex const * const CurrentRelease, std::vector<ReleaseInfoChange> &&Changes) APT_OVERRIDE;
-   virtual bool MediaChange(std::string Media,std::string Drive) APT_OVERRIDE;
-   virtual void IMSHit(pkgAcquire::ItemDesc &Itm) APT_OVERRIDE;
-   virtual void Fetch(pkgAcquire::ItemDesc &Itm) APT_OVERRIDE;
-   virtual void Done(pkgAcquire::ItemDesc &Itm) APT_OVERRIDE;
-   virtual void Fail(pkgAcquire::ItemDesc &Itm) APT_OVERRIDE;
-   virtual void Start() APT_OVERRIDE;
-   virtual void Stop() APT_OVERRIDE;
-
-   bool Pulse(pkgAcquire *Owner) APT_OVERRIDE;
+   bool Pulse(pkgAcquire *Owner) override;
 
    AcqTextStatus(std::ostream &out, unsigned int &ScreenWidth,unsigned int const Quiet);
 };

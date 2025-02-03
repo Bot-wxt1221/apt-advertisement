@@ -16,11 +16,8 @@ Comment:
  for the project has always been GPL-2+, so we cannot be sure that contributors
  meant to grant additional permissions.
  .
- Translation files are considered to generally be GPL-2+,
- but they also include strings used by methods/rsh.cc which appears to be GPL-2.
- As the translations are split into separate domains later on,
- these strings are not loaded by library users outside of apt
- (they are in the 'apt' translation domain).
+ Translation files are also considered to generally be GPL-2+,
+ but they might include strings used in code with other licenses.
  .
  The apt-pkg/contrib/fileutl.cc file states "RunScripts()" is "GPLv2".
  We believe that this was not meant to exclude later versions of the GPL,
@@ -52,22 +49,9 @@ Copyright: 1997-1999 Jason Gunthorpe and others
            2014 Anthony Towns
 License: GPL-2+
 
-Files: methods/rsh.cc
-Copyright: 2000 Ben Collins <bcollins@debian.org>
-License: GPL-2
-Comment:
- This file stated:
- Licensed under the GNU General Public License v2 [no exception clauses]
- .
- We believe that this was intended to be not a statement against future
- versions of the GPL, but meant to exclude the Qt license exception in
- place in APT until that time.
- .
- We received permission from Ben in 2021 to relicense under GPL-2+,
- contributions from Adam Heath and Daniel Hartwig may still have to
- be considered GPL-2 for the time being.
- .
- Other contributions are GPL-2+
+Files: methods/connect.c
+Copyright: Copyright (c) 1996 - 2023, Daniel Stenberg, <daniel@haxx.se>, and many contributors
+License: GPL-2+ and curl
 
 Files: CMake/FindBerkeley.cmake
 Copyright: 2006, Alexander Dymo, <adymo@kdevelop.org>
@@ -153,3 +137,20 @@ License: GPL-2+
 Comment:
  On Debian systems, the complete text of the GNU General
  Public License version 2 can be found in "/usr/share/common-licenses/GPL-2".
+
+License: curl
+ Permission to use, copy, modify, and distribute this software for any purpose
+ with or without fee is hereby granted, provided that the above copyright
+ notice and this permission notice appear in all copies.
+ .
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT OF THIRD PARTY RIGHTS. IN
+ NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+ OR OTHER DEALINGS IN THE SOFTWARE.
+ .
+ Except as contained in this notice, the name of a copyright holder shall not
+ be used in advertising or otherwise to promote the sale, use or other dealings
+ in this Software without prior written authorization of the copyright holder.

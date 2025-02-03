@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt 1.0.5\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2024-07-30 04:29+0000\n"
+"POT-Creation-Date: 2025-01-28 18:52+0000\n"
 "PO-Revision-Date: 2010-08-30 02:31+0900\n"
 "Last-Translator: Changwoo Ryu <cwryu@debian.org>\n"
 "Language-Team: Korean <debian-l10n-korean@lists.debian.org>\n"
@@ -48,8 +48,8 @@ msgstr "%s 디렉터리가 전환되었습니다"
 
 #: apt-pkg/acquire-item.cc
 msgid ""
-"This is normally not allowed, but the option Acquire::"
-"AllowDowngradeToInsecureRepositories was given to override it."
+"This is normally not allowed, but the option "
+"Acquire::AllowDowngradeToInsecureRepositories was given to override it."
 msgstr ""
 
 #: apt-pkg/acquire-item.cc
@@ -180,8 +180,7 @@ msgstr ""
 msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr "배포판 충돌: %s (예상값 %s, 실제값 %s)"
 
-#. Both messages are reused from the ReleaseInfoChange feature in acquire-item.cc
-#: apt-pkg/acquire-item.cc apt-private/private-update.cc
+#: apt-pkg/acquire-item.cc
 #, c-format
 msgid "Repository '%s' changed its '%s' value from '%s' to '%s'"
 msgstr ""
@@ -192,7 +191,7 @@ msgid "Repository '%s' changed its default priority for %s from %hi to %hi."
 msgstr ""
 
 #. TRANSLATOR: the "this" refers to changes in the repository like a new release or owner change
-#: apt-pkg/acquire-item.cc apt-private/private-update.cc
+#: apt-pkg/acquire-item.cc
 #, c-format
 msgid ""
 "More information about this can be found online in the Release notes at: %s"
@@ -237,13 +236,6 @@ msgstr ""
 #, fuzzy, c-format
 msgid "Changelog unavailable for %s=%s"
 msgstr "%s(%s)에 연결하는 중입니다"
-
-#: apt-pkg/acquire-worker.cc
-#, c-format
-msgid ""
-"The method '%s' is unsupported and disabled by default. Consider switching "
-"to http(s). Set Dir::Bin::Methods::%s to \"%s\" to enable it again."
-msgstr ""
 
 #: apt-pkg/acquire-worker.cc
 #, c-format
@@ -765,11 +757,11 @@ msgstr "하위 프로세스 %s 프로세스가 오류 코드(%u)를 리턴했습
 msgid "Sub-process %s exited unexpectedly"
 msgstr "하위 프로세스 %s 프로세스가 예상치 못하게 끝났습니다"
 
-#: apt-pkg/contrib/fileutl.cc methods/ftp.cc methods/rsh.cc
+#: apt-pkg/contrib/fileutl.cc
 msgid "Read error"
 msgstr "읽기 오류"
 
-#: apt-pkg/contrib/fileutl.cc methods/ftp.cc methods/rsh.cc
+#: apt-pkg/contrib/fileutl.cc
 msgid "Write error"
 msgstr "쓰기 오류"
 
@@ -1085,6 +1077,12 @@ msgstr "관리 디렉터리를 (%s) 잠글 수 없습니다. 루트 사용자가
 #: apt-pkg/deb/debsystem.cc
 msgid "Not locked"
 msgstr "잠기지 않음"
+
+#: apt-pkg/deb/debsystem.cc
+msgid ""
+"The dpkg executable set in Dir::Bin::dpkg is missing, falling back to using "
+"default dpkg."
+msgstr ""
 
 #. we don't care for the difference
 #: apt-pkg/deb/dpkgpm.cc
@@ -2395,7 +2393,7 @@ msgid "Y"
 msgstr "Y"
 
 #. TRANSLATOR: "No" answer printed for a yes/no question if --assume-no is set
-#: apt-private/private-output.cc
+#: apt-private/private-output.cc apt-private/private-sources.cc
 msgid "N"
 msgstr ""
 
@@ -2572,8 +2570,8 @@ msgstr "%s 패키지에 빌드 의존성이 없습니다.\n"
 #: apt-private/private-source.cc
 #, c-format
 msgid ""
-"No architecture information available for %s. See apt.conf(5) APT::"
-"Architectures for setup"
+"No architecture information available for %s. See apt.conf(5) "
+"APT::Architectures for setup"
 msgstr ""
 
 #: apt-private/private-source.cc
@@ -2610,6 +2608,11 @@ msgstr "%s 파일의 이름을 %s(으)로 바꾸는데 실패했습니다"
 msgid "Your '%s' file changed, please run 'apt-get update'.\n"
 msgstr ""
 
+#: apt-private/private-sources.cc
+#, c-format
+msgid "Rewrite %zu sources?"
+msgstr ""
+
 #: apt-private/private-unmet.cc
 #, c-format
 msgid "Package %s version %s has an unmet dep:\n"
@@ -2630,7 +2633,32 @@ msgstr ""
 #. TRANSLATOR: the first is manpage reference, the last the URI from a sources.list
 #: apt-private/private-update.cc
 #, c-format
+msgid "The %s entry for '%s' should be upgraded to deb822 .sources"
+msgstr ""
+
+#. TRANSLATOR: the first is manpage reference, the last the URI from a sources.list
+#: apt-private/private-update.cc
+#, c-format
 msgid "Missing Signed-By in the %s entry for '%s'"
+msgstr ""
+
+#: apt-private/private-update.cc
+msgid ""
+"Consider migrating all sources.list(5) entries to the deb822 .sources format"
+msgstr ""
+
+#: apt-private/private-update.cc
+msgid ""
+"The deb822 .sources format supports both embedded as well as external "
+"OpenPGP keys"
+msgstr ""
+
+#: apt-private/private-update.cc
+msgid "See apt-secure(8) for best practices in configuring repository signing."
+msgstr ""
+
+#: apt-private/private-update.cc
+msgid "Some sources can be modernized. Run 'apt modernize-sources' to do so."
 msgstr ""
 
 #: apt-private/private-update.cc
@@ -3005,6 +3033,12 @@ msgid "concatenate files, with automatic decompression"
 msgstr ""
 
 #: cmdline/apt-helper.cc
+#, fuzzy
+#| msgid "Problem hashing file"
+msgid "hash file"
+msgstr "파일 해싱에 문제가 있습니다"
+
+#: cmdline/apt-helper.cc
 msgid "detect proxy using apt.conf"
 msgstr ""
 
@@ -3252,6 +3286,10 @@ msgid "edit the source information file"
 msgstr "상태 정보를 읽는 중입니다"
 
 #: cmdline/apt.cc
+msgid "modernize .list files to .sources files"
+msgstr ""
+
+#: cmdline/apt.cc
 #, fuzzy
 #| msgid "Failed to satisfy %s dependency for %s: %s"
 msgid "satisfy dependency strings"
@@ -3455,7 +3493,7 @@ msgstr "'%s' 압축 알고리즘을 알 수 없습니다"
 msgid "Compressed output %s needs a compression set"
 msgstr "압축된 출력물 %s에는 압축 세트가 필요합니다"
 
-#: ftparchive/multicompress.cc methods/rsh.cc
+#: ftparchive/multicompress.cc
 msgid "Failed to create IPC pipe to subprocess"
 msgstr "하위 프로세스에 대한 IPC 파이프를 만드는데 실패했습니다"
 
@@ -3575,23 +3613,23 @@ msgstr "아카이브에 패키지 필드가 없습니다"
 
 #: ftparchive/writer.cc
 #, c-format
-msgid "  %s has no override entry\n"
-msgstr "  %s에는 override 항목이 없습니다\n"
+msgid "  %.*s has no override entry\n"
+msgstr "  %.*s에는 override 항목이 없습니다\n"
 
 #: ftparchive/writer.cc
 #, c-format
-msgid "  %s maintainer is %s not %s\n"
-msgstr "  %s 관리자가 %s입니다 (%s 아님)\n"
+msgid "  %.*s maintainer is %.*s not %s\n"
+msgstr "  %.*s 관리자가 %.*s입니다 (%s 아님)\n"
 
 #: ftparchive/writer.cc
 #, c-format
-msgid "  %s has no source override entry\n"
-msgstr "  %s에는 source override 항목이 없습니다\n"
+msgid "  %.*s has no source override entry\n"
+msgstr "  %.*s에는 source override 항목이 없습니다\n"
 
 #: ftparchive/writer.cc
 #, c-format
-msgid "  %s has no binary override entry either\n"
-msgstr "  %s에는 binary override 항목이 없습니다\n"
+msgid "  %.*s has no binary override entry either\n"
+msgstr "  %.*s에는 binary override 항목이 없습니다\n"
 
 #: methods/basehttp.cc
 msgid "Waiting for headers"
@@ -3629,7 +3667,7 @@ msgstr "헤더 데이터가 잘못되었습니다"
 msgid "Connection failed"
 msgstr "연결이 실패했습니다"
 
-#: methods/basehttp.cc methods/ftp.cc methods/http.cc
+#: methods/basehttp.cc methods/http.cc
 #, c-format
 msgid "File has unexpected size (%llu != %llu). Mirror sync in progress?"
 msgstr ""
@@ -3671,7 +3709,7 @@ msgstr "%s 안의 CD-ROM을 마운트 해제할 수 없습니다. 사용 중일 
 msgid "Disk not found."
 msgstr "디스크가 없습니다."
 
-#: methods/cdrom.cc methods/file.cc methods/rsh.cc
+#: methods/cdrom.cc methods/file.cc
 msgid "File not found"
 msgstr "파일이 없습니다"
 
@@ -3707,7 +3745,7 @@ msgstr "%s에 대한 소켓을 만들 수 없습니다 (f=%u t=%u p=%u)"
 msgid "Cannot initiate the connection to %s:%s (%s)."
 msgstr "%s:%s에 연결을 초기화할 수 없습니다 (%s)."
 
-#: methods/connect.cc methods/ftp.cc methods/rsh.cc
+#: methods/connect.cc
 msgid "Failed"
 msgstr "실패"
 
@@ -3721,9 +3759,7 @@ msgstr "%s:%s에 연결할 수 없습니다 (%s)."
 msgid "Could not connect to %s:%s (%s), connection timed out"
 msgstr "%s:%s에 연결할 수 없습니다 (%s). 연결 제한 시간이 초과했습니다"
 
-#. We say this mainly because the pause here is for the
-#. ssh connection that is still going
-#: methods/connect.cc methods/rsh.cc
+#: methods/connect.cc
 #, c-format
 msgid "Connecting to %s"
 msgstr "%s에 연결하는 중입니다"
@@ -3761,145 +3797,6 @@ msgstr "파일 정보를 읽는데 실패했습니다"
 msgid "Invalid URI, local URIS must not start with //"
 msgstr "URI가 틀렸습니다. 로컬 URI는 //로 시작해야 합니다."
 
-#. Login must be before getpeername otherwise dante won't work.
-#: methods/ftp.cc
-msgid "Logging in"
-msgstr "로그인하는 중입니다"
-
-#: methods/ftp.cc
-msgid "Unable to determine the peer name"
-msgstr "상대방의 이름을 알 수 없습니다"
-
-#: methods/ftp.cc
-msgid "Unable to determine the local name"
-msgstr "로컬 이름을 알 수 없습니다"
-
-#: methods/ftp.cc
-#, c-format
-msgid "The server refused the connection and said: %s"
-msgstr "서버에서 다음과 같이 연결을 거부했습니다: %s"
-
-#: methods/ftp.cc
-#, c-format
-msgid "USER failed, server said: %s"
-msgstr "USER 실패, 서버에서는: %s"
-
-#: methods/ftp.cc
-#, c-format
-msgid "PASS failed, server said: %s"
-msgstr "PASS 실패, 서버에서는: %s"
-
-#: methods/ftp.cc
-msgid ""
-"A proxy server was specified but no login script, Acquire::ftp::ProxyLogin "
-"is empty."
-msgstr ""
-"프록시 서버를 지정했지만 로그인 스크립트가 없습니다. Acquire::ftp::"
-"ProxyLogin 값이 비어 있습니다."
-
-#: methods/ftp.cc
-#, c-format
-msgid "Login script command '%s' failed, server said: %s"
-msgstr "로그인 스크립트 명령 '%s' 실패, 서버에서는: %s"
-
-#: methods/ftp.cc
-#, c-format
-msgid "TYPE failed, server said: %s"
-msgstr "TYPE 실패, 서버에서는: %s"
-
-#: methods/ftp.cc methods/rsh.cc
-msgid "Connection timeout"
-msgstr "연결 시간 초과"
-
-#: methods/ftp.cc
-msgid "Server closed the connection"
-msgstr "서버에서 연결을 닫았습니다"
-
-#: methods/ftp.cc methods/rsh.cc
-msgid "A response overflowed the buffer."
-msgstr "응답이 버퍼 크기를 넘어갔습니다."
-
-#: methods/ftp.cc
-msgid "Protocol corruption"
-msgstr "프로토콜이 틀렸습니다"
-
-#: methods/ftp.cc
-msgid "Could not create a socket"
-msgstr "소켓을 만들 수 없습니다"
-
-#: methods/ftp.cc
-msgid "Could not connect data socket, connection timed out"
-msgstr "데이터 소켓을 연결할 수 없습니다. 연결 시간이 초과되었습니다"
-
-#: methods/ftp.cc
-msgid "Could not connect passive socket."
-msgstr "수동(passive) 소켓을 연결할 수 없습니다."
-
-#: methods/ftp.cc
-msgid "getaddrinfo was unable to get a listening socket"
-msgstr "getaddrinfo에서 소켓에 listen할 수 없습니다"
-
-#: methods/ftp.cc
-msgid "Could not bind a socket"
-msgstr "소켓을 bind할 수 없습니다"
-
-#: methods/ftp.cc
-msgid "Could not listen on the socket"
-msgstr "소켓에 listen할 수 없습니다"
-
-#: methods/ftp.cc
-msgid "Could not determine the socket's name"
-msgstr "소켓의 이름을 알아낼 수 없습니다"
-
-#: methods/ftp.cc
-msgid "Unable to send PORT command"
-msgstr "PORT 명령을 보낼 수 없습니다"
-
-#: methods/ftp.cc
-#, c-format
-msgid "Unknown address family %u (AF_*)"
-msgstr "주소 %u의 종류(AF_*)를 알 수 없습니다"
-
-#: methods/ftp.cc
-#, c-format
-msgid "EPRT failed, server said: %s"
-msgstr "EPRT 실패, 서버에서는: %s"
-
-#: methods/ftp.cc
-msgid "Data socket connect timed out"
-msgstr "데이터 소켓 연결 시간 초과"
-
-#: methods/ftp.cc
-msgid "Unable to accept connection"
-msgstr "연결을 받을 수 없습니다"
-
-#: methods/ftp.cc methods/http.cc methods/rsh.cc
-msgid "Problem hashing file"
-msgstr "파일 해싱에 문제가 있습니다"
-
-#: methods/ftp.cc
-#, c-format
-msgid "Unable to fetch file, server said '%s'"
-msgstr "파일을 가져올 수 없습니다. 서버 왈, '%s'"
-
-#: methods/ftp.cc methods/rsh.cc
-msgid "Data socket timed out"
-msgstr "데이터 소켓에 제한 시간이 초과했습니다"
-
-#: methods/ftp.cc
-#, c-format
-msgid "Data transfer failed, server said '%s'"
-msgstr "데이터 전송 실패, 서버에서는: %s"
-
-#. Get the files information
-#: methods/ftp.cc
-msgid "Query"
-msgstr "질의"
-
-#: methods/ftp.cc
-msgid "Unable to invoke "
-msgstr "다음을 실행할 수 없습니다: "
-
 #: methods/gpgv.cc
 #, c-format
 msgid "untrusted public key algorithm: %s"
@@ -3927,21 +3824,19 @@ msgid ""
 msgstr "내부 오류: 서명은 올바르지만 키 핑거프린트를 확인할 수 없습니다?!"
 
 #: methods/gpgv.cc
-msgid "Could not execute 'apt-key' to verify signature (is gnupg installed?)"
+#, fuzzy
+#| msgid ""
+#| "Could not execute 'apt-key' to verify signature (is gnupg installed?)"
+msgid "Could not execute 'gpgv' to verify signature (is gnupg installed?)"
 msgstr ""
 "서명을 확인하는 'apt-key' 프로그램을 실행할 수 없습니다. (gnupg를 설치했습니"
 "까?)"
 
 #: methods/gpgv.cc
-msgid "Unknown error executing apt-key"
+#, fuzzy
+#| msgid "Unknown error executing apt-key"
+msgid "Unknown error executing gpgv"
 msgstr "apt-key 실행 도중 알 수 없는 오류 발생"
-
-#: methods/gpgv.cc
-#, c-format
-msgid ""
-"Key is stored in legacy trusted.gpg keyring (%s), see the DEPRECATION "
-"section in apt-key(8) for details."
-msgstr ""
 
 #. TRANSLATORS: The second %s is the reason and is untranslated for repository owners.
 #: methods/gpgv.cc
@@ -3979,17 +3874,123 @@ msgstr "select가 실패했습니다"
 msgid "Connection timed out"
 msgstr "연결 시간이 초과했습니다"
 
+#: methods/http.cc
+msgid "Problem hashing file"
+msgstr "파일 해싱에 문제가 있습니다"
+
 #: methods/rred.cc
 msgid "Failed to set modification time"
 msgstr "파일 변경 시각을 설정하는데 실패했습니다"
 
-#: methods/rsh.cc
-msgid "Connection closed prematurely"
-msgstr "연결이 너무 빨리 끊어졌습니다"
-
 #: methods/store.cc
 msgid "Empty files can't be valid archives"
 msgstr ""
+
+#~ msgid "Logging in"
+#~ msgstr "로그인하는 중입니다"
+
+#~ msgid "Unable to determine the peer name"
+#~ msgstr "상대방의 이름을 알 수 없습니다"
+
+#~ msgid "Unable to determine the local name"
+#~ msgstr "로컬 이름을 알 수 없습니다"
+
+#, c-format
+#~ msgid "The server refused the connection and said: %s"
+#~ msgstr "서버에서 다음과 같이 연결을 거부했습니다: %s"
+
+#, c-format
+#~ msgid "USER failed, server said: %s"
+#~ msgstr "USER 실패, 서버에서는: %s"
+
+#, c-format
+#~ msgid "PASS failed, server said: %s"
+#~ msgstr "PASS 실패, 서버에서는: %s"
+
+#~ msgid ""
+#~ "A proxy server was specified but no login script, "
+#~ "Acquire::ftp::ProxyLogin is empty."
+#~ msgstr ""
+#~ "프록시 서버를 지정했지만 로그인 스크립트가 없습니다. "
+#~ "Acquire::ftp::ProxyLogin 값이 비어 있습니다."
+
+#, c-format
+#~ msgid "Login script command '%s' failed, server said: %s"
+#~ msgstr "로그인 스크립트 명령 '%s' 실패, 서버에서는: %s"
+
+#, c-format
+#~ msgid "TYPE failed, server said: %s"
+#~ msgstr "TYPE 실패, 서버에서는: %s"
+
+#~ msgid "Connection timeout"
+#~ msgstr "연결 시간 초과"
+
+#~ msgid "Server closed the connection"
+#~ msgstr "서버에서 연결을 닫았습니다"
+
+#~ msgid "A response overflowed the buffer."
+#~ msgstr "응답이 버퍼 크기를 넘어갔습니다."
+
+#~ msgid "Protocol corruption"
+#~ msgstr "프로토콜이 틀렸습니다"
+
+#~ msgid "Could not create a socket"
+#~ msgstr "소켓을 만들 수 없습니다"
+
+#~ msgid "Could not connect data socket, connection timed out"
+#~ msgstr "데이터 소켓을 연결할 수 없습니다. 연결 시간이 초과되었습니다"
+
+#~ msgid "Could not connect passive socket."
+#~ msgstr "수동(passive) 소켓을 연결할 수 없습니다."
+
+#~ msgid "getaddrinfo was unable to get a listening socket"
+#~ msgstr "getaddrinfo에서 소켓에 listen할 수 없습니다"
+
+#~ msgid "Could not bind a socket"
+#~ msgstr "소켓을 bind할 수 없습니다"
+
+#~ msgid "Could not listen on the socket"
+#~ msgstr "소켓에 listen할 수 없습니다"
+
+#~ msgid "Could not determine the socket's name"
+#~ msgstr "소켓의 이름을 알아낼 수 없습니다"
+
+#~ msgid "Unable to send PORT command"
+#~ msgstr "PORT 명령을 보낼 수 없습니다"
+
+#, c-format
+#~ msgid "Unknown address family %u (AF_*)"
+#~ msgstr "주소 %u의 종류(AF_*)를 알 수 없습니다"
+
+#, c-format
+#~ msgid "EPRT failed, server said: %s"
+#~ msgstr "EPRT 실패, 서버에서는: %s"
+
+#~ msgid "Data socket connect timed out"
+#~ msgstr "데이터 소켓 연결 시간 초과"
+
+#~ msgid "Unable to accept connection"
+#~ msgstr "연결을 받을 수 없습니다"
+
+#, c-format
+#~ msgid "Unable to fetch file, server said '%s'"
+#~ msgstr "파일을 가져올 수 없습니다. 서버 왈, '%s'"
+
+#~ msgid "Data socket timed out"
+#~ msgstr "데이터 소켓에 제한 시간이 초과했습니다"
+
+#, c-format
+#~ msgid "Data transfer failed, server said '%s'"
+#~ msgstr "데이터 전송 실패, 서버에서는: %s"
+
+#~ msgid "Query"
+#~ msgstr "질의"
+
+#~ msgid "Unable to invoke "
+#~ msgstr "다음을 실행할 수 없습니다: "
+
+#~ msgid "Connection closed prematurely"
+#~ msgstr "연결이 너무 빨리 끊어졌습니다"
 
 #, fuzzy
 #~| msgid "The following held packages will be changed:"

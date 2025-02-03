@@ -11,11 +11,19 @@
 
 #include <apt-pkg/macros.h>
 
+#include <forward_list>
 #include <string>
 #include <vector>
 
 
 class FileFd;
+
+#ifdef APT_COMPILING_APT
+namespace APT::Internal
+{
+APT_PUBLIC std::pair<std::string, std::forward_list<std::string>> FindGPGV(bool Debug);
+}
+#endif
 
 /** \brief generates and run the command to verify a file with gpgv
  *
@@ -39,9 +47,11 @@ class FileFd;
  * @param fd is used as a pipe for the standard output of gpgv
  * @param key is the specific one to be used instead of using all
  */
-APT_PUBLIC void ExecGPGV(std::string const &File, std::string const &FileSig,
-      int const &statusfd, int fd[2], std::string const &Key = "") APT_NORETURN;
-inline APT_NORETURN void ExecGPGV(std::string const &File, std::string const &FileSig,
+[[noreturn]] APT_PUBLIC void ExecGPGV(std::string const &File, std::string const &FileSig,
+				      int const &statusfd, int fd[2], std::vector<std::string> const &KeyFiles);
+[[noreturn]] APT_PUBLIC void ExecGPGV(std::string const &File, std::string const &FileSig,
+				      int const &statusfd, int fd[2], std::string const &Key = "");
+[[noreturn]] inline void ExecGPGV(std::string const &File, std::string const &FileSig,
       int const &statusfd = -1) {
    int fd[2];
    ExecGPGV(File, FileSig, statusfd, fd);
@@ -85,6 +95,15 @@ APT_PUBLIC bool SplitClearSignedFile(std::string const &InFile, FileFd * const C
  * @return true if opening was successful, otherwise false
  */
 APT_PUBLIC bool OpenMaybeClearSignedFile(std::string const &ClearSignedFileName, FileFd &MessageFile);
+
+/** \brief verifiy a detached signature file for correctness.
+ *
+ * We want to expect unavoided content. This may set an error when returning false
+ * but it might not necessarily do so (in case of empty signature file).
+ *
+ * @return true if the detached signature files contains ASCII-armored signatures, otherwise false
+ */
+APT_PUBLIC bool VerifyDetachedSignatureFile(std::string const &DetachedSignatureFileName);
 
 APT_PUBLIC bool IsAssertedPubKeyAlgo(std::string const &pkstr, std::string const &option);
 #endif

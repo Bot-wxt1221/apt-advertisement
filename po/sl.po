@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt 0.5.5\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2024-07-30 04:29+0000\n"
+"POT-Creation-Date: 2025-01-28 18:52+0000\n"
 "PO-Revision-Date: 2012-06-27 21:29+0000\n"
 "Last-Translator: Andrej Znidarsic <andrej.znidarsic@gmail.com>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
@@ -53,8 +53,8 @@ msgstr "Mapa %s je odklonjena"
 
 #: apt-pkg/acquire-item.cc
 msgid ""
-"This is normally not allowed, but the option Acquire::"
-"AllowDowngradeToInsecureRepositories was given to override it."
+"This is normally not allowed, but the option "
+"Acquire::AllowDowngradeToInsecureRepositories was given to override it."
 msgstr ""
 
 #: apt-pkg/acquire-item.cc
@@ -192,8 +192,7 @@ msgstr ""
 msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr "Distribucija v sporu: %s (pričakovana %s, toda dobljena %s)"
 
-#. Both messages are reused from the ReleaseInfoChange feature in acquire-item.cc
-#: apt-pkg/acquire-item.cc apt-private/private-update.cc
+#: apt-pkg/acquire-item.cc
 #, c-format
 msgid "Repository '%s' changed its '%s' value from '%s' to '%s'"
 msgstr ""
@@ -204,7 +203,7 @@ msgid "Repository '%s' changed its default priority for %s from %hi to %hi."
 msgstr ""
 
 #. TRANSLATOR: the "this" refers to changes in the repository like a new release or owner change
-#: apt-pkg/acquire-item.cc apt-private/private-update.cc
+#: apt-pkg/acquire-item.cc
 #, c-format
 msgid ""
 "More information about this can be found online in the Release notes at: %s"
@@ -249,13 +248,6 @@ msgstr "Ni mogoče najti vira za prejem različice '%s' paketa '%s'"
 #, fuzzy, c-format
 msgid "Changelog unavailable for %s=%s"
 msgstr "Dnevnik sprememb za %s (%s)"
-
-#: apt-pkg/acquire-worker.cc
-#, c-format
-msgid ""
-"The method '%s' is unsupported and disabled by default. Consider switching "
-"to http(s). Set Dir::Bin::Methods::%s to \"%s\" to enable it again."
-msgstr ""
 
 #: apt-pkg/acquire-worker.cc
 #, c-format
@@ -782,11 +774,11 @@ msgstr "Pod-opravilo %s je vrnilo kodo napake (%u)"
 msgid "Sub-process %s exited unexpectedly"
 msgstr "Pod-opravilo %s se je nepričakovano zaključilo"
 
-#: apt-pkg/contrib/fileutl.cc methods/ftp.cc methods/rsh.cc
+#: apt-pkg/contrib/fileutl.cc
 msgid "Read error"
 msgstr "Napaka branja"
 
-#: apt-pkg/contrib/fileutl.cc methods/ftp.cc methods/rsh.cc
+#: apt-pkg/contrib/fileutl.cc
 msgid "Write error"
 msgstr "Napaka pisanja"
 
@@ -1100,6 +1092,12 @@ msgstr "Skrbniške mape (%s) ni mogoče zakleniti. Ali ste skrbnik?"
 #: apt-pkg/deb/debsystem.cc
 msgid "Not locked"
 msgstr "Ni zaklenjeno"
+
+#: apt-pkg/deb/debsystem.cc
+msgid ""
+"The dpkg executable set in Dir::Bin::dpkg is missing, falling back to using "
+"default dpkg."
+msgstr ""
 
 #. we don't care for the difference
 #: apt-pkg/deb/dpkgpm.cc
@@ -1930,8 +1928,8 @@ msgstr "Notranja napaka, Urejanje se ni končalo"
 #: apt-private/private-install.cc
 msgid "How odd... The sizes didn't match, email apt@packages.debian.org"
 msgstr ""
-"Kako čudno ... Velikosti se ne ujemata, pošljite sporočilo na apt@packages."
-"debian.org"
+"Kako čudno ... Velikosti se ne ujemata, pošljite sporočilo na "
+"apt@packages.debian.org"
 
 #: apt-private/private-install.cc
 #, fuzzy, c-format
@@ -2446,7 +2444,7 @@ msgid "Y"
 msgstr ""
 
 #. TRANSLATOR: "No" answer printed for a yes/no question if --assume-no is set
-#: apt-private/private-output.cc
+#: apt-private/private-output.cc apt-private/private-sources.cc
 msgid "N"
 msgstr ""
 
@@ -2627,8 +2625,8 @@ msgstr "%s nima odvisnosti za gradnjo.\n"
 #: apt-private/private-source.cc
 #, c-format
 msgid ""
-"No architecture information available for %s. See apt.conf(5) APT::"
-"Architectures for setup"
+"No architecture information available for %s. See apt.conf(5) "
+"APT::Architectures for setup"
 msgstr ""
 "Za %s ni bilo mogoče najti podatkov o arhitekturi. Za nastavitev si oglejte "
 "apt.conf(5) APT::Architectures"
@@ -2669,6 +2667,11 @@ msgstr "Ni mogoče preimenovati %s v %s"
 msgid "Your '%s' file changed, please run 'apt-get update'.\n"
 msgstr ""
 
+#: apt-private/private-sources.cc
+#, c-format
+msgid "Rewrite %zu sources?"
+msgstr ""
+
 #: apt-private/private-unmet.cc
 #, c-format
 msgid "Package %s version %s has an unmet dep:\n"
@@ -2689,7 +2692,32 @@ msgstr ""
 #. TRANSLATOR: the first is manpage reference, the last the URI from a sources.list
 #: apt-private/private-update.cc
 #, c-format
+msgid "The %s entry for '%s' should be upgraded to deb822 .sources"
+msgstr ""
+
+#. TRANSLATOR: the first is manpage reference, the last the URI from a sources.list
+#: apt-private/private-update.cc
+#, c-format
 msgid "Missing Signed-By in the %s entry for '%s'"
+msgstr ""
+
+#: apt-private/private-update.cc
+msgid ""
+"Consider migrating all sources.list(5) entries to the deb822 .sources format"
+msgstr ""
+
+#: apt-private/private-update.cc
+msgid ""
+"The deb822 .sources format supports both embedded as well as external "
+"OpenPGP keys"
+msgstr ""
+
+#: apt-private/private-update.cc
+msgid "See apt-secure(8) for best practices in configuring repository signing."
+msgstr ""
+
+#: apt-private/private-update.cc
+msgid "Some sources can be modernized. Run 'apt modernize-sources' to do so."
 msgstr ""
 
 #: apt-private/private-update.cc
@@ -3070,6 +3098,12 @@ msgid "concatenate files, with automatic decompression"
 msgstr ""
 
 #: cmdline/apt-helper.cc
+#, fuzzy
+#| msgid "Problem hashing file"
+msgid "hash file"
+msgstr "Težava med razprševanjem datoteke"
+
+#: cmdline/apt-helper.cc
 msgid "detect proxy using apt.conf"
 msgstr ""
 
@@ -3321,6 +3355,10 @@ msgid "edit the source information file"
 msgstr "Branje podatkov o stanju"
 
 #: cmdline/apt.cc
+msgid "modernize .list files to .sources files"
+msgstr ""
+
+#: cmdline/apt.cc
 #, fuzzy
 #| msgid "Failed to satisfy %s dependency for %s: %s"
 msgid "satisfy dependency strings"
@@ -3524,7 +3562,7 @@ msgstr "Neznan algoritem stiskanja '%s'"
 msgid "Compressed output %s needs a compression set"
 msgstr "Stisnjen izhod %s potrebuje niz stiskanja"
 
-#: ftparchive/multicompress.cc methods/rsh.cc
+#: ftparchive/multicompress.cc
 msgid "Failed to create IPC pipe to subprocess"
 msgstr "Ustvarjanje cevi IPC do podopravila je spodletelo"
 
@@ -3643,23 +3681,23 @@ msgstr "Arhiv ni imel polja s paketom"
 
 #: ftparchive/writer.cc
 #, c-format
-msgid "  %s has no override entry\n"
-msgstr "  %s nima prepisanega vnosa\n"
+msgid "  %.*s has no override entry\n"
+msgstr "  %.*s nima prepisanega vnosa\n"
 
 #: ftparchive/writer.cc
 #, c-format
-msgid "  %s maintainer is %s not %s\n"
-msgstr "  Vzdrževalec %s je %s in ne %s\n"
+msgid "  %.*s maintainer is %.*s not %s\n"
+msgstr "  Vzdrževalec %.*s je %.*s in ne %s\n"
 
 #: ftparchive/writer.cc
 #, c-format
-msgid "  %s has no source override entry\n"
-msgstr "  %s nima izvornega vnosa prepisa\n"
+msgid "  %.*s has no source override entry\n"
+msgstr "  %.*s nima izvornega vnosa prepisa\n"
 
 #: ftparchive/writer.cc
 #, c-format
-msgid "  %s has no binary override entry either\n"
-msgstr "  %s nima tudi binarnega vnosa prepisa\n"
+msgid "  %.*s has no binary override entry either\n"
+msgstr "  %.*s nima tudi binarnega vnosa prepisa\n"
 
 #: methods/basehttp.cc
 msgid "Waiting for headers"
@@ -3697,7 +3735,7 @@ msgstr "Napačni podatki glave"
 msgid "Connection failed"
 msgstr "Povezava ni uspela"
 
-#: methods/basehttp.cc methods/ftp.cc methods/http.cc
+#: methods/basehttp.cc methods/http.cc
 #, c-format
 msgid "File has unexpected size (%llu != %llu). Mirror sync in progress?"
 msgstr ""
@@ -3739,7 +3777,7 @@ msgstr "Ni mogoče odklopiti CD-ROM-a v %s, ker je morda še v uporabi."
 msgid "Disk not found."
 msgstr "Diska ni mogoče najti."
 
-#: methods/cdrom.cc methods/file.cc methods/rsh.cc
+#: methods/cdrom.cc methods/file.cc
 msgid "File not found"
 msgstr "Datoteke ni mogoče najti"
 
@@ -3775,7 +3813,7 @@ msgstr "Ni mogoče ustvariti vtiča za %s (f=%u t=%u p=%u)"
 msgid "Cannot initiate the connection to %s:%s (%s)."
 msgstr "Ni mogoče začeti povezave z %s:%s (%s)."
 
-#: methods/connect.cc methods/ftp.cc methods/rsh.cc
+#: methods/connect.cc
 msgid "Failed"
 msgstr "Spodletelo"
 
@@ -3789,9 +3827,7 @@ msgstr "Ni se mogoče povezati z %s:%s (%s)."
 msgid "Could not connect to %s:%s (%s), connection timed out"
 msgstr "Ni se mogoče povezati z %s:%s (%s). Povezava je zakasnela."
 
-#. We say this mainly because the pause here is for the
-#. ssh connection that is still going
-#: methods/connect.cc methods/rsh.cc
+#: methods/connect.cc
 #, c-format
 msgid "Connecting to %s"
 msgstr "Povezovanje z %s"
@@ -3829,145 +3865,6 @@ msgstr "Določitev ni uspela"
 msgid "Invalid URI, local URIS must not start with //"
 msgstr "Neveljaven URI. Krajevni URI-ji se morajo začeti z //"
 
-#. Login must be before getpeername otherwise dante won't work.
-#: methods/ftp.cc
-msgid "Logging in"
-msgstr "Prijavljanje"
-
-#: methods/ftp.cc
-msgid "Unable to determine the peer name"
-msgstr "Ni mogoče ugotoviti imena gostitelja"
-
-#: methods/ftp.cc
-msgid "Unable to determine the local name"
-msgstr "Ni mogoče določiti krajevnega imena"
-
-#: methods/ftp.cc
-#, c-format
-msgid "The server refused the connection and said: %s"
-msgstr "Strežnik je zavrnil povezavo in sporočil: %s"
-
-#: methods/ftp.cc
-#, c-format
-msgid "USER failed, server said: %s"
-msgstr "USER je spodletel, strežnik je odgovoril: %s"
-
-#: methods/ftp.cc
-#, c-format
-msgid "PASS failed, server said: %s"
-msgstr "PASS je spodletel, strežnik je odgovoril: %s"
-
-#: methods/ftp.cc
-msgid ""
-"A proxy server was specified but no login script, Acquire::ftp::ProxyLogin "
-"is empty."
-msgstr ""
-"Naveden je bil posredniški strežnik, ne pa tudi prijavni skript. Acquire::"
-"ftp::ProxyLogin je prazen."
-
-#: methods/ftp.cc
-#, c-format
-msgid "Login script command '%s' failed, server said: %s"
-msgstr "Ukaz prijavne skripte '%s' ni uspel, strežnik je odgovoril: %s"
-
-#: methods/ftp.cc
-#, c-format
-msgid "TYPE failed, server said: %s"
-msgstr "TYPE je spodletel, strežnik je odgovoril: %s"
-
-#: methods/ftp.cc methods/rsh.cc
-msgid "Connection timeout"
-msgstr "Povezava je zakasnela"
-
-#: methods/ftp.cc
-msgid "Server closed the connection"
-msgstr "Strežnik je zaprl povezavo"
-
-#: methods/ftp.cc methods/rsh.cc
-msgid "A response overflowed the buffer."
-msgstr "Odgovor je prekoračil predpomnilnik."
-
-#: methods/ftp.cc
-msgid "Protocol corruption"
-msgstr "Okvara protokola"
-
-#: methods/ftp.cc
-msgid "Could not create a socket"
-msgstr "Ni mogoče ustvariti vtiča"
-
-#: methods/ftp.cc
-msgid "Could not connect data socket, connection timed out"
-msgstr "Ni mogoče povezati podatkovnega vtiča. Povezava je zakasnela."
-
-#: methods/ftp.cc
-msgid "Could not connect passive socket."
-msgstr "Ni mogoče povezat pasivnega vtiča."
-
-#: methods/ftp.cc
-msgid "getaddrinfo was unable to get a listening socket"
-msgstr "getaddrinfo ni mogel dobiti poslušajočega vtiča"
-
-#: methods/ftp.cc
-msgid "Could not bind a socket"
-msgstr "Ni mogoče povezati vtiča"
-
-#: methods/ftp.cc
-msgid "Could not listen on the socket"
-msgstr "Ni mogoče poslušati na vtiču"
-
-#: methods/ftp.cc
-msgid "Could not determine the socket's name"
-msgstr "Ni mogoče določiti imena vtiča"
-
-#: methods/ftp.cc
-msgid "Unable to send PORT command"
-msgstr "Ni mogoče poslati ukaza PORT"
-
-#: methods/ftp.cc
-#, c-format
-msgid "Unknown address family %u (AF_*)"
-msgstr "Neznan naslov družine %u (AF_*)"
-
-#: methods/ftp.cc
-#, c-format
-msgid "EPRT failed, server said: %s"
-msgstr "EPRT ni uspel, strežnik je odgovoril: %s"
-
-#: methods/ftp.cc
-msgid "Data socket connect timed out"
-msgstr "Povezava podatkovne vtičnice je zakasnela"
-
-#: methods/ftp.cc
-msgid "Unable to accept connection"
-msgstr "Ni mogoče sprejeti povezave"
-
-#: methods/ftp.cc methods/http.cc methods/rsh.cc
-msgid "Problem hashing file"
-msgstr "Težava med razprševanjem datoteke"
-
-#: methods/ftp.cc
-#, c-format
-msgid "Unable to fetch file, server said '%s'"
-msgstr "Ni mogoče pridobiti datoteke, strežnik je odgovoril '%s'"
-
-#: methods/ftp.cc methods/rsh.cc
-msgid "Data socket timed out"
-msgstr "Podatkovna vtič je potekel"
-
-#: methods/ftp.cc
-#, c-format
-msgid "Data transfer failed, server said '%s'"
-msgstr "Prenos podatkov ni uspel, strežnik je odgovoril '%s'"
-
-#. Get the files information
-#: methods/ftp.cc
-msgid "Query"
-msgstr "Poizvedba"
-
-#: methods/ftp.cc
-msgid "Unable to invoke "
-msgstr "Ni mogoče klicati "
-
 #: methods/gpgv.cc
 #, c-format
 msgid "untrusted public key algorithm: %s"
@@ -3996,20 +3893,18 @@ msgstr ""
 "Notranja napaka: Dober podpis, toda ni mogoče določiti podpisa ključa?!"
 
 #: methods/gpgv.cc
-msgid "Could not execute 'apt-key' to verify signature (is gnupg installed?)"
+#, fuzzy
+#| msgid ""
+#| "Could not execute 'apt-key' to verify signature (is gnupg installed?)"
+msgid "Could not execute 'gpgv' to verify signature (is gnupg installed?)"
 msgstr ""
 "Ni mogoče izvesti 'apt-key' za preverjanje podpisa (je gnupg nameščen?)"
 
 #: methods/gpgv.cc
-msgid "Unknown error executing apt-key"
+#, fuzzy
+#| msgid "Unknown error executing apt-key"
+msgid "Unknown error executing gpgv"
 msgstr "Neznana napaka med izvajanjem apt-key"
-
-#: methods/gpgv.cc
-#, c-format
-msgid ""
-"Key is stored in legacy trusted.gpg keyring (%s), see the DEPRECATION "
-"section in apt-key(8) for details."
-msgstr ""
 
 #. TRANSLATORS: The second %s is the reason and is untranslated for repository owners.
 #: methods/gpgv.cc
@@ -4048,17 +3943,123 @@ msgstr "Izbira ni uspela"
 msgid "Connection timed out"
 msgstr "Povezava je zakasnela"
 
+#: methods/http.cc
+msgid "Problem hashing file"
+msgstr "Težava med razprševanjem datoteke"
+
 #: methods/rred.cc
 msgid "Failed to set modification time"
 msgstr "Nastavitev časa spremembe je spodletela"
 
-#: methods/rsh.cc
-msgid "Connection closed prematurely"
-msgstr "Povezava se je prezgodaj zaprla"
-
 #: methods/store.cc
 msgid "Empty files can't be valid archives"
 msgstr "Prazne datoteke ne morejo biti veljavni arhivi"
+
+#~ msgid "Logging in"
+#~ msgstr "Prijavljanje"
+
+#~ msgid "Unable to determine the peer name"
+#~ msgstr "Ni mogoče ugotoviti imena gostitelja"
+
+#~ msgid "Unable to determine the local name"
+#~ msgstr "Ni mogoče določiti krajevnega imena"
+
+#, c-format
+#~ msgid "The server refused the connection and said: %s"
+#~ msgstr "Strežnik je zavrnil povezavo in sporočil: %s"
+
+#, c-format
+#~ msgid "USER failed, server said: %s"
+#~ msgstr "USER je spodletel, strežnik je odgovoril: %s"
+
+#, c-format
+#~ msgid "PASS failed, server said: %s"
+#~ msgstr "PASS je spodletel, strežnik je odgovoril: %s"
+
+#~ msgid ""
+#~ "A proxy server was specified but no login script, "
+#~ "Acquire::ftp::ProxyLogin is empty."
+#~ msgstr ""
+#~ "Naveden je bil posredniški strežnik, ne pa tudi prijavni skript. "
+#~ "Acquire::ftp::ProxyLogin je prazen."
+
+#, c-format
+#~ msgid "Login script command '%s' failed, server said: %s"
+#~ msgstr "Ukaz prijavne skripte '%s' ni uspel, strežnik je odgovoril: %s"
+
+#, c-format
+#~ msgid "TYPE failed, server said: %s"
+#~ msgstr "TYPE je spodletel, strežnik je odgovoril: %s"
+
+#~ msgid "Connection timeout"
+#~ msgstr "Povezava je zakasnela"
+
+#~ msgid "Server closed the connection"
+#~ msgstr "Strežnik je zaprl povezavo"
+
+#~ msgid "A response overflowed the buffer."
+#~ msgstr "Odgovor je prekoračil predpomnilnik."
+
+#~ msgid "Protocol corruption"
+#~ msgstr "Okvara protokola"
+
+#~ msgid "Could not create a socket"
+#~ msgstr "Ni mogoče ustvariti vtiča"
+
+#~ msgid "Could not connect data socket, connection timed out"
+#~ msgstr "Ni mogoče povezati podatkovnega vtiča. Povezava je zakasnela."
+
+#~ msgid "Could not connect passive socket."
+#~ msgstr "Ni mogoče povezat pasivnega vtiča."
+
+#~ msgid "getaddrinfo was unable to get a listening socket"
+#~ msgstr "getaddrinfo ni mogel dobiti poslušajočega vtiča"
+
+#~ msgid "Could not bind a socket"
+#~ msgstr "Ni mogoče povezati vtiča"
+
+#~ msgid "Could not listen on the socket"
+#~ msgstr "Ni mogoče poslušati na vtiču"
+
+#~ msgid "Could not determine the socket's name"
+#~ msgstr "Ni mogoče določiti imena vtiča"
+
+#~ msgid "Unable to send PORT command"
+#~ msgstr "Ni mogoče poslati ukaza PORT"
+
+#, c-format
+#~ msgid "Unknown address family %u (AF_*)"
+#~ msgstr "Neznan naslov družine %u (AF_*)"
+
+#, c-format
+#~ msgid "EPRT failed, server said: %s"
+#~ msgstr "EPRT ni uspel, strežnik je odgovoril: %s"
+
+#~ msgid "Data socket connect timed out"
+#~ msgstr "Povezava podatkovne vtičnice je zakasnela"
+
+#~ msgid "Unable to accept connection"
+#~ msgstr "Ni mogoče sprejeti povezave"
+
+#, c-format
+#~ msgid "Unable to fetch file, server said '%s'"
+#~ msgstr "Ni mogoče pridobiti datoteke, strežnik je odgovoril '%s'"
+
+#~ msgid "Data socket timed out"
+#~ msgstr "Podatkovna vtič je potekel"
+
+#, c-format
+#~ msgid "Data transfer failed, server said '%s'"
+#~ msgstr "Prenos podatkov ni uspel, strežnik je odgovoril '%s'"
+
+#~ msgid "Query"
+#~ msgstr "Poizvedba"
+
+#~ msgid "Unable to invoke "
+#~ msgstr "Ni mogoče klicati "
+
+#~ msgid "Connection closed prematurely"
+#~ msgstr "Povezava se je prezgodaj zaprla"
 
 #, fuzzy, c-format
 #~| msgid "  Installed: "
@@ -4285,8 +4286,8 @@ msgstr "Prazne datoteke ne morejo biti veljavni arhivi"
 #~ "  -i Pokaže le pomembne odvisnosti za neujemajoč ukaz.\n"
 #~ "  -c=? Prebere to nastavitveno datoteko\n"
 #~ "  -o=? Nastavi poljubno možnost nastavitve, na primer -o dir::cache=/tmp\n"
-#~ "Za več podrobnosti si oglejte strani priročnikov apt-cache(8) in apt."
-#~ "conf(5).\n"
+#~ "Za več podrobnosti si oglejte strani priročnikov apt-cache(8) in "
+#~ "apt.conf(5).\n"
 
 #, fuzzy
 #~ msgid ""

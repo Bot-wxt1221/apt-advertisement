@@ -20,6 +20,7 @@
 #include <apt-pkg/error.h>
 #include <apt-pkg/fileutl.h>
 #include <apt-pkg/hashes.h>
+#include <apt-pkg/metaindex.h>
 #include <apt-pkg/proxy.h>
 #include <apt-pkg/strutl.h>
 
@@ -98,8 +99,6 @@ bool pkgAcquire::Worker::Start()
    std::string Method;
    if (_config->Exists(confItem))
 	 Method = _config->FindFile(confItem.c_str());
-   else if (Access == "ftp" || Access == "rsh" || Access == "ssh")
-      return _error->Error(_("The method '%s' is unsupported and disabled by default. Consider switching to http(s). Set Dir::Bin::Methods::%s to \"%s\" to enable it again."), Access.c_str(), Access.c_str(), Access.c_str());
    else
 	 Method = _config->FindDir(methodsDir) + Access;
    if (FileExists(Method) == false)
@@ -436,11 +435,18 @@ bool pkgAcquire::Worker::RunMessages()
 		  Log->Pulse((*O)->GetOwner());
 
 	    HashStringList ReceivedHashes;
+	    bool AltFile = false;
 	    {
-	       std::string const givenfilename = LookupTag(Message, "Filename");
-	       std::string const filename = givenfilename.empty() ? Itm->Owner->DestFile : givenfilename;
+	       std::string filename;
+	       if (filename = LookupTag(Message, "Filename"); filename.empty())
+	       {
+		  if (filename = LookupTag(Message, "Alt-Filename"); not filename.empty())
+		     AltFile = true;
+		  else
+		     filename = Itm->Owner->DestFile;
+	       }
 	       // see if we got hashes to verify
-	       ReceivedHashes = GetHashesFromMessage("", Message);
+	       ReceivedHashes = GetHashesFromMessage(AltFile ? "Alt-" : "", Message);
 	       // not all methods always sent Hashes our way
 	       if (ReceivedHashes.usable() == false)
 	       {
@@ -451,64 +457,107 @@ bool pkgAcquire::Worker::RunMessages()
 		     FileFd file(filename, FileFd::ReadOnly, FileFd::None);
 		     calc.AddFD(file);
 		     ReceivedHashes = calc.GetHashStringList();
+		     for (auto const &h : ReceivedHashes)
+		     {
+			std::string tagname;
+			if (AltFile)
+			   tagname = "Alt-";
+			tagname.append(h.HashType()).append("-Hash");
+			if (not LookupTag(Message, tagname.c_str()).empty())
+			   continue;
+			if (not APT::String::Endswith(Message, "\n"))
+			   Message.append("\n");
+			Message.append(tagname).append(": ").append(h.HashValue());
+		     }
 		  }
 	       }
 
 	       // only local files can refer other filenames and counting them as fetched would be unfair
-	       if (Log != NULL && Itm->Owner->Complete == false && Itm->Owner->Local == false && givenfilename == filename)
+	       if (Log != nullptr && not Itm->Owner->Complete && not Itm->Owner->Local && not AltFile && Itm->Owner->DestFile == filename)
 		  Log->Fetched(ReceivedHashes.FileSize(),atoi(LookupTag(Message,"Resume-Point","0").c_str()));
 	    }
 
 	    std::vector<Item*> const ItmOwners = Itm->Owners;
+	    for (auto const Owner : ItmOwners)
+	       Owner->ErrorText.clear();
 	    OwnerQ->ItemDone(Itm);
 	    Itm = NULL;
 
 	    bool const isIMSHit = StringToBool(LookupTag(Message,"IMS-Hit"),false) ||
 	       StringToBool(LookupTag(Message,"Alt-IMS-Hit"),false);
 	    auto const forcedHash = _config->Find("Acquire::ForceHash");
+
+	    bool consideredOkay = true;
+	    HashStringList ExpectedHashes;
+	    bool const DebugAuth = _config->FindB("Debug::pkgAcquire::Auth", false);
+	    if (DebugAuth)
+	    {
+	       std::clog << "201 URI Done: " << URI << endl
+			 << "ReceivedHash:" << endl;
+	       for (auto const &hs : ReceivedHashes)
+		  std::clog << "\t- " << hs.toStr() << std::endl;
+	       std::clog << "ExpectedHash:" << endl;
+	    }
 	    for (auto const Owner: ItmOwners)
 	    {
-	       HashStringList const ExpectedHashes = Owner->GetExpectedHashes();
-	       if(_config->FindB("Debug::pkgAcquire::Auth", false) == true)
-	       {
-		  std::clog << "201 URI Done: " << Owner->DescURI() << endl
-		     << "ReceivedHash:" << endl;
-		  for (HashStringList::const_iterator hs = ReceivedHashes.begin(); hs != ReceivedHashes.end(); ++hs)
-		     std::clog <<  "\t- " << hs->toStr() << std::endl;
-		  std::clog << "ExpectedHash:" << endl;
-		  for (HashStringList::const_iterator hs = ExpectedHashes.begin(); hs != ExpectedHashes.end(); ++hs)
-		     std::clog <<  "\t- " << hs->toStr() << std::endl;
-		  std::clog << endl;
-	       }
-
-	       // decide if what we got is what we expected
-	       bool consideredOkay = false;
-	       if ((forcedHash.empty() && ExpectedHashes.empty() == false) ||
-		     (forcedHash.empty() == false && ExpectedHashes.usable()))
-	       {
-		  if (ReceivedHashes.empty())
+	       HashStringList const OwnerExpectedHashes = [&]() {
+		  if (AltFile)
 		  {
-		     /* IMS-Hits can't be checked here as we will have uncompressed file,
-			but the hashes for the compressed file. What we have was good through
-			so all we have to ensure later is that we are not stalled. */
-		     consideredOkay = isIMSHit;
+		     auto const * const transOwner = dynamic_cast<pkgAcqTransactionItem const * const>(Owner);
+		     if (transOwner != nullptr && transOwner->TransactionManager != nullptr && transOwner->TransactionManager->MetaIndexParser != nullptr)
+		     {
+			auto const * const hashes = transOwner->TransactionManager->MetaIndexParser->Lookup(transOwner->Target.MetaKey);
+			if (hashes != nullptr)
+			   return hashes->Hashes;
+		     }
 		  }
-		  else if (ReceivedHashes == ExpectedHashes)
-		     consideredOkay = true;
-		  else
+		  return Owner->GetExpectedHashes();
+	       }();
+	       for (auto const &h : OwnerExpectedHashes)
+	       {
+		  if (not ExpectedHashes.push_back(h))
+		  {
 		     consideredOkay = false;
-
+		     std::clog << "\t- " << h.toStr() << " [conflict]" << std::endl;
+		  }
+		  else if (DebugAuth)
+		     std::clog << "\t- " << h.toStr() << std::endl;
 	       }
+	    }
+	    if (DebugAuth)
+	       std::clog << endl;
+
+	    // decide if what we got is what we expected
+	    if (not consideredOkay)
+	       ;
+	    else if ((forcedHash.empty() && not ExpectedHashes.empty()) ||
+		     (not forcedHash.empty() && ExpectedHashes.usable()))
+	    {
+	       if (ReceivedHashes.empty())
+	       {
+		  /* IMS-Hits can't be checked here as we will have uncompressed file,
+		     but the hashes for the compressed file. What we have was good through
+		     so all we have to ensure later is that we are not stalled. */
+		  consideredOkay = isIMSHit;
+	       }
+	       else if (ReceivedHashes == ExpectedHashes)
+		  consideredOkay = true;
 	       else
-		  consideredOkay = !Owner->HashesRequired();
+		  consideredOkay = false;
+	    }
+	    else
+	       consideredOkay = std::none_of(ItmOwners.begin(), ItmOwners.end(), [](auto const * const O) { return O->HashesRequired(); });
 
-	       if (consideredOkay == true)
-		  consideredOkay = Owner->VerifyDone(Message, Config);
-	       else // hashsum mismatch
-		  Owner->Status = pkgAcquire::Item::StatAuthError;
+	    bool otherReasons = false;
+	    if (consideredOkay && not std::all_of(ItmOwners.begin(), ItmOwners.end(), [&](auto * const O) { return O->VerifyDone(Message, Config); }))
+	    {
+	       consideredOkay = false;
+	       otherReasons = true;
+	    }
 
-
-	       if (consideredOkay == true)
+	    if (consideredOkay)
+	    {
+	       for (auto const Owner : ItmOwners)
 	       {
 		  if (isDoomedItem(Owner) == false)
 		     Owner->Done(Message, ReceivedHashes, Config);
@@ -520,22 +569,21 @@ bool pkgAcquire::Worker::RunMessages()
 			Log->Done(Owner->GetItemDesc());
 		  }
 	       }
+	    }
+	    else
+	    {
+	       if (otherReasons)
+		  HandleFailure(ItmOwners, Config, Log, Message, false, false);
 	       else
 	       {
-		  auto SavedDesc = Owner->GetItemDesc();
-		  if (isDoomedItem(Owner) == false)
+		  if (Message.find("\nFailReason:") == std::string::npos)
 		  {
-		     if (Message.find("\nFailReason:") == std::string::npos)
-		     {
-			if (ReceivedHashes != ExpectedHashes)
-			   Message.append("\nFailReason: HashSumMismatch");
-			else
-			   Message.append("\nFailReason: WeakHashSums");
-		     }
-		     Owner->Failed(Message,Config);
+		     if (ReceivedHashes != ExpectedHashes)
+			Message.append("\nFailReason: HashSumMismatch");
+		     else
+			Message.append("\nFailReason: WeakHashSums");
 		  }
-		  if (Log != nullptr)
-		     Log->Fail(SavedDesc);
+		  HandleFailure(ItmOwners, Config, Log, Message, false, true);
 	       }
 	    }
 	    ItemDone();
@@ -595,6 +643,8 @@ bool pkgAcquire::Worker::RunMessages()
 		  Log->Pulse((*O)->GetOwner());
 
 	    std::vector<Item*> const ItmOwners = Itm->Owners;
+	    for (auto const Owner : ItmOwners)
+	       Owner->ErrorText.clear();
 	    OwnerQ->ItemDone(Itm);
 	    Itm = nullptr;
 
@@ -605,8 +655,8 @@ bool pkgAcquire::Worker::RunMessages()
 	    {
 	       std::string const failReason = LookupTag(Message, "FailReason");
 	       {
-		  auto const reasons = { "Timeout", "ConnectionRefused",
-		     "ConnectionTimedOut", "ResolveFailure", "TmpResolveFailure" };
+		  auto const reasons = {"Timeout", "ConnectionRefused",
+					"ConnectionTimedOut", "ResolveFailure", "TmpResolveFailure", "TooManyRequests"};
 		  errTransient = std::find(std::begin(reasons), std::end(reasons), failReason) != std::end(reasons);
 	       }
 	       if (errTransient == false)
@@ -638,6 +688,7 @@ void pkgAcquire::Worker::HandleFailure(std::vector<pkgAcquire::Item *> const &It
 				       std::string const &Message, bool const errTransient, bool const errAuthErr)
 {
    auto currentTime = clock::now();
+   auto currentWall = std::chrono::system_clock::now();
    for (auto const Owner : ItmOwners)
    {
       std::string NewURI;
@@ -650,7 +701,24 @@ void pkgAcquire::Worker::HandleFailure(std::vector<pkgAcquire::Item *> const &It
 	 {
 	    auto Iter = _config->FindI("Acquire::Retries", 3) - Owner->Retries - 1;
 	    auto const MaxDur = _config->FindI("Acquire::Retries::Delay::Maximum", 30);
-	    auto Dur =  std::chrono::seconds(std::min(1 << Iter, MaxDur));
+	    auto const handleRetryAfter = _config->FindB("Acquire::Retries::HandleRetryAfter", true);
+	    auto Dur = std::chrono::seconds(1 << Iter);
+	    auto const retryAfterStr = LookupTag(Message, "Retry-After");
+	    auto const failReason = LookupTag(Message, "FailReason");
+	    if (failReason == "TooManyRequests" && !retryAfterStr.empty() && handleRetryAfter)
+	    {
+	       // The webserver gave a retry time. Use it, but also add exponential
+	       // backoff waiting as we might not be the only client.
+	       const auto retryAfter = std::chrono::seconds(std::strtoul(retryAfterStr.c_str(), nullptr, 10));
+	       const auto epochCurrent = std::chrono::duration_cast<std::chrono::seconds>(currentWall.time_since_epoch());
+	       // If the retryAfter is in the past, we can just continue.
+	       if (retryAfter > epochCurrent)
+		  Dur += retryAfter - epochCurrent;
+	       // Usually, all requests run into the rate limit at the same time.
+	       // Distribute the retries to avoid hitting the limit again.
+	       Dur += std::chrono::seconds(std::rand() % Dur.count());
+	    }
+	    Dur = std::min(Dur, std::chrono::seconds(MaxDur));
 	    if (_config->FindB("Debug::Acquire::Retries"))
 	       std::clog << "Delaying " << SavedDesc.Description << " by " << Dur.count() << " seconds" << std::endl;
 	    Owner->FetchAfter(currentTime + Dur);
@@ -668,7 +736,7 @@ void pkgAcquire::Worker::HandleFailure(std::vector<pkgAcquire::Item *> const &It
       else
       {
 	 if (errAuthErr)
-	    Owner->RemoveAlternativeSite(URI::SiteOnly(Owner->GetItemDesc().URI));
+	    Owner->RemoveAlternativeSite(Owner->GetItemDesc().URI);
 	 if (Owner->PopAlternativeURI(NewURI))
 	 {
 	    Owner->FailMessage(Message);
@@ -829,14 +897,12 @@ bool pkgAcquire::Worker::QueueItem(pkgAcquire::Queue::QItem *Item)
    }
    Message += "\nFilename: " + Item->Owner->DestFile;
 
-   // FIXME: We should not hard code proxy protocols here.
-   if (URL.Access == "http" || URL.Access == "https")
+   // AutoDetectProxy() checks this already by itself, but we don't want to access unknown configs
+   if (CanURIBeAccessedViaProxy(URL))
    {
       AutoDetectProxy(URL);
-      if (_config->Exists("Acquire::" + URL.Access + "::proxy::" + URL.Host))
-      {
-	 Message += "\nProxy: " + _config->Find("Acquire::" + URL.Access + "::proxy::" + URL.Host);
-      }
+      if (auto const proxy = _config->Find("Acquire::" + URL.Access + "::proxy::" + URL.Host); not proxy.empty())
+	 Message.append("\nProxy: ").append(proxy);
    }
 
    HashStringList const hsl = Item->GetExpectedHashes();

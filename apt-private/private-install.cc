@@ -348,8 +348,8 @@ bool InstallPackages(CacheFile &Cache, APT::PackageVector &HeldBackPackages, boo
 	 if (statvfs(_config->FindDir("Dir::Usr").c_str(), &st) == 0)
 	 {
 	    struct statvfs st_boot;
-	    double BootSize = 0;
-	    double InitrdSize = 0;
+	    unsigned long long BootSize = 0;
+	    unsigned long long InitrdSize = 0;
 	    if (statvfs(_config->FindDir("Dir::Boot").c_str(), &st_boot) == 0 && st_boot.f_fsid != st.f_fsid)
 	       BootSize = Cache->BootSize(false);
 	    else
@@ -986,7 +986,7 @@ std::vector<PseudoPkg> GetAllPackagesAsPseudo(pkgSourceList *const SL, CommandLi
 std::vector<PseudoPkg> GetPseudoPackages(pkgSourceList *const SL, CommandLine &CmdL, bool (*Add)(pkgSourceList *const, PseudoPkg &&, std::vector<PseudoPkg> &), std::string const &pseudoArch)/*{{{*/
 {
    std::vector<PseudoPkg> VolatileCmdL;
-   std::remove_if(CmdL.FileList + 1, CmdL.FileList + 1 + CmdL.FileSize(), [&](char const *const I) {
+   (void)std::remove_if(CmdL.FileList + 1, CmdL.FileList + 1 + CmdL.FileSize(), [&](char const *const I) {
       return AddIfVolatile(SL, VolatileCmdL, Add, I, pseudoArch);
    });
    return VolatileCmdL;

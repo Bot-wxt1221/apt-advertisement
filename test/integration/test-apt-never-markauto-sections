@@ -20,15 +20,17 @@ buildsimplenativepackage 'browser' 'amd64' '42' 'unstable'
 buildsimplenativepackage 'texteditor' 'amd64' '1' 'stable'
 buildsimplenativepackage 'bad-texteditor' 'amd64' '1' 'stable' 'Depends: texteditor
 Conflicts: mydesktop-core'
-buildsimplenativepackage 'nosection' 'amd64' '1' 'stable' '' '' '<none>'
 buildsimplenativepackage 'foreignpkg' 'i386' '1' 'stable' 'Multi-Arch: foreign'
 setupaptarchive
 
+insertinstalledpackage 'nosection' 'amd64' '1' '' '' '' '' '<none>'
+
+testsuccess aptmark auto nosection
+testempty aptmark showmanual
+testsuccess aptget install mydesktop -y -o Debug::pkgProblemResolver=1 -o Debug::pkgDepCache::Marker=1 -o Debug::pkgDepCache::AutoInstall=1
+
 testsuccess aptcache show nosection
 testfailure grep 'Section' rootdir/tmp/testsuccess.output
-testempty aptmark showmanual
-
-testsuccess aptget install mydesktop -y -o Debug::pkgProblemResolver=1 -o Debug::pkgDepCache::Marker=1 -o Debug::pkgDepCache::AutoInstall=1
 
 testmarkedmanual 'mydesktop'
 testmarkedauto 'mydesktop-core' 'foreignpkg:i386' 'texteditor' 'browser' 'nosection'
@@ -47,7 +49,7 @@ Remv foreignpkg:i386 [1]
 Remv nosection [1]
 Remv texteditor [1]' aptget autoremove mydesktop -s
 
-testfailuremsg 'E: Conflict: not texteditor:amd64 -> not texteditor:amd64=1 -> not bad-texteditor:amd64=1 -> not mydesktop-core:amd64=1 but mydesktop:amd64 -> mydesktop:amd64=1 -> mydesktop-core:amd64=1' aptget autoremove texteditor -s --solver 3.0 #-o Debug::pkgDepCache::AutoInstall=1 -o Debug::pkgProblemResolver=1 -o Debug::pkgDepCache::Marker=1
+testfailuremsg 'E: Conflict: not texteditor:amd64 -> not texteditor:amd64=1 -> not mydesktop-core:amd64=1 but mydesktop:amd64 -> mydesktop-core:amd64=1' aptget autoremove texteditor -s --solver 3.0 #-o Debug::pkgDepCache::AutoInstall=1 -o Debug::pkgProblemResolver=1 -o Debug::pkgDepCache::Marker=1
 testsuccessequal 'Reading package lists...
 Building dependency tree...
 Reading state information...

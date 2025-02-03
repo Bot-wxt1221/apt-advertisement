@@ -23,7 +23,6 @@
 #include <apt-pkg/fileutl.h>
 #include <apt-pkg/hashes.h>
 #include <apt-pkg/proxy.h>
-#include <apt-pkg/string_view.h>
 #include <apt-pkg/strutl.h>
 
 #include <cerrno>
@@ -280,14 +279,14 @@ CircleBuf::~CircleBuf()							/*{{{*/
 // UnwrapHTTPConnect - Does the HTTP CONNECT handshake			/*{{{*/
 // ---------------------------------------------------------------------
 /* Performs a TLS handshake on the socket */
-struct HttpConnectFd : public MethodFd
+struct HttpConnectFd final : public MethodFd
 {
    std::unique_ptr<MethodFd> UnderlyingFd;
    std::string Buffer;
 
-   int Fd() APT_OVERRIDE { return UnderlyingFd->Fd(); }
+   int Fd() override { return UnderlyingFd->Fd(); }
 
-   ssize_t Read(void *buf, size_t count) APT_OVERRIDE
+   ssize_t Read(void *buf, size_t count) override
    {
       if (!Buffer.empty())
       {
@@ -300,17 +299,17 @@ struct HttpConnectFd : public MethodFd
 
       return UnderlyingFd->Read(buf, count);
    }
-   ssize_t Write(void *buf, size_t count) APT_OVERRIDE
+   ssize_t Write(void *buf, size_t count) override
    {
       return UnderlyingFd->Write(buf, count);
    }
 
-   int Close() APT_OVERRIDE
+   int Close() override
    {
       return UnderlyingFd->Close();
    }
 
-   bool HasPending() APT_OVERRIDE
+   bool HasPending() override
    {
       return !Buffer.empty();
    }
@@ -429,9 +428,7 @@ ResultState HttpServerState::Open()
    Out.Reset();
    Persistent = true;
 
-#ifdef HAVE_GNUTLS
    bool tls = (ServerName.Access == "https" || APT::String::Endswith(ServerName.Access, "+https"));
-#endif
 
    // Determine the proxy setting
    // Used to run AutoDetectProxy(ServerName) here, but we now send a Proxy
@@ -456,7 +453,6 @@ ResultState HttpServerState::Open()
 	   {
 	      char *result = getenv("http_proxy");
 	      Proxy = result ? result : "";
-#ifdef HAVE_GNUTLS
 	      if (tls == true)
 	      {
 		 char *result = getenv("https_proxy");
@@ -465,7 +461,6 @@ ResultState HttpServerState::Open()
 		    Proxy = result;
 		 }
 	      }
-#endif
 	   }
    }
    
@@ -479,13 +474,8 @@ ResultState HttpServerState::Open()
    if (Proxy.empty() == false)
       Owner->AddProxyAuth(Proxy, ServerName);
 
-#ifdef HAVE_GNUTLS
    auto const DefaultService = tls ? "https" : "http";
    auto const DefaultPort = tls ? 443 : 80;
-#else
-   auto const DefaultService = "http";
-   auto const DefaultPort = 80;
-#endif
    if (Proxy.Access == "socks5h")
    {
       auto result = Connect(Proxy.Host, Proxy.Port, "socks", 1080, ServerFd, TimeOut, Owner);
@@ -519,15 +509,12 @@ ResultState HttpServerState::Open()
 	    Port = Proxy.Port;
 	 Host = Proxy.Host;
 
-#ifdef HAVE_GNUTLS
 	 if (Proxy.Access == "https" && Port == 0)
 	    Port = 443;
-#endif
       }
       auto result = Connect(Host, Port, DefaultService, DefaultPort, ServerFd, TimeOut, Owner);
       if (result != ResultState::SUCCESSFUL)
 	 return result;
-#ifdef HAVE_GNUTLS
       if (Host == Proxy.Host && Proxy.Access == "https")
       {
 	 aptConfigWrapperForMethods ProxyConf{std::vector<std::string>{"http", "https"}};
@@ -542,13 +529,10 @@ ResultState HttpServerState::Open()
 	 if (result != ResultState::SUCCESSFUL)
 	    return result;
       }
-#endif
    }
 
-#ifdef HAVE_GNUTLS
    if (tls)
       return UnwrapTLS(ServerName.Host, ServerFd, TimeOut, Owner, Owner);
-#endif
 
    return ResultState::SUCCESSFUL;
 }
@@ -977,12 +961,12 @@ void HttpMethod::SendReq(FetchItem *Itm)
 #ifdef HAVE_SYSTEMD
    if (ConfigFindB("User-Agent-Non-Interactive", false))
    {
-      using APT::operator""_sv;
+      using std::literals::operator""sv;
       char *unit = nullptr;
       sd_pid_get_unit(getpid(), &unit);
       if (unit != nullptr && *unit != '\0' && not APT::String::Startswith(unit, "user@") // user@ _is_ interactive
-	  && "packagekit.service"_sv != unit						 // packagekit likely is interactive
-	  && "dbus.service"_sv != unit)							 // aptdaemon and qapt don't have systemd services
+	  && "packagekit.service"sv != unit						 // packagekit likely is interactive
+	  && "dbus.service"sv != unit)							 // aptdaemon and qapt don't have systemd services
 	 Req << " non-interactive";
 
       free(unit);
@@ -1040,7 +1024,7 @@ BaseHttpMethod::DealWithHeadersResult HttpMethod::DealWithHeaders(FetchResult &R
 									/*}}}*/
 HttpMethod::HttpMethod(std::string &&pProg) : BaseHttpMethod(std::move(pProg), "1.2", Pipeline | SendConfig | SendURIEncoded) /*{{{*/
 {
-   SeccompFlags = aptMethod::BASE | aptMethod::NETWORK;
+   SeccompFlags = aptMethod::BASE | aptMethod::NETWORK | aptMethod::DIRECTORY;
 
    auto addName = std::inserter(methodNames, methodNames.begin());
    if (Binary != "http")

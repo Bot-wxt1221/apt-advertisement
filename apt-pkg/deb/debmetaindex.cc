@@ -75,7 +75,7 @@ static std::string NormalizeSignedBy(std::string SignedBy, bool const Introducer
       return os.str();
    }
 
-   // we could go all fancy and allow short/long/string matches as gpgv/apt-key does,
+   // we could go all fancy and allow short/long/string matches as gpgv does,
    // but fingerprints are harder to fake than the others and this option is set once,
    // not interactively all the time so easy to type is not really a concern.
    std::transform(SignedBy.begin(), SignedBy.end(), SignedBy.begin(), [](char const c) {
@@ -533,7 +533,7 @@ bool debReleaseIndex::Load(std::string const &Filename, std::string * const Erro
 	 if (!parseSumData(Start, End, Name, Hash, Size))
 	    return false;
 
-	 HashString const hs(hashinfo.name.to_string(), Hash);
+	 HashString const hs(std::string{hashinfo.name}, Hash);
          if (Entries.find(Name) == Entries.end())
          {
             metaIndex::checkSum *Sum = new metaIndex::checkSum;
@@ -698,7 +698,7 @@ bool debReleaseIndex::parseSumData(const char *&Start, const char *End,	/*{{{*/
       Start++;
    if (Start >= End)
       return false;
-   
+
    EntryEnd = Start;
    /* Find the end of the second entry (the size) */
    while ((*EntryEnd != '\t' && *EntryEnd != ' ' )
@@ -706,19 +706,19 @@ bool debReleaseIndex::parseSumData(const char *&Start, const char *End,	/*{{{*/
       EntryEnd++;
    if (EntryEnd == End)
       return false;
-   
+
    Size = strtoull (Start, NULL, 10);
-      
+
    /* Skip over intermediate blanks */
    Start = EntryEnd;
    while (*Start == '\t' || *Start == ' ')
       Start++;
    if (Start >= End)
       return false;
-   
+
    EntryEnd = Start;
    /* Find the end of the third entry (the filename) */
-   while ((*EntryEnd != '\t' && *EntryEnd != ' ' && 
+   while ((*EntryEnd != '\t' && *EntryEnd != ' ' &&
            *EntryEnd != '\n' && *EntryEnd != '\r')
 	  && EntryEnd < End)
       EntryEnd++;
@@ -1255,7 +1255,7 @@ class APT_HIDDEN debSLTypeDebian : public pkgSourceList::Type		/*{{{*/
    }
 
    protected:
-   // This is a duplicate of pkgAcqChangelog::URITemplate()  with some changes to work 
+   // This is a duplicate of pkgAcqChangelog::URITemplate()  with some changes to work
    // on metaIndex instead of cache structures, and using Snapshots
    std::string SnapshotServer(debReleaseIndex const *Rls) const
    {
@@ -1475,7 +1475,7 @@ class APT_HIDDEN debSLTypeDeb : public debSLTypeDebian			/*{{{*/
 
    bool CreateItem(std::vector<metaIndex *> &List, std::string const &URI,
 		   std::string const &Dist, std::string const &Section,
-		   std::map<std::string, std::string> const &Options) const APT_OVERRIDE
+		   std::map<std::string, std::string> const &Options) const override
    {
       return CreateItemInternal(List, URI, Dist, Section, false, Options);
    }
@@ -1491,7 +1491,7 @@ class APT_HIDDEN debSLTypeDebSrc : public debSLTypeDebian		/*{{{*/
 
    bool CreateItem(std::vector<metaIndex *> &List, std::string const &URI,
 		   std::string const &Dist, std::string const &Section,
-		   std::map<std::string, std::string> const &Options) const APT_OVERRIDE
+		   std::map<std::string, std::string> const &Options) const override
    {
       return CreateItemInternal(List, URI, Dist, Section, true, Options);
    }

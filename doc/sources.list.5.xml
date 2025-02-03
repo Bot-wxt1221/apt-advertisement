@@ -14,7 +14,7 @@
    &apt-email;
    &apt-product;
    <!-- The last update date -->
-   <date>2023-01-29T00:00:00Z</date>
+   <date>2025-01-28T00:00:00Z</date>
  </refentryinfo>
  
  <refmeta>
@@ -54,6 +54,16 @@
        Otherwise APT will print a notice that it has ignored a file, unless that
        file matches a pattern in the <literal>Dir::Ignore-Files-Silently</literal>
        configuration list - in which case it will be silently ignored.</para>
+     <para>
+       The suggested filename for new systems is
+       <filename>/etc/apt/sources.list.d/<replaceable>vendor</replaceable>.sources</filename>,
+       where <replaceable>vendor</replaceable> is the result of
+       <command>dpkg-vendor --query Vendor | tr A-Z a-z</command>,
+       in deb822-style format.
+       For example,
+       Ubuntu uses
+       <filename>/etc/apt/sources.list.d/ubuntu.sources</filename>.
+     </para>
  </refsect1>
 
  <refsect1><title>One-Line-Style Format</title>
@@ -82,6 +92,10 @@
        Note also that some older applications parsing this format on their own might not
        expect to encounter options as they were uncommon before the introduction of
        multi-architecture support.
+    </para>
+    <para>
+        This format is deprecated and may eventually be removed, but not before
+        2029.
     </para>
  </refsect1>
 
@@ -187,7 +201,7 @@ deb-src [ option1=value1 option2=value2 ] uri suite [component1] [component2] [.
    network, followed by distant Internet hosts, for example).</para>
 
    <para>As an example, the sources for your distribution could look like this
-      in one-line-style format:
+      in the deprecated one-line-style format:
       <literallayout>&sourceslist-list-format;</literallayout> or like this in
       deb822 style format:
       <literallayout>&sourceslist-sources-format;</literallayout></para>
@@ -304,8 +318,8 @@ deb-src [ option1=value1 option2=value2 ] uri suite [component1] [component2] [.
 		and <filename>/etc/apt/keyrings</filename> for keyrings managed by the system operator.
 		If no keyring files are specified
 		the default is the <filename>trusted.gpg</filename> keyring and
-		all keyrings in the <filename>trusted.gpg.d/</filename> directory
-		(see <command>apt-key fingerprint</command>). If no fingerprint is
+		all keyrings in the <filename>trusted.gpg.d/</filename> directory.
+		If no fingerprint is
 		specified all keys in the keyrings are selected. A fingerprint will
 		accept also all signatures by a subkey of this key, if this isn't
 		desired an exclamation mark (<literal>!</literal>) can be appended to
@@ -477,35 +491,11 @@ Signed-By:
     source list.</para></listitem>
     </varlistentry>
 
-    <varlistentry><term><command>ftp</command></term>
-    <listitem><para>
-    The ftp scheme specifies an FTP server for an archive. Use of FTP is on the
-    decline in favour of <literal>http</literal> and <literal>https</literal>
-    and many archives either never offered or are retiring FTP access. If you
-    still need this method many configuration options for it are available in
-    the <literal>Acquire::ftp</literal> scope and detailed in &apt-conf;.</para>
-    <para>Please note that an FTP proxy can be specified
-    by using the <envar>ftp_proxy</envar> environment variable. It is possible
-    to specify an HTTP proxy (HTTP proxy servers often understand FTP URLs)
-    using this environment variable and <emphasis>only</emphasis> this
-    environment variable. Proxies using HTTP specified in
-    the configuration file will be ignored.</para></listitem>
-    </varlistentry>
-
     <varlistentry><term><command>copy</command></term>
     <listitem><para>
     The copy scheme is identical to the file scheme except that packages are
     copied into the cache directory instead of used directly at their location.
     This is useful for people using removable media to copy files around with APT.</para></listitem>
-    </varlistentry>
-    
-    <varlistentry><term><command>rsh</command></term><term><command>ssh</command></term>
-    <listitem><para>
-    The rsh/ssh method invokes RSH/SSH to connect to a remote host and
-    access the files as a given user. Prior configuration of rhosts or RSA keys
-    is recommended. The standard <command>find</command> and <command>dd</command>
-    commands are used to perform the file transfers from the remote host.
-    </para></listitem>
     </varlistentry>
 
     <varlistentry><term>adding more recognizable URI types</term>
@@ -567,21 +557,21 @@ URIs: http://archive.debian.org/debian-archive
 Suites: hamm
 Components: main</literallayout>
 
-   <para>Uses FTP to access the archive at ftp.debian.org, under the debian
+   <para>Uses HTTPS to access the archive at deb.debian.org, under the debian
    directory, and uses only the &debian-stable-codename;/contrib area.</para>
-   <literallayout>deb ftp://ftp.debian.org/debian &debian-stable-codename; contrib</literallayout>
+   <literallayout>deb https://deb.debian.org/debian &debian-stable-codename; contrib</literallayout>
    <literallayout>Types: deb
-URIs: ftp://ftp.debian.org/debian
+URIs: https://deb.debian.org/debian
 Suites: &debian-stable-codename;
 Components: contrib</literallayout>
 
-   <para>Uses FTP to access the archive at ftp.debian.org, under the debian
+   <para>Uses HTTPS to access the archive at deb.debian.org, under the debian
    directory, and uses only the unstable/contrib area. If this line appears as
    well as the one in the previous example in <filename>sources.list</filename>
-   a single FTP session will be used for both resource lines.</para>
-   <literallayout>deb ftp://ftp.debian.org/debian unstable contrib</literallayout>
+   a single HTTPS session will be used for both resource lines.</para>
+   <literallayout>deb https://deb.debian.org/debian unstable contrib</literallayout>
    <literallayout>Types: deb
-URIs: ftp://ftp.debian.org/debian
+URIs: https://deb.debian.org/debian
 Suites: unstable
 Components: contrib</literallayout>
 

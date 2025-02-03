@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt 0.5.26\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2024-07-30 04:29+0000\n"
+"POT-Creation-Date: 2025-01-28 18:52+0000\n"
 "PO-Revision-Date: 2008-12-11 14:52+0200\n"
 "Last-Translator: Tapio Lehtonen <tale@debian.org>\n"
 "Language-Team: Finnish <debian-l10n-finnish@lists.debian.org>\n"
@@ -53,8 +53,8 @@ msgstr "Kansio %s on korvautunut"
 
 #: apt-pkg/acquire-item.cc
 msgid ""
-"This is normally not allowed, but the option Acquire::"
-"AllowDowngradeToInsecureRepositories was given to override it."
+"This is normally not allowed, but the option "
+"Acquire::AllowDowngradeToInsecureRepositories was given to override it."
 msgstr ""
 
 #: apt-pkg/acquire-item.cc
@@ -183,8 +183,7 @@ msgstr ""
 msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr ""
 
-#. Both messages are reused from the ReleaseInfoChange feature in acquire-item.cc
-#: apt-pkg/acquire-item.cc apt-private/private-update.cc
+#: apt-pkg/acquire-item.cc
 #, c-format
 msgid "Repository '%s' changed its '%s' value from '%s' to '%s'"
 msgstr ""
@@ -195,7 +194,7 @@ msgid "Repository '%s' changed its default priority for %s from %hi to %hi."
 msgstr ""
 
 #. TRANSLATOR: the "this" refers to changes in the repository like a new release or owner change
-#: apt-pkg/acquire-item.cc apt-private/private-update.cc
+#: apt-pkg/acquire-item.cc
 #, c-format
 msgid ""
 "More information about this can be found online in the Release notes at: %s"
@@ -240,13 +239,6 @@ msgstr ""
 #, fuzzy, c-format
 msgid "Changelog unavailable for %s=%s"
 msgstr "Avataan yhteys %s (%s)"
-
-#: apt-pkg/acquire-worker.cc
-#, c-format
-msgid ""
-"The method '%s' is unsupported and disabled by default. Consider switching "
-"to http(s). Set Dir::Bin::Methods::%s to \"%s\" to enable it again."
-msgstr ""
 
 #: apt-pkg/acquire-worker.cc
 #, c-format
@@ -765,11 +757,11 @@ msgstr "Aliprosessi %s palautti virhekoodin (%u)"
 msgid "Sub-process %s exited unexpectedly"
 msgstr "Aliprosessi %s lopetti odottamatta"
 
-#: apt-pkg/contrib/fileutl.cc methods/ftp.cc methods/rsh.cc
+#: apt-pkg/contrib/fileutl.cc
 msgid "Read error"
 msgstr "Lukuvirhe"
 
-#: apt-pkg/contrib/fileutl.cc methods/ftp.cc methods/rsh.cc
+#: apt-pkg/contrib/fileutl.cc
 msgid "Write error"
 msgstr "Virhe kirjoitettaessa"
 
@@ -1074,6 +1066,12 @@ msgstr "Luettelokansiota ei voitu lukita"
 
 #: apt-pkg/deb/debsystem.cc
 msgid "Not locked"
+msgstr ""
+
+#: apt-pkg/deb/debsystem.cc
+msgid ""
+"The dpkg executable set in Dir::Bin::dpkg is missing, falling back to using "
+"default dpkg."
 msgstr ""
 
 #. we don't care for the difference
@@ -2384,7 +2382,7 @@ msgid "Y"
 msgstr "K"
 
 #. TRANSLATOR: "No" answer printed for a yes/no question if --assume-no is set
-#: apt-private/private-output.cc
+#: apt-private/private-output.cc apt-private/private-sources.cc
 msgid "N"
 msgstr ""
 
@@ -2558,8 +2556,8 @@ msgstr "Paketille %s ei ole määritetty paketointiriippuvuuksia.\n"
 #: apt-private/private-source.cc
 #, c-format
 msgid ""
-"No architecture information available for %s. See apt.conf(5) APT::"
-"Architectures for setup"
+"No architecture information available for %s. See apt.conf(5) "
+"APT::Architectures for setup"
 msgstr ""
 
 #: apt-private/private-source.cc
@@ -2597,6 +2595,11 @@ msgstr "Nimen muuttaminen %s -> %s ei onnistunut"
 msgid "Your '%s' file changed, please run 'apt-get update'.\n"
 msgstr ""
 
+#: apt-private/private-sources.cc
+#, c-format
+msgid "Rewrite %zu sources?"
+msgstr ""
+
 #: apt-private/private-unmet.cc
 #, c-format
 msgid "Package %s version %s has an unmet dep:\n"
@@ -2617,7 +2620,32 @@ msgstr ""
 #. TRANSLATOR: the first is manpage reference, the last the URI from a sources.list
 #: apt-private/private-update.cc
 #, c-format
+msgid "The %s entry for '%s' should be upgraded to deb822 .sources"
+msgstr ""
+
+#. TRANSLATOR: the first is manpage reference, the last the URI from a sources.list
+#: apt-private/private-update.cc
+#, c-format
 msgid "Missing Signed-By in the %s entry for '%s'"
+msgstr ""
+
+#: apt-private/private-update.cc
+msgid ""
+"Consider migrating all sources.list(5) entries to the deb822 .sources format"
+msgstr ""
+
+#: apt-private/private-update.cc
+msgid ""
+"The deb822 .sources format supports both embedded as well as external "
+"OpenPGP keys"
+msgstr ""
+
+#: apt-private/private-update.cc
+msgid "See apt-secure(8) for best practices in configuring repository signing."
+msgstr ""
+
+#: apt-private/private-update.cc
+msgid "Some sources can be modernized. Run 'apt modernize-sources' to do so."
 msgstr ""
 
 #: apt-private/private-update.cc
@@ -2996,6 +3024,12 @@ msgid "concatenate files, with automatic decompression"
 msgstr ""
 
 #: cmdline/apt-helper.cc
+#, fuzzy
+#| msgid "Problem hashing file"
+msgid "hash file"
+msgstr "Pulmia tiedoston hajautuksessa"
+
+#: cmdline/apt-helper.cc
 msgid "detect proxy using apt.conf"
 msgstr ""
 
@@ -3243,6 +3277,10 @@ msgid "edit the source information file"
 msgstr "Luetaan tilatiedot"
 
 #: cmdline/apt.cc
+msgid "modernize .list files to .sources files"
+msgstr ""
+
+#: cmdline/apt.cc
 #, fuzzy
 #| msgid "Failed to satisfy %s dependency for %s: %s"
 msgid "satisfy dependency strings"
@@ -3452,7 +3490,7 @@ msgstr "Tuntematon pakkausalgoritmi \"%s\""
 msgid "Compressed output %s needs a compression set"
 msgstr "Pakattu tulostus %s tarvitsee pakkausjoukon"
 
-#: ftparchive/multicompress.cc methods/rsh.cc
+#: ftparchive/multicompress.cc
 msgid "Failed to create IPC pipe to subprocess"
 msgstr "IPC-putken luominen aliprosessiin ei onnistunut"
 
@@ -3571,23 +3609,23 @@ msgstr "Arkistossa ei ollut pakettikenttää"
 
 #: ftparchive/writer.cc
 #, c-format
-msgid "  %s has no override entry\n"
-msgstr "  %s:llä ei ole poikkeustietuetta\n"
+msgid "  %.*s has no override entry\n"
+msgstr "  %.*s:llä ei ole poikkeustietuetta\n"
 
 #: ftparchive/writer.cc
 #, c-format
-msgid "  %s maintainer is %s not %s\n"
-msgstr "  %s ylläpitäjä on %s eikä %s\n"
+msgid "  %.*s maintainer is %.*s not %s\n"
+msgstr "  %.*s ylläpitäjä on %.*s eikä %s\n"
 
 #: ftparchive/writer.cc
 #, c-format
-msgid "  %s has no source override entry\n"
-msgstr "  %s:llä ei ole poikkeustietuetta\n"
+msgid "  %.*s has no source override entry\n"
+msgstr "  %.*s:llä ei ole poikkeustietuetta\n"
 
 #: ftparchive/writer.cc
 #, c-format
-msgid "  %s has no binary override entry either\n"
-msgstr "  %s:llä ei  ole binääristäkään poikkeustietuetta\n"
+msgid "  %.*s has no binary override entry either\n"
+msgstr "  %.*s:llä ei  ole binääristäkään poikkeustietuetta\n"
 
 #: methods/basehttp.cc
 msgid "Waiting for headers"
@@ -3625,7 +3663,7 @@ msgstr "Virheellinen otsikkotieto"
 msgid "Connection failed"
 msgstr "Yhteys ei toiminut"
 
-#: methods/basehttp.cc methods/ftp.cc methods/http.cc
+#: methods/basehttp.cc methods/http.cc
 #, c-format
 msgid "File has unexpected size (%llu != %llu). Mirror sync in progress?"
 msgstr ""
@@ -3667,7 +3705,7 @@ msgstr "Rompun %s irrottaminen ei onnistu, se on ehkä käytössä."
 msgid "Disk not found."
 msgstr "Levyä ei löydy"
 
-#: methods/cdrom.cc methods/file.cc methods/rsh.cc
+#: methods/cdrom.cc methods/file.cc
 msgid "File not found"
 msgstr "Tiedostoa ei löydy"
 
@@ -3703,7 +3741,7 @@ msgstr "Pistokeen luonti ei onnistu %s (f=%u t=%u p=%u)"
 msgid "Cannot initiate the connection to %s:%s (%s)."
 msgstr "Yhteyden %s avaus ei onnistu: %s (%s)."
 
-#: methods/connect.cc methods/ftp.cc methods/rsh.cc
+#: methods/connect.cc
 msgid "Failed"
 msgstr "Ei onnistunut"
 
@@ -3717,9 +3755,7 @@ msgstr "Yhteyttä %s ei voitu muodostaa: %s (%s)"
 msgid "Could not connect to %s:%s (%s), connection timed out"
 msgstr "Yhteyttä %s ei voitu muodostaa: %s (%s), yhteys aikakatkaistiin"
 
-#. We say this mainly because the pause here is for the
-#. ssh connection that is still going
-#: methods/connect.cc methods/rsh.cc
+#: methods/connect.cc
 #, c-format
 msgid "Connecting to %s"
 msgstr "Avataan yhteys %s"
@@ -3757,145 +3793,6 @@ msgstr "Komento stat ei toiminut"
 msgid "Invalid URI, local URIS must not start with //"
 msgstr "URI on kelvoton, paikallinen URI ei saa alkaa //"
 
-#. Login must be before getpeername otherwise dante won't work.
-#: methods/ftp.cc
-msgid "Logging in"
-msgstr "Kirjaudutaan sisään"
-
-#: methods/ftp.cc
-msgid "Unable to determine the peer name"
-msgstr "Vastapään nimeä ei saa selville"
-
-#: methods/ftp.cc
-msgid "Unable to determine the local name"
-msgstr "Paikallista nimeä ei saa selville"
-
-#: methods/ftp.cc
-#, c-format
-msgid "The server refused the connection and said: %s"
-msgstr "Palvelin ei huolinut yhteyttä ilmoituksella: %s"
-
-#: methods/ftp.cc
-#, c-format
-msgid "USER failed, server said: %s"
-msgstr "USER ei onnistunut, palvelimen ilmoitus: %s"
-
-#: methods/ftp.cc
-#, c-format
-msgid "PASS failed, server said: %s"
-msgstr "PASS ei onnistunut, palvelimen ilmoitus: %s"
-
-#: methods/ftp.cc
-msgid ""
-"A proxy server was specified but no login script, Acquire::ftp::ProxyLogin "
-"is empty."
-msgstr ""
-"Määritettiin välipalvelin mutta ei komentotiedostoa kirjautumiseen, Acquire::"
-"ftp::ProxyLogin on tyhjä."
-
-#: methods/ftp.cc
-#, c-format
-msgid "Login script command '%s' failed, server said: %s"
-msgstr "Komentotiedoston rivi \"%s\" ei toiminut, palvelin ilmoitti: %s"
-
-#: methods/ftp.cc
-#, c-format
-msgid "TYPE failed, server said: %s"
-msgstr "TYPE ei toiminut, palvelin ilmoitti: %s"
-
-#: methods/ftp.cc methods/rsh.cc
-msgid "Connection timeout"
-msgstr "Yhteys aikakatkaistiin"
-
-#: methods/ftp.cc
-msgid "Server closed the connection"
-msgstr "Palvelin sulki yhteyden"
-
-#: methods/ftp.cc methods/rsh.cc
-msgid "A response overflowed the buffer."
-msgstr "Vastaus aiheutti puskurin ylivuodon."
-
-#: methods/ftp.cc
-msgid "Protocol corruption"
-msgstr "Yhteyskäytäntö on turmeltunut"
-
-#: methods/ftp.cc
-msgid "Could not create a socket"
-msgstr "Pistoketta ei voitu luoda"
-
-#: methods/ftp.cc
-msgid "Could not connect data socket, connection timed out"
-msgstr "Pistoketta ei voitu kytkeä, yhteys aikakatkaistiin"
-
-#: methods/ftp.cc
-msgid "Could not connect passive socket."
-msgstr "Passiivista pistoketta ei voitu kytkeä."
-
-#: methods/ftp.cc
-msgid "getaddrinfo was unable to get a listening socket"
-msgstr "getaddrinfo ei saanut kuuntelupistoketta"
-
-#: methods/ftp.cc
-msgid "Could not bind a socket"
-msgstr "Pistoketta ei voitu nimetä"
-
-#: methods/ftp.cc
-msgid "Could not listen on the socket"
-msgstr "Pistoketta ei voitu kuunnella"
-
-#: methods/ftp.cc
-msgid "Could not determine the socket's name"
-msgstr "Pistokkeen nimeä ei saatu selville"
-
-#: methods/ftp.cc
-msgid "Unable to send PORT command"
-msgstr "Komennon PORT lähetys ei onnistu"
-
-#: methods/ftp.cc
-#, c-format
-msgid "Unknown address family %u (AF_*)"
-msgstr "Tuntematon osoiteperhe %u (AF_*)"
-
-#: methods/ftp.cc
-#, c-format
-msgid "EPRT failed, server said: %s"
-msgstr "EPRT ei onnistunut, palvelin ilmoitti: %s"
-
-#: methods/ftp.cc
-msgid "Data socket connect timed out"
-msgstr "Pistokkeen kytkeminen aikakatkaistiin"
-
-#: methods/ftp.cc
-msgid "Unable to accept connection"
-msgstr "Yhteyttä ei voitu hyväksyä"
-
-#: methods/ftp.cc methods/http.cc methods/rsh.cc
-msgid "Problem hashing file"
-msgstr "Pulmia tiedoston hajautuksessa"
-
-#: methods/ftp.cc
-#, c-format
-msgid "Unable to fetch file, server said '%s'"
-msgstr "Tiedostoa ei saatu noudettua, palvelin ilmoitti \"%s\""
-
-#: methods/ftp.cc methods/rsh.cc
-msgid "Data socket timed out"
-msgstr "Pistoke aikakatkaistiin"
-
-#: methods/ftp.cc
-#, c-format
-msgid "Data transfer failed, server said '%s'"
-msgstr "Tiedonsiirto ei onnistunut, palvelin ilmoitti \"%s\""
-
-#. Get the files information
-#: methods/ftp.cc
-msgid "Query"
-msgstr "Kysely"
-
-#: methods/ftp.cc
-msgid "Unable to invoke "
-msgstr "Käynnistys ei onnistu"
-
 #: methods/gpgv.cc
 #, c-format
 msgid "untrusted public key algorithm: %s"
@@ -3925,20 +3822,15 @@ msgstr ""
 
 #: methods/gpgv.cc
 #, fuzzy
-msgid "Could not execute 'apt-key' to verify signature (is gnupg installed?)"
+msgid "Could not execute 'gpgv' to verify signature (is gnupg installed?)"
 msgstr ""
 "Ei käynnistynyt \"%s\" allekirjoitusta tarkistamaan (onko gnupg asennettu?)"
 
 #: methods/gpgv.cc
-msgid "Unknown error executing apt-key"
+#, fuzzy
+#| msgid "Unknown error executing apt-key"
+msgid "Unknown error executing gpgv"
 msgstr "Tapahtui tuntematon virhe suoritettaessa apt-key"
-
-#: methods/gpgv.cc
-#, c-format
-msgid ""
-"Key is stored in legacy trusted.gpg keyring (%s), see the DEPRECATION "
-"section in apt-key(8) for details."
-msgstr ""
 
 #. TRANSLATORS: The second %s is the reason and is untranslated for repository owners.
 #: methods/gpgv.cc
@@ -3978,17 +3870,123 @@ msgstr "Select ei toiminut"
 msgid "Connection timed out"
 msgstr "Yhteys aikakatkaistiin"
 
+#: methods/http.cc
+msgid "Problem hashing file"
+msgstr "Pulmia tiedoston hajautuksessa"
+
 #: methods/rred.cc
 msgid "Failed to set modification time"
 msgstr "Tiedoston muutospäivämäärää ei saatu vaihdettua"
 
-#: methods/rsh.cc
-msgid "Connection closed prematurely"
-msgstr "Yhteys katkesi ennenaikaisesti"
-
 #: methods/store.cc
 msgid "Empty files can't be valid archives"
 msgstr ""
+
+#~ msgid "Logging in"
+#~ msgstr "Kirjaudutaan sisään"
+
+#~ msgid "Unable to determine the peer name"
+#~ msgstr "Vastapään nimeä ei saa selville"
+
+#~ msgid "Unable to determine the local name"
+#~ msgstr "Paikallista nimeä ei saa selville"
+
+#, c-format
+#~ msgid "The server refused the connection and said: %s"
+#~ msgstr "Palvelin ei huolinut yhteyttä ilmoituksella: %s"
+
+#, c-format
+#~ msgid "USER failed, server said: %s"
+#~ msgstr "USER ei onnistunut, palvelimen ilmoitus: %s"
+
+#, c-format
+#~ msgid "PASS failed, server said: %s"
+#~ msgstr "PASS ei onnistunut, palvelimen ilmoitus: %s"
+
+#~ msgid ""
+#~ "A proxy server was specified but no login script, "
+#~ "Acquire::ftp::ProxyLogin is empty."
+#~ msgstr ""
+#~ "Määritettiin välipalvelin mutta ei komentotiedostoa kirjautumiseen, "
+#~ "Acquire::ftp::ProxyLogin on tyhjä."
+
+#, c-format
+#~ msgid "Login script command '%s' failed, server said: %s"
+#~ msgstr "Komentotiedoston rivi \"%s\" ei toiminut, palvelin ilmoitti: %s"
+
+#, c-format
+#~ msgid "TYPE failed, server said: %s"
+#~ msgstr "TYPE ei toiminut, palvelin ilmoitti: %s"
+
+#~ msgid "Connection timeout"
+#~ msgstr "Yhteys aikakatkaistiin"
+
+#~ msgid "Server closed the connection"
+#~ msgstr "Palvelin sulki yhteyden"
+
+#~ msgid "A response overflowed the buffer."
+#~ msgstr "Vastaus aiheutti puskurin ylivuodon."
+
+#~ msgid "Protocol corruption"
+#~ msgstr "Yhteyskäytäntö on turmeltunut"
+
+#~ msgid "Could not create a socket"
+#~ msgstr "Pistoketta ei voitu luoda"
+
+#~ msgid "Could not connect data socket, connection timed out"
+#~ msgstr "Pistoketta ei voitu kytkeä, yhteys aikakatkaistiin"
+
+#~ msgid "Could not connect passive socket."
+#~ msgstr "Passiivista pistoketta ei voitu kytkeä."
+
+#~ msgid "getaddrinfo was unable to get a listening socket"
+#~ msgstr "getaddrinfo ei saanut kuuntelupistoketta"
+
+#~ msgid "Could not bind a socket"
+#~ msgstr "Pistoketta ei voitu nimetä"
+
+#~ msgid "Could not listen on the socket"
+#~ msgstr "Pistoketta ei voitu kuunnella"
+
+#~ msgid "Could not determine the socket's name"
+#~ msgstr "Pistokkeen nimeä ei saatu selville"
+
+#~ msgid "Unable to send PORT command"
+#~ msgstr "Komennon PORT lähetys ei onnistu"
+
+#, c-format
+#~ msgid "Unknown address family %u (AF_*)"
+#~ msgstr "Tuntematon osoiteperhe %u (AF_*)"
+
+#, c-format
+#~ msgid "EPRT failed, server said: %s"
+#~ msgstr "EPRT ei onnistunut, palvelin ilmoitti: %s"
+
+#~ msgid "Data socket connect timed out"
+#~ msgstr "Pistokkeen kytkeminen aikakatkaistiin"
+
+#~ msgid "Unable to accept connection"
+#~ msgstr "Yhteyttä ei voitu hyväksyä"
+
+#, c-format
+#~ msgid "Unable to fetch file, server said '%s'"
+#~ msgstr "Tiedostoa ei saatu noudettua, palvelin ilmoitti \"%s\""
+
+#~ msgid "Data socket timed out"
+#~ msgstr "Pistoke aikakatkaistiin"
+
+#, c-format
+#~ msgid "Data transfer failed, server said '%s'"
+#~ msgstr "Tiedonsiirto ei onnistunut, palvelin ilmoitti \"%s\""
+
+#~ msgid "Query"
+#~ msgstr "Kysely"
+
+#~ msgid "Unable to invoke "
+#~ msgstr "Käynnistys ei onnistu"
+
+#~ msgid "Connection closed prematurely"
+#~ msgstr "Yhteys katkesi ennenaikaisesti"
 
 #, fuzzy
 #~| msgid "The following held packages will be changed:"

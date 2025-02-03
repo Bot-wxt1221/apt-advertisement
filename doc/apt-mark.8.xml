@@ -14,7 +14,7 @@
    &apt-email;
    &apt-product;
    <!-- The last update date -->
-   <date>2018-12-11T00:00:00Z</date>
+   <date>2024-09-14T00:00:00Z</date>
  </refentryinfo>
  
  <refmeta>
@@ -151,7 +151,8 @@
  </refsect1>
 
  <refsect1><title>See Also</title>
-    <para><phrase>&apt-get;,&aptitude;,&apt-conf;</phrase></para>
+   <para>&apt-get;, &aptitude;, &apt-conf;
+   </para>
  </refsect1>
 
  <refsect1><title>Diagnostics</title>

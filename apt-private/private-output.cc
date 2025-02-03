@@ -6,6 +6,7 @@
 #include <apt-pkg/configuration.h>
 #include <apt-pkg/depcache.h>
 #include <apt-pkg/error.h>
+#include <apt-pkg/fileutl.h>
 #include <apt-pkg/pkgcache.h>
 #include <apt-pkg/pkgrecords.h>
 #include <apt-pkg/policy.h>
@@ -18,11 +19,14 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <fcntl.h>
 #include <iomanip>
 #include <iostream>
 #include <langinfo.h>
 #include <regex.h>
 #include <sys/ioctl.h>
+#include <sys/wait.h>
+#include <termios.h>
 #include <unistd.h>
 
 #include <sstream>
@@ -40,6 +44,14 @@ std::ofstream devnull("/dev/null");
 
 
 unsigned int ScreenWidth = 80 - 1; /* - 1 for the cursor */
+static pid_t Pager = -1;
+static constexpr std::array<int, 5> PagerSignalsToHandle = {
+   SIGINT,
+   SIGHUP,
+   SIGTERM,
+   SIGQUIT,
+   SIGPIPE,
+};
 
 // SigWinch - Window size change signal handler				/*{{{*/
 // ---------------------------------------------------------------------
@@ -55,9 +67,164 @@ static void SigWinch(int)
 #endif
 }
 									/*}}}*/
+
+bool IsStdoutAtty()
+{
+   static bool is = isatty(STDOUT_FILENO);
+   return is;
+}
+
+static void WaitPager()
+{
+   if (Pager != -1)
+   {
+      c0out.flush();
+      c1out.flush();
+      c2out.flush();
+      std::cerr.flush();
+      std::cout.flush();
+      fflush(stdout);
+      fflush(stderr);
+      close(STDOUT_FILENO);
+      close(STDERR_FILENO);
+      waitpid(Pager, nullptr, 0);
+      Pager = -1;
+   }
+}
+
+static void SignalPager(int signo)
+{
+   if (Pager != -1)
+   {
+      // We can't flush from inside the signal handler.
+      close(STDOUT_FILENO);
+      close(STDERR_FILENO);
+      waitpid(Pager, nullptr, 0);
+      Pager = -1;
+      for (auto signalToHandle : PagerSignalsToHandle)
+	 signal(signalToHandle, SIG_DFL);
+      raise(signo);
+   }
+}
+
+static std::string DeterminePager()
+{
+   if (not IsStdoutAtty() || not _config->FindB("Pager", false))
+      return "";
+   if (auto pager = getenv("APT_PAGER"); pager)
+      return pager;
+   if (auto pager = getenv("PAGER"); pager)
+      return pager;
+   return DEFAULT_PAGER;
+}
+
+bool InitOutputPager()
+{
+   // InitOutputPager() behaves like a singleton, do not run twice-
+   static bool alreadyRan = false;
+   if (alreadyRan)
+      return true;
+   alreadyRan = true;
+
+   auto pager = DeterminePager();
+   if (pager.empty() || pager == "cat")
+      return true;
+
+   auto pagerEnv = VectorizeString(PAGER_ENV, '\n');
+
+   int pipefds[2] = {-1, -1};
+   int notifyPipe[2] = {-1, -1};
+
+   DEFER([&] () {
+      close(pipefds[0]);
+      close(pipefds[1]);
+      close(notifyPipe[0]);
+      close(notifyPipe[1]);
+   });
+
+   if (pipe(pipefds) || pipe(notifyPipe))
+      return _error->Errno("pipe", "Failed to setup pipe");
+
+   Pager = ExecFork();
+   if (Pager < 0)
+      return _error->Errno("fork", "Failed to fork");
+   if (Pager == 0)
+   {
+      // Child process
+      if (dup2(pipefds[0], STDIN_FILENO) == -1)
+	 goto err;
+      if (dup2(STDOUT_FILENO, STDERR_FILENO) == -1)
+	 goto err;
+
+      for (int sig = 1; sig < NSIG; sig++)
+	 signal(sig, SIG_DFL);
+
+      for (auto &v: pagerEnv)
+	 putenv(v.data());
+
+      {
+	 // If our pager name contains a space we need to invoke it in a shell. Boooo!
+	 char *cmd[] = {(char*)"/bin/sh", (char*)"-c", pager.data(), nullptr};
+	 constexpr std::string_view allowed_chars{"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" "+-._=/"};
+	 static_assert(allowed_chars.size() == 26 + 26 + 10 + 6);
+	 if (pager.find_first_not_of(allowed_chars) == pager.npos)
+	 {
+	    cmd[0] = pager.data();
+	    cmd[1] = nullptr;
+	 }
+	 execvp(cmd[0], cmd);
+      }
+   err:
+      int err = errno;
+      FileFd::Write(notifyPipe[1], &err, sizeof(err));
+      _exit(128);
+   }
+
+   // Parent process.
+
+   // Figure out if we were able to execvp() the child successfully. To do so,
+   // read from the notifyPipe. If execvp() was successful, it was closed due
+   // to CLOEXEC. On failure, our child code writes an errno to it.
+   _error->PushToStack();
+   close(notifyPipe[1]);   // Need to close our write end so our read doesn't block
+   notifyPipe[1] = -1;
+   if (int err = 0; FileFd::Read(notifyPipe[0], &err, sizeof(err))) {
+      errno = err;
+      _error->WarningE("PagerSetup", "Could not execute pager");
+      _error->MergeWithStack();
+      return true;
+   }
+   _error->RevertToStack();
+
+   // When running a pager, we must not be reading from stdin/tty, so
+   // let's be safe and open /dev/null in its place.
+   if (int const nullfd = open("/dev/null", O_RDONLY); nullfd != -1)
+   {
+      dup2(nullfd, STDIN_FILENO);
+      close(nullfd);
+   }
+
+   // Redirect the output(s) to the pager
+   if (dup2(pipefds[1], STDOUT_FILENO) == -1)
+      abort();
+   if (isatty(STDERR_FILENO) && dup2(pipefds[1], STDERR_FILENO) == -1)
+      abort();
+
+   // From now on, we can't show any progress messages as we are outputting
+   // to the pager.
+   _config->CndSet("quiet::NoUpdate", "1");
+
+   // Setup signal handlers and exit handlers for the pager, such that
+   // we wait for it.
+   for (auto signalToHandle : PagerSignalsToHandle)
+      signal(signalToHandle, SignalPager);
+   atexit(WaitPager);
+
+   return true;
+}
 bool InitOutput(std::basic_streambuf<char> * const out)			/*{{{*/
 {
-   if (!isatty(STDOUT_FILENO) && _config->FindI("quiet", -1) == -1)
+   if (not IsStdoutAtty() && _config->FindI("quiet", -1) == -1)
       _config->Set("quiet","1");
 
    c0out.rdbuf(out);
@@ -88,7 +255,7 @@ bool InitOutput(std::basic_streambuf<char> * const out)			/*{{{*/
       SigWinch(0);
    }
 
-   if (isatty(STDOUT_FILENO) == 0 || not _config->FindB("APT::Color", true) || getenv("NO_COLOR") != nullptr || getenv("APT_NO_COLOR") != nullptr)
+   if (not IsStdoutAtty() || not _config->FindB("APT::Color", true) || getenv("NO_COLOR") != nullptr || getenv("APT_NO_COLOR") != nullptr)
    {
       _config->Set("APT::Color", false);
       _config->Set("APT::Color::Highlight", "");
@@ -809,6 +976,12 @@ bool YnPrompt(char const * const Question, bool const Default, bool const ShowGl
       else
 	 _error->DumpErrors(c2o, GlobalError::NOTICE);
    }
+   // ignore pending input on terminal
+   if (not AssumeYes && not AssumeNo && isatty(STDIN_FILENO) == 1)
+   {
+      tcflush(STDIN_FILENO, TCIFLUSH);
+      std::cin.clear();
+   }
 
    c2o << Question << std::flush;
 
@@ -854,9 +1027,10 @@ bool YnPrompt(char const * const Question, bool const Default, bool const ShowGl
 
    char response[1024] = "";
    std::cin.getline(response, sizeof(response));
-
    if (!std::cin)
       return false;
+   if (isatty(STDIN_FILENO) == 0)
+      c1o << response << '\n';
 
    if (strlen(response) == 0)
       return Default;
@@ -894,7 +1068,7 @@ std::string CurrentVersion(pkgCacheFile * const Cache, pkgCache::PkgIterator con
 }
 std::function<std::string(pkgCache::PkgIterator const &)> CurrentVersion(pkgCacheFile * const Cache)
 {
-   return std::bind(static_cast<std::string(*)(pkgCacheFile * const, pkgCache::PkgIterator const&)>(&CurrentVersion), Cache, std::placeholders::_1);
+   return [=](pkgCache::PkgIterator const &i) { return CurrentVersion(Cache, i); };
 }
 std::string CandidateVersion(pkgCacheFile * const Cache, pkgCache::PkgIterator const &Pkg)
 {
@@ -902,7 +1076,7 @@ std::string CandidateVersion(pkgCacheFile * const Cache, pkgCache::PkgIterator c
 }
 std::function<std::string(pkgCache::PkgIterator const &)> CandidateVersion(pkgCacheFile * const Cache)
 {
-   return std::bind(static_cast<std::string(*)(pkgCacheFile * const, pkgCache::PkgIterator const&)>(&CandidateVersion), Cache, std::placeholders::_1);
+   return [=](pkgCache::PkgIterator const &i) { return CandidateVersion(Cache, i); };
 }
 std::string CurrentToCandidateVersion(pkgCacheFile * const Cache, pkgCache::PkgIterator const &Pkg)
 {
@@ -918,7 +1092,7 @@ std::string CurrentToCandidateVersion(pkgCacheFile * const Cache, pkgCache::PkgI
 }
 std::function<std::string(pkgCache::PkgIterator const &)> CurrentToCandidateVersion(pkgCacheFile * const Cache)
 {
-   return std::bind(static_cast<std::string(*)(pkgCacheFile * const, pkgCache::PkgIterator const&)>(&CurrentToCandidateVersion), Cache, std::placeholders::_1);
+   return [=](pkgCache::PkgIterator const &i) { return CurrentToCandidateVersion(Cache, i); };
 }
 bool AlwaysTrue(pkgCache::PkgIterator const &)
 {

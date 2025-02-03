@@ -5,9 +5,6 @@
 /* Define if we have the timegm() function */
 #cmakedefine HAVE_TIMEGM
 
-/* Define if we have the gnutls library for TLS */
-#cmakedefine HAVE_GNUTLS
-
 /* Define if we have the zlib library for gzip */
 #cmakedefine HAVE_ZLIB
 
@@ -85,3 +82,7 @@
 
 /* Whether to check for and require merged usr if a usrmerge package is available. */
 #cmakedefine REQUIRE_MERGED_USR
+
+#cmakedefine DEFAULT_PAGER "${DEFAULT_PAGER}"
+#cmakedefine PAGER_ENV "${PAGER_ENV}"
+#cmakedefine SQV_EXECUTABLE "${SQV_EXECUTABLE}"

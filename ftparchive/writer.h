@@ -2,11 +2,11 @@
 // Description								/*{{{*/
 /* ######################################################################
 
-   Writer 
-   
+   Writer
+
    The file writer classes. These write various types of output, sources,
    packages and contents.
-   
+
    ##################################################################### */
 									/*}}}*/
 #ifndef WRITER_H
@@ -95,7 +95,7 @@ class TranslationWriter
    FileFd *Output;
 
    public:
-   bool DoPackage(string const &Pkg, string const &Desc, string const &MD5);
+   bool DoPackage(std::string_view Pkg, string const &Desc, string const &MD5);
 
    TranslationWriter(string const &File, string const &TransCompress, mode_t const &Permissions);
    ~TranslationWriter();
@@ -121,9 +121,9 @@ class PackagesWriter : public FTWScanner
    TranslationWriter * const TransWriter;
 
    inline bool ReadOverride(string const &File) {return Over.ReadOverride(File);};
-   inline bool ReadExtraOverride(string const &File) 
+   inline bool ReadExtraOverride(string const &File)
       {return Over.ReadExtraOverride(File);};
-   virtual bool DoPackage(string FileName) APT_OVERRIDE;
+   bool DoPackage(string FileName) override;
 
    PackagesWriter(FileFd * const Output, TranslationWriter * const TransWriter, string const &DB,
                   string const &Overrides,
@@ -146,7 +146,7 @@ class ContentsWriter : public FTWScanner
    string Prefix;
 
    bool DoPackage(string FileName,string Package);
-   virtual bool DoPackage(string FileName) APT_OVERRIDE 
+   bool DoPackage(string FileName) override
              {return DoPackage(FileName,string());};
    bool ReadFromPkgs(string const &PkgFile,string const &PkgCompress);
 
@@ -176,7 +176,7 @@ class SourcesWriter : public FTWScanner
    string DirStrip;
    struct CacheDB::Stats &Stats;
 
-   virtual bool DoPackage(string FileName) APT_OVERRIDE;
+   bool DoPackage(string FileName) override;
 
    SourcesWriter(FileFd * const Output, string const &DB,string const &BOverrides,string const &SOverrides,
 		 string const &ExtOverrides=string());
@@ -187,7 +187,7 @@ class ReleaseWriter : public FTWScanner
 {
 public:
    ReleaseWriter(FileFd * const Output, string const &DB);
-   virtual bool DoPackage(string FileName) APT_OVERRIDE;
+   bool DoPackage(string FileName) override;
    void Finish();
 
    // General options

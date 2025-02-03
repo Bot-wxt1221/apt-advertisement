@@ -92,6 +92,7 @@ class APT_PUBLIC pkgAcqMethod
 
    // Outgoing messages
    void Fail(bool Transient = false);
+   void FailWithContext(std::string Why, bool Transient, std::unordered_map<std::string, std::string> &fields);
    inline void Fail(const char *Why, bool Transient = false) {Fail(std::string(Why),Transient);};
    virtual void Fail(std::string Why, bool Transient = false);
    virtual void URIStart(FetchResult &Res);
@@ -101,7 +102,7 @@ class APT_PUBLIC pkgAcqMethod
    bool MediaFail(std::string Required,std::string Drive);
    virtual void Exit() {};
 
-   APT_DEPRECATED_MSG("Use SendMessage instead") void PrintStatus(char const * const header, const char* Format, va_list &args) const;
+   [[deprecated("Use SendMessage instead")]] void PrintStatus(char const * const header, const char* Format, va_list &args) const;
 
    public:
    enum CnfFlags

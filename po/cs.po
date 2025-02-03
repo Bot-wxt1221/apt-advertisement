@@ -10,10 +10,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: apt 2.9.0\n"
+"Project-Id-Version: apt 2.9.10\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2024-07-30 04:29+0000\n"
-"PO-Revision-Date: 2024-04-13 22:12+0200\n"
+"POT-Creation-Date: 2025-01-28 18:52+0000\n"
+"PO-Revision-Date: 2024-11-09 20:38+0100\n"
 "Last-Translator: Miroslav Kure <kurem@debian.cz>\n"
 "Language-Team: Czech <debian-l10n-czech@lists.debian.org>\n"
 "Language: cs\n"
@@ -27,7 +27,7 @@ msgid ""
 "Updating from such a repository can't be done securely, and is therefore "
 "disabled by default."
 msgstr ""
-"Aktualizaci z takového repositáře nelze provést zabezpečeně a je proto "
+"Aktualizaci z takového repozitáře nelze provést zabezpečeně a je proto "
 "implicitně zakázána."
 
 #: apt-pkg/acquire-item.cc
@@ -35,7 +35,7 @@ msgid ""
 "Data from such a repository can't be authenticated and is therefore "
 "potentially dangerous to use."
 msgstr ""
-"Data z takového repositáře nelze ověřit a proto je jejich použití "
+"Data z takového repozitáře nelze ověřit a proto je jejich použití "
 "potenciálně nebezpečné."
 
 #: apt-pkg/acquire-item.cc
@@ -43,41 +43,41 @@ msgid ""
 "See apt-secure(8) manpage for repository creation and user configuration "
 "details."
 msgstr ""
-"Podrobnosti o vytváření a nastavení repositářů naleznete v manuálové stránce "
+"Podrobnosti o vytváření a nastavení repozitářů naleznete v manuálové stránce "
 "apt-secure(8)."
 
 #: apt-pkg/acquire-item.cc
 #, c-format
 msgid "The repository '%s' is no longer signed."
-msgstr "Repositář „%s“ již není podepsán."
+msgstr "Repozitář „%s“ již není podepsán."
 
 #: apt-pkg/acquire-item.cc
 #, c-format
 msgid "The repository '%s' no longer has a Release file."
-msgstr "Repositář „%s“ již neobsahuje soubor Release."
+msgstr "Repozitář „%s“ již neobsahuje soubor Release."
 
 #: apt-pkg/acquire-item.cc
 msgid ""
-"This is normally not allowed, but the option Acquire::"
-"AllowDowngradeToInsecureRepositories was given to override it."
+"This is normally not allowed, but the option "
+"Acquire::AllowDowngradeToInsecureRepositories was given to override it."
 msgstr ""
-"Toto není běžně povoleno, ale bylo to vynuceno volbou Acquire::"
-"AllowDowngradeToInsecureRepositories."
+"Toto není běžně povoleno, ale bylo to vynuceno volbou "
+"Acquire::AllowDowngradeToInsecureRepositories."
 
 #: apt-pkg/acquire-item.cc
 #, c-format
 msgid "The repository '%s' is not signed."
-msgstr "Repositář „%s“ není podepsán."
+msgstr "Repozitář „%s“ není podepsán."
 
 #: apt-pkg/acquire-item.cc
 #, c-format
 msgid "The repository '%s' does not have a Release file."
-msgstr "Repositář „%s“ neobsahuje soubor Release."
+msgstr "Repozitář „%s“ neobsahuje soubor Release."
 
 #: apt-pkg/acquire-item.cc
 #, c-format
 msgid "The repository '%s' provides only weak security information."
-msgstr "Repositář „%s“ nabízí pouze slabé zabezpečení."
+msgstr "Repozitář „%s“ nabízí pouze slabé zabezpečení."
 
 #: apt-pkg/acquire-item.cc ftparchive/writer.cc
 #, c-format
@@ -130,7 +130,7 @@ msgid ""
 "An error occurred during the signature verification. The repository is not "
 "updated and the previous index files will be used. GPG error: %s: %s"
 msgstr ""
-"Při ověřování podpisů se objevila chyba. Repositář není aktualizovaný, tudíž "
+"Při ověřování podpisů se objevila chyba. Repozitář není aktualizovaný, tudíž "
 "se použijí předchozí indexové soubory. Chyba GPG: %s: %s"
 
 #. Invalid signature file, reject (LP: #346386) (Closes: #627642)
@@ -145,7 +145,7 @@ msgid ""
 "Skipping acquire of configured file '%s' as repository '%s' doesn't have the "
 "component '%s' (component misspelt in sources.list?)"
 msgstr ""
-"Přeskakuje se stažení souboru „%s“, protože repositář „%s“ neobsahuje "
+"Přeskakuje se stažení souboru „%s“, protože repozitář „%s“ neobsahuje "
 "komponentu „%s“ (není v sources.list překlep v názvu?)"
 
 #: apt-pkg/acquire-item.cc
@@ -154,7 +154,7 @@ msgid ""
 "Skipping acquire of configured file '%s' as repository '%s' doesn't support "
 "architecture '%s'"
 msgstr ""
-"Přeskakuje se stažení souboru „%s“, protože repositář „%s“ nepodporuje "
+"Přeskakuje se stažení souboru „%s“, protože repozitář „%s“ nepodporuje "
 "architekturu „%s“"
 
 #: apt-pkg/acquire-item.cc
@@ -163,7 +163,7 @@ msgid ""
 "Skipping acquire of configured file '%s' as repository '%s' does not seem to "
 "provide it (sources.list entry misspelt?)"
 msgstr ""
-"Přeskakuje se stažení souboru „%s“, protože repositář „%s“ ho neposkytuje "
+"Přeskakuje se stažení souboru „%s“, protože repozitář „%s“ ho neposkytuje "
 "(překlep v sources.list?)"
 
 #: apt-pkg/acquire-item.cc
@@ -172,7 +172,7 @@ msgid ""
 "Skipping acquire of configured file '%s' as repository '%s' provides only "
 "weak security information for it"
 msgstr ""
-"Přeskakuje se stažení souboru „%s“, protože repositář „%s“ o něm poskytuje "
+"Přeskakuje se stažení souboru „%s“, protože repozitář „%s“ o něm poskytuje "
 "pouze slabé bezpečnostní informace"
 
 #. TRANSLATOR: The first %s is the URL of the bad Release file, the second is
@@ -185,7 +185,7 @@ msgid ""
 "repository will not be applied."
 msgstr ""
 "Soubor Release pro %s již expiroval (neplatný od %s). Aktualizace z tohoto "
-"repositáře se nepoužijí."
+"repozitáře se nepoužijí."
 
 #. TRANSLATOR: The first %s is the URL of the bad Release file, the second is
 #. the time until the file will be valid - formatted in the same way as in
@@ -197,26 +197,25 @@ msgid ""
 "this repository will not be applied."
 msgstr ""
 "Soubor Release pro %s ještě není platný (a nebude po dalších %s). "
-"Aktualizace z tohoto repositáře se nepoužijí."
+"Aktualizace z tohoto repozitáře se nepoužijí."
 
 #: apt-pkg/acquire-item.cc
 #, c-format
 msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr "Konfliktní distribuce: %s (očekáváno %s, obdrženo %s)"
 
-#. Both messages are reused from the ReleaseInfoChange feature in acquire-item.cc
-#: apt-pkg/acquire-item.cc apt-private/private-update.cc
+#: apt-pkg/acquire-item.cc
 #, c-format
 msgid "Repository '%s' changed its '%s' value from '%s' to '%s'"
-msgstr "Repositář „%s“ změnil svou hodnotu „%s“ z „%s“ na „%s“"
+msgstr "Repozitář „%s“ změnil svou hodnotu „%s“ z „%s“ na „%s“"
 
 #: apt-pkg/acquire-item.cc
 #, c-format
 msgid "Repository '%s' changed its default priority for %s from %hi to %hi."
-msgstr "Repositář „%s“ změnil svou výchozí prioritu pro %s z %hi na %hi."
+msgstr "Repozitář „%s“ změnil svou výchozí prioritu pro %s z %hi na %hi."
 
 #. TRANSLATOR: the "this" refers to changes in the repository like a new release or owner change
-#: apt-pkg/acquire-item.cc apt-private/private-update.cc
+#: apt-pkg/acquire-item.cc
 #, c-format
 msgid ""
 "More information about this can be found online in the Release notes at: %s"
@@ -229,7 +228,7 @@ msgid ""
 "This must be accepted explicitly before updates for this repository can be "
 "applied. See %s manpage for details."
 msgstr ""
-"Než se začnou používat aktualizace z tohoto repositáře, je nutné to "
+"Než se začnou používat aktualizace z tohoto repozitáře, je nutné to "
 "explicitně akceptovat. Podrobnosti naleznete v manuálové stránce %s."
 
 #: apt-pkg/acquire-item.cc apt-pkg/update.cc apt-private/private-download.cc
@@ -243,6 +242,8 @@ msgid ""
 "Repositories should provide a clear-signed InRelease file, but none found at "
 "%s."
 msgstr ""
+"Repozitáře by měly poskytovat podepsaný soubor InRelease, ale ten na %s "
+"chybí."
 
 #: apt-pkg/acquire-item.cc
 #, c-format
@@ -263,16 +264,6 @@ msgstr "Nelze najít zdroj pro stažení verze „%s“ balíku „%s“"
 #, c-format
 msgid "Changelog unavailable for %s=%s"
 msgstr "Seznam změn pro %s=%s není dostupný"
-
-#: apt-pkg/acquire-worker.cc
-#, c-format
-msgid ""
-"The method '%s' is unsupported and disabled by default. Consider switching "
-"to http(s). Set Dir::Bin::Methods::%s to \"%s\" to enable it again."
-msgstr ""
-"Metoda „%s“ není podporovaná a je ve výchozím nastavení zakázaná. Zvažte "
-"přechod na http(s). Pro znovupovolení nastavte Dir::Bin::Methods::%s na "
-"\"%s\"."
 
 #: apt-pkg/acquire-worker.cc
 #, c-format
@@ -673,26 +664,26 @@ msgstr "Syntaktická chyba %s:%u: Na konci souboru je zbytečné smetí"
 #. TRANSLATOR: This is a warning level displayed before the message
 #: apt-pkg/contrib/error.cc
 msgid "Error:"
-msgstr ""
+msgstr "Chyba:"
 
 #. TRANSLATOR: This is a warning level displayed before the message
 #: apt-pkg/contrib/error.cc
 msgid "Warning:"
-msgstr ""
+msgstr "Varování:"
 
 #. TRANSLATOR: This is a warning level displayed before the message
 #: apt-pkg/contrib/error.cc
 msgid "Notice:"
-msgstr ""
+msgstr "Upozornění:"
 
 #: apt-pkg/contrib/error.cc
 msgid "Audit:"
-msgstr ""
+msgstr "Audit:"
 
 #. TRANSLATOR: This is a warning level displayed before the message
 #: apt-pkg/contrib/error.cc
 msgid "Debug:"
-msgstr ""
+msgstr "Ladění:"
 
 #: apt-pkg/contrib/extracttar.cc
 #, c-format
@@ -802,11 +793,11 @@ msgstr "Podproces %s vrátil chybový kód (%u)"
 msgid "Sub-process %s exited unexpectedly"
 msgstr "Podproces %s neočekávaně skončil"
 
-#: apt-pkg/contrib/fileutl.cc methods/ftp.cc methods/rsh.cc
+#: apt-pkg/contrib/fileutl.cc
 msgid "Read error"
 msgstr "Chyba čtení"
 
-#: apt-pkg/contrib/fileutl.cc methods/ftp.cc methods/rsh.cc
+#: apt-pkg/contrib/fileutl.cc
 msgid "Write error"
 msgstr "Chyba zápisu"
 
@@ -1117,6 +1108,12 @@ msgstr "Nelze uzamknout administrační adresář (%s). Jste root?"
 msgid "Not locked"
 msgstr "Není uzamčen"
 
+#: apt-pkg/deb/debsystem.cc
+msgid ""
+"The dpkg executable set in Dir::Bin::dpkg is missing, falling back to using "
+"default dpkg."
+msgstr ""
+
 #. we don't care for the difference
 #: apt-pkg/deb/dpkgpm.cc
 #, c-format
@@ -1313,10 +1310,8 @@ msgid "Calculating upgrade"
 msgstr "Propočítává se aktualizace"
 
 #: apt-pkg/edsp.cc
-#, fuzzy
-#| msgid "Installing dependencies:"
 msgid "Solving dependencies"
-msgstr "Instalace závislostí:"
+msgstr "Řešení závislostí"
 
 #: apt-pkg/edsp.cc
 msgid "Execute external solver"
@@ -1668,7 +1663,7 @@ msgstr ""
 msgid ""
 "Do you want to accept these changes and continue updating from this "
 "repository?"
-msgstr "Chcete přijmout tyto změny a pokračovat v používání tohoto repositáře?"
+msgstr "Chcete přijmout tyto změny a pokračovat v používání tohoto repozitáře?"
 
 #: apt-private/private-cachefile.cc
 msgid "Correcting dependencies..."
@@ -1980,7 +1975,7 @@ msgstr "Po této operaci bude na disku použito dalších %sB.\n"
 #: apt-private/private-install.cc
 #, c-format
 msgid "Space needed: %sB / %sB available\n"
-msgstr ""
+msgstr "Požadované místo: %sB / %sB volných\n"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
@@ -1988,6 +1983,7 @@ msgstr ""
 #, c-format
 msgid "More space needed than available: %sB > %sB, installation may fail"
 msgstr ""
+"Je vyžadováno více místa, než je volného: %sB > %sB, instalace může selhat"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB -
@@ -1997,7 +1993,7 @@ msgstr ""
 #: apt-private/private-install.cc
 #, c-format
 msgid "in %s:  %sB / %sB available\n"
-msgstr ""
+msgstr "v %s:  %sB / %sB volných\n"
 
 #. TRANSLATOR: The required space between number and unit is already included
 #. in the replacement string, so %sB will be correctly translate in e.g. 1,5 MB
@@ -2007,11 +2003,13 @@ msgstr ""
 msgid ""
 "More space needed in %s than available: %sB > %sB, installation may fail"
 msgstr ""
+"V %s je vyžadováno více místa, než je volného: %sB > %sB, instalace může "
+"selhat"
 
 #: apt-private/private-install.cc
 #, c-format
 msgid "Space needed: %sB\n"
-msgstr ""
+msgstr "Požadované místo: %sB\n"
 
 #: apt-private/private-install.cc
 #, c-format
@@ -2038,10 +2036,8 @@ msgstr ""
 "rozbít systém."
 
 #: apt-private/private-install.cc
-#, fuzzy
-#| msgid "Continue?"
 msgid "Continue anyway?"
-msgstr "Pokračovat?"
+msgstr "Přesto pokračovat?"
 
 #: apt-private/private-install.cc
 msgid "Continue?"
@@ -2434,7 +2430,7 @@ msgid "Y"
 msgstr "Y"
 
 #. TRANSLATOR: "No" answer printed for a yes/no question if --assume-no is set
-#: apt-private/private-output.cc
+#: apt-private/private-output.cc apt-private/private-sources.cc
 msgid "N"
 msgstr "N"
 
@@ -2613,8 +2609,8 @@ msgstr "%s nemá žádné závislosti pro sestavení.\n"
 #: apt-private/private-source.cc
 #, c-format
 msgid ""
-"No architecture information available for %s. See apt.conf(5) APT::"
-"Architectures for setup"
+"No architecture information available for %s. See apt.conf(5) "
+"APT::Architectures for setup"
 msgstr ""
 "O architektuře %s nejsou známy žádné informace. Pro nastavení si přečtěte "
 "část APT::Architectures v manuálové stránce apt.conf(5)"
@@ -2656,6 +2652,11 @@ msgstr "Nepodařilo se zpracovat %s. Zkusit znovu upravit?"
 msgid "Your '%s' file changed, please run 'apt-get update'.\n"
 msgstr "Soubor „%s“ se změnil, spusťte prosím „apt-get update“.\n"
 
+#: apt-private/private-sources.cc
+#, c-format
+msgid "Rewrite %zu sources?"
+msgstr ""
+
 #: apt-private/private-unmet.cc
 #, c-format
 msgid "Package %s version %s has an unmet dep:\n"
@@ -2678,8 +2679,39 @@ msgstr ""
 #. TRANSLATOR: the first is manpage reference, the last the URI from a sources.list
 #: apt-private/private-update.cc
 #, c-format
+msgid "The %s entry for '%s' should be upgraded to deb822 .sources"
+msgstr ""
+
+#. TRANSLATOR: the first is manpage reference, the last the URI from a sources.list
+#: apt-private/private-update.cc
+#, c-format
 msgid "Missing Signed-By in the %s entry for '%s'"
 msgstr "Chybí Signed-By v %s pro „%s“"
+
+#: apt-private/private-update.cc
+msgid ""
+"Consider migrating all sources.list(5) entries to the deb822 .sources format"
+msgstr ""
+
+#: apt-private/private-update.cc
+msgid ""
+"The deb822 .sources format supports both embedded as well as external "
+"OpenPGP keys"
+msgstr ""
+
+#: apt-private/private-update.cc
+#, fuzzy
+#| msgid ""
+#| "See apt-secure(8) manpage for repository creation and user configuration "
+#| "details."
+msgid "See apt-secure(8) for best practices in configuring repository signing."
+msgstr ""
+"Podrobnosti o vytváření a nastavení repozitářů naleznete v manuálové stránce "
+"apt-secure(8)."
+
+#: apt-private/private-update.cc
+msgid "Some sources can be modernized. Run 'apt modernize-sources' to do so."
+msgstr ""
 
 #: apt-private/private-update.cc
 #, c-format
@@ -3076,6 +3108,12 @@ msgid "concatenate files, with automatic decompression"
 msgstr "spojí soubory, automaticky je rozbalí"
 
 #: cmdline/apt-helper.cc
+#, fuzzy
+#| msgid "Problem hashing file"
+msgid "hash file"
+msgstr "Problém s kontrolním součtem souboru"
+
+#: cmdline/apt-helper.cc
 msgid "detect proxy using apt.conf"
 msgstr "detekuje proxy pomocí apt.conf"
 
@@ -3310,6 +3348,10 @@ msgid "edit the source information file"
 msgstr "upraví soubor se zdroji balíků"
 
 #: cmdline/apt.cc
+msgid "modernize .list files to .sources files"
+msgstr ""
+
+#: cmdline/apt.cc
 msgid "satisfy dependency strings"
 msgstr "splní řetězec závislostí"
 
@@ -3506,7 +3548,7 @@ msgstr "Neznámý kompresní algoritmus „%s“"
 msgid "Compressed output %s needs a compression set"
 msgstr "Komprimovaný výstup %s potřebuje kompresní sadu"
 
-#: ftparchive/multicompress.cc methods/rsh.cc
+#: ftparchive/multicompress.cc
 msgid "Failed to create IPC pipe to subprocess"
 msgstr "Selhalo vytvoření meziprocesové roury k podprocesu"
 
@@ -3625,23 +3667,23 @@ msgstr "Archiv nemá pole Package"
 
 #: ftparchive/writer.cc
 #, c-format
-msgid "  %s has no override entry\n"
-msgstr " %s nemá žádnou položku pro override\n"
+msgid "  %.*s has no override entry\n"
+msgstr " %.*s nemá žádnou položku pro override\n"
 
 #: ftparchive/writer.cc
 #, c-format
-msgid "  %s maintainer is %s not %s\n"
-msgstr "  správce %s je %s, ne %s\n"
+msgid "  %.*s maintainer is %.*s not %s\n"
+msgstr "  správce %.*s je %.*s, ne %s\n"
 
 #: ftparchive/writer.cc
 #, c-format
-msgid "  %s has no source override entry\n"
-msgstr " %s nemá žádnou zdrojovou položku pro override\n"
+msgid "  %.*s has no source override entry\n"
+msgstr " %.*s nemá žádnou zdrojovou položku pro override\n"
 
 #: ftparchive/writer.cc
 #, c-format
-msgid "  %s has no binary override entry either\n"
-msgstr " %s nemá ani žádnou binární položku pro override\n"
+msgid "  %.*s has no binary override entry either\n"
+msgstr " %.*s nemá ani žádnou binární položku pro override\n"
 
 #: methods/basehttp.cc
 msgid "Waiting for headers"
@@ -3679,7 +3721,7 @@ msgstr "Špatné datové záhlaví"
 msgid "Connection failed"
 msgstr "Spojení selhalo"
 
-#: methods/basehttp.cc methods/ftp.cc methods/http.cc
+#: methods/basehttp.cc methods/http.cc
 #, c-format
 msgid "File has unexpected size (%llu != %llu). Mirror sync in progress?"
 msgstr ""
@@ -3692,8 +3734,8 @@ msgid ""
 "Automatically disabled %s due to incorrect response from server/proxy. (man "
 "5 apt.conf)"
 msgstr ""
-"Automaticky zakázáno %s kvůli chybné odpovědi od serveru/proxy. (man 5 apt."
-"conf)"
+"Automaticky zakázáno %s kvůli chybné odpovědi od serveru/proxy. (man 5 "
+"apt.conf)"
 
 #: methods/basehttp.cc
 msgid "Internal error"
@@ -3725,7 +3767,7 @@ msgstr "Nelze odpojit CD-ROM v %s - možná se stále používá."
 msgid "Disk not found."
 msgstr "Disk nebyl nalezen."
 
-#: methods/cdrom.cc methods/file.cc methods/rsh.cc
+#: methods/cdrom.cc methods/file.cc
 msgid "File not found"
 msgstr "Soubor nebyl nalezen"
 
@@ -3760,7 +3802,7 @@ msgstr "Nelze vytvořit socket pro %s (f=%u t=%u p=%u)"
 msgid "Cannot initiate the connection to %s:%s (%s)."
 msgstr "Nelze navázat spojení na %s:%s (%s)."
 
-#: methods/connect.cc methods/ftp.cc methods/rsh.cc
+#: methods/connect.cc
 msgid "Failed"
 msgstr "Selhalo"
 
@@ -3774,9 +3816,7 @@ msgstr "Nelze se připojit k %s:%s (%s)."
 msgid "Could not connect to %s:%s (%s), connection timed out"
 msgstr "Nelze se připojit k %s:%s (%s), čas spojení vypršel"
 
-#. We say this mainly because the pause here is for the
-#. ssh connection that is still going
-#: methods/connect.cc methods/rsh.cc
+#: methods/connect.cc
 #, c-format
 msgid "Connecting to %s"
 msgstr "Připojování k %s"
@@ -3814,145 +3854,6 @@ msgstr "Selhalo vyhodnocení"
 msgid "Invalid URI, local URIS must not start with //"
 msgstr "Neplatné URI, lokální URI nesmí začínat na //"
 
-#. Login must be before getpeername otherwise dante won't work.
-#: methods/ftp.cc
-msgid "Logging in"
-msgstr "Přihlašování"
-
-#: methods/ftp.cc
-msgid "Unable to determine the peer name"
-msgstr "Nelze určit jméno druhé strany"
-
-#: methods/ftp.cc
-msgid "Unable to determine the local name"
-msgstr "Nelze určit lokální jméno"
-
-#: methods/ftp.cc
-#, c-format
-msgid "The server refused the connection and said: %s"
-msgstr "Server zamítl naše spojení a řekl: %s"
-
-#: methods/ftp.cc
-#, c-format
-msgid "USER failed, server said: %s"
-msgstr "USER selhal, server řekl: %s"
-
-#: methods/ftp.cc
-#, c-format
-msgid "PASS failed, server said: %s"
-msgstr "PASS selhal, server řekl: %s"
-
-#: methods/ftp.cc
-msgid ""
-"A proxy server was specified but no login script, Acquire::ftp::ProxyLogin "
-"is empty."
-msgstr ""
-"Byl zadán proxy server, ale ne přihlašovací skript. Acquire::ftp::ProxyLogin "
-"je prázdný."
-
-#: methods/ftp.cc
-#, c-format
-msgid "Login script command '%s' failed, server said: %s"
-msgstr "Příkaz „%s“ přihlašovacího skriptu selhal, server řekl: %s"
-
-#: methods/ftp.cc
-#, c-format
-msgid "TYPE failed, server said: %s"
-msgstr "TYPE selhal, server řekl: %s"
-
-#: methods/ftp.cc methods/rsh.cc
-msgid "Connection timeout"
-msgstr "Čas spojení vypršel"
-
-#: methods/ftp.cc
-msgid "Server closed the connection"
-msgstr "Server uzavřel spojení"
-
-#: methods/ftp.cc methods/rsh.cc
-msgid "A response overflowed the buffer."
-msgstr "Odpověď přeplnila buffer."
-
-#: methods/ftp.cc
-msgid "Protocol corruption"
-msgstr "Porušení protokolu"
-
-#: methods/ftp.cc
-msgid "Could not create a socket"
-msgstr "Nelze vytvořit socket"
-
-#: methods/ftp.cc
-msgid "Could not connect data socket, connection timed out"
-msgstr "Nelze připojit datový socket, čas spojení vypršel"
-
-#: methods/ftp.cc
-msgid "Could not connect passive socket."
-msgstr "Nelze připojit pasivní socket."
-
-#: methods/ftp.cc
-msgid "getaddrinfo was unable to get a listening socket"
-msgstr "getaddrinfo nezískal naslouchající socket"
-
-#: methods/ftp.cc
-msgid "Could not bind a socket"
-msgstr "Nelze navázat socket"
-
-#: methods/ftp.cc
-msgid "Could not listen on the socket"
-msgstr "Nelze naslouchat na socketu"
-
-#: methods/ftp.cc
-msgid "Could not determine the socket's name"
-msgstr "Nelze určit jméno socketu"
-
-#: methods/ftp.cc
-msgid "Unable to send PORT command"
-msgstr "Nelze odeslat příkaz PORT"
-
-#: methods/ftp.cc
-#, c-format
-msgid "Unknown address family %u (AF_*)"
-msgstr "Neznámá rodina adres %u (AF_*)"
-
-#: methods/ftp.cc
-#, c-format
-msgid "EPRT failed, server said: %s"
-msgstr "EPRT selhal, server řekl: %s"
-
-#: methods/ftp.cc
-msgid "Data socket connect timed out"
-msgstr "Spojení datového socketu vypršelo"
-
-#: methods/ftp.cc
-msgid "Unable to accept connection"
-msgstr "Nelze přijmout spojení"
-
-#: methods/ftp.cc methods/http.cc methods/rsh.cc
-msgid "Problem hashing file"
-msgstr "Problém s kontrolním součtem souboru"
-
-#: methods/ftp.cc
-#, c-format
-msgid "Unable to fetch file, server said '%s'"
-msgstr "Nelze stáhnout soubor, server řekl „%s“"
-
-#: methods/ftp.cc methods/rsh.cc
-msgid "Data socket timed out"
-msgstr "Datový socket vypršel"
-
-#: methods/ftp.cc
-#, c-format
-msgid "Data transfer failed, server said '%s'"
-msgstr "Přenos dat selhal, server řekl „%s“"
-
-#. Get the files information
-#: methods/ftp.cc
-msgid "Query"
-msgstr "Dotaz"
-
-#: methods/ftp.cc
-msgid "Unable to invoke "
-msgstr "Nelze vyvolat "
-
 #: methods/gpgv.cc
 #, c-format
 msgid "untrusted public key algorithm: %s"
@@ -3961,7 +3862,7 @@ msgstr "nedůvěryhodný algoritmus veřejného klíče: %s"
 #: methods/gpgv.cc
 #, c-format
 msgid "%s will be deprecated in a future release"
-msgstr ""
+msgstr "%s bude v budoucím vydání odstraněn"
 
 #. TRANSLATORS: %s is a single techy word like 'NODATA'
 #: methods/gpgv.cc
@@ -3982,21 +3883,17 @@ msgid ""
 msgstr "Vnitřní chyba: Dobrý podpis, ale nelze zjistit otisk klíče?!"
 
 #: methods/gpgv.cc
-msgid "Could not execute 'apt-key' to verify signature (is gnupg installed?)"
+#, fuzzy
+#| msgid ""
+#| "Could not execute 'apt-key' to verify signature (is gnupg installed?)"
+msgid "Could not execute 'gpgv' to verify signature (is gnupg installed?)"
 msgstr "Nelze spustit „apt-key“ pro ověření podpisu (je gnupg nainstalováno?)"
 
 #: methods/gpgv.cc
-msgid "Unknown error executing apt-key"
+#, fuzzy
+#| msgid "Unknown error executing apt-key"
+msgid "Unknown error executing gpgv"
 msgstr "Neznámá chyba při spouštění apt-key"
-
-#: methods/gpgv.cc
-#, c-format
-msgid ""
-"Key is stored in legacy trusted.gpg keyring (%s), see the DEPRECATION "
-"section in apt-key(8) for details."
-msgstr ""
-"Klíč je uložen v zastaralé klíčence trusted.gpg (%s), podrobnosti viz část "
-"DEPRECATION v manuálové stránce apt-key(8)."
 
 #. TRANSLATORS: The second %s is the reason and is untranslated for repository owners.
 #: methods/gpgv.cc
@@ -4036,17 +3933,144 @@ msgstr "Výběr selhal"
 msgid "Connection timed out"
 msgstr "Čas spojení vypršel"
 
+#: methods/http.cc
+msgid "Problem hashing file"
+msgstr "Problém s kontrolním součtem souboru"
+
 #: methods/rred.cc
 msgid "Failed to set modification time"
 msgstr "Nelze nastavit čas modifikace"
 
-#: methods/rsh.cc
-msgid "Connection closed prematurely"
-msgstr "Spojení bylo předčasně ukončeno"
-
 #: methods/store.cc
 msgid "Empty files can't be valid archives"
 msgstr "Prázdné soubory nejsou platnými archivy"
+
+#, fuzzy, c-format
+#~| msgid ""
+#~| "Key is stored in legacy trusted.gpg keyring (%s), see the DEPRECATION "
+#~| "section in apt-key(8) for details."
+#~ msgid ""
+#~ "Key is stored in legacy trusted.gpg keyring (%s). Use Signed-By instead. "
+#~ "See the USER CONFIGURATION section in apt-secure(8) for details."
+#~ msgstr ""
+#~ "Klíč je uložen v zastaralé klíčence trusted.gpg (%s), podrobnosti viz "
+#~ "část DEPRECATION v manuálové stránce apt-key(8)."
+
+#, c-format
+#~ msgid ""
+#~ "The method '%s' is unsupported and disabled by default. Consider "
+#~ "switching to http(s). Set Dir::Bin::Methods::%s to \"%s\" to enable it "
+#~ "again."
+#~ msgstr ""
+#~ "Metoda „%s“ není podporovaná a je ve výchozím nastavení zakázaná. Zvažte "
+#~ "přechod na http(s). Pro znovupovolení nastavte Dir::Bin::Methods::%s na "
+#~ "\"%s\"."
+
+#~ msgid "Logging in"
+#~ msgstr "Přihlašování"
+
+#~ msgid "Unable to determine the peer name"
+#~ msgstr "Nelze určit jméno druhé strany"
+
+#~ msgid "Unable to determine the local name"
+#~ msgstr "Nelze určit lokální jméno"
+
+#, c-format
+#~ msgid "The server refused the connection and said: %s"
+#~ msgstr "Server zamítl naše spojení a řekl: %s"
+
+#, c-format
+#~ msgid "USER failed, server said: %s"
+#~ msgstr "USER selhal, server řekl: %s"
+
+#, c-format
+#~ msgid "PASS failed, server said: %s"
+#~ msgstr "PASS selhal, server řekl: %s"
+
+#~ msgid ""
+#~ "A proxy server was specified but no login script, "
+#~ "Acquire::ftp::ProxyLogin is empty."
+#~ msgstr ""
+#~ "Byl zadán proxy server, ale ne přihlašovací skript. "
+#~ "Acquire::ftp::ProxyLogin je prázdný."
+
+#, c-format
+#~ msgid "Login script command '%s' failed, server said: %s"
+#~ msgstr "Příkaz „%s“ přihlašovacího skriptu selhal, server řekl: %s"
+
+#, c-format
+#~ msgid "TYPE failed, server said: %s"
+#~ msgstr "TYPE selhal, server řekl: %s"
+
+#~ msgid "Connection timeout"
+#~ msgstr "Čas spojení vypršel"
+
+#~ msgid "Server closed the connection"
+#~ msgstr "Server uzavřel spojení"
+
+#~ msgid "A response overflowed the buffer."
+#~ msgstr "Odpověď přeplnila buffer."
+
+#~ msgid "Protocol corruption"
+#~ msgstr "Porušení protokolu"
+
+#~ msgid "Could not create a socket"
+#~ msgstr "Nelze vytvořit socket"
+
+#~ msgid "Could not connect data socket, connection timed out"
+#~ msgstr "Nelze připojit datový socket, čas spojení vypršel"
+
+#~ msgid "Could not connect passive socket."
+#~ msgstr "Nelze připojit pasivní socket."
+
+#~ msgid "getaddrinfo was unable to get a listening socket"
+#~ msgstr "getaddrinfo nezískal naslouchající socket"
+
+#~ msgid "Could not bind a socket"
+#~ msgstr "Nelze navázat socket"
+
+#~ msgid "Could not listen on the socket"
+#~ msgstr "Nelze naslouchat na socketu"
+
+#~ msgid "Could not determine the socket's name"
+#~ msgstr "Nelze určit jméno socketu"
+
+#~ msgid "Unable to send PORT command"
+#~ msgstr "Nelze odeslat příkaz PORT"
+
+#, c-format
+#~ msgid "Unknown address family %u (AF_*)"
+#~ msgstr "Neznámá rodina adres %u (AF_*)"
+
+#, c-format
+#~ msgid "EPRT failed, server said: %s"
+#~ msgstr "EPRT selhal, server řekl: %s"
+
+#~ msgid "Data socket connect timed out"
+#~ msgstr "Spojení datového socketu vypršelo"
+
+#~ msgid "Unable to accept connection"
+#~ msgstr "Nelze přijmout spojení"
+
+#, c-format
+#~ msgid "Unable to fetch file, server said '%s'"
+#~ msgstr "Nelze stáhnout soubor, server řekl „%s“"
+
+#~ msgid "Data socket timed out"
+#~ msgstr "Datový socket vypršel"
+
+#, c-format
+#~ msgid "Data transfer failed, server said '%s'"
+#~ msgstr "Přenos dat selhal, server řekl „%s“"
+
+#~ msgid "Query"
+#~ msgstr "Dotaz"
+
+#~ msgid "Unable to invoke "
+#~ msgstr "Nelze vyvolat "
+
+#~ msgid "Connection closed prematurely"
+#~ msgstr "Spojení bylo předčasně ukončeno"
 
 #, c-format
 #~ msgid "  Installed size: %sB\n"
@@ -4168,8 +4192,8 @@ msgstr "Prázdné soubory nejsou platnými archivy"
 #~ "Unable to find expected entry '%s' in Release file (Wrong sources.list "
 #~ "entry or malformed file)"
 #~ msgstr ""
-#~ "V souboru Release nelze najít očekávanou položku „%s“ (chybný sources."
-#~ "list nebo porušený soubor)"
+#~ "V souboru Release nelze najít očekávanou položku „%s“ (chybný "
+#~ "sources.list nebo porušený soubor)"
 
 #~ msgid "Unmet dependencies. Try using --fix-broken."
 #~ msgstr "Nesplněné závislosti. Zkuste použít --fix-broken."
@@ -4336,15 +4360,15 @@ msgstr "Prázdné soubory nejsou platnými archivy"
 #~ "The data from '%s' is not signed. Packages from that repository can not "
 #~ "be authenticated."
 #~ msgstr ""
-#~ "Data z „%s“ nejsou podepsaná. Balíky z tohoto repositáře nemohou být "
+#~ "Data z „%s“ nejsou podepsaná. Balíky z tohoto repozitáře nemohou být "
 #~ "ověřeny."
 
 #~ msgid ""
 #~ "The repository '%s' does not have a Release file. This is deprecated, "
 #~ "please contact the owner of the repository."
 #~ msgstr ""
-#~ "Repositář „%s“ neobsahuje soubor Release. To již není podporováno, "
-#~ "kontaktujte prosím správce repositáře."
+#~ "Repozitář „%s“ neobsahuje soubor Release. To již není podporováno, "
+#~ "kontaktujte prosím správce repozitáře."
 
 #~ msgid "Child process failed"
 #~ msgstr "Synovský proces selhal"

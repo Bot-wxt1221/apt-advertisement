@@ -6,12 +6,10 @@ test-apt-install-file-reltag
 test-apt-install-order-matters-a-bit
 test-apt-move-and-forget-manual-sections
 test-apt-patterns
-test-apt-source-and-build-dep
 test-bug-470115-new-and-tighten-recommends
 test-bug-602412-dequote-redirect
 test-bug-611729-mark-as-manual
 test-bug-675449-essential-are-protected
-test-bug-709560-set-candidate-release
 test-bug-745046-candidate-propagation-fails
 test-bug-753297-upgradable
 test-bug-767891-force-essential-important
@@ -26,6 +24,7 @@ test-phased-updates-upgrade
 test-prevent-markinstall-multiarch-same-versionscrew
 test-release-candidate-switching
 test-resolve-by-keep-new-recommends
+test-resolve-by-keep-obsolete-removals
 test-ubuntu-bug-1304403-obsolete-priority-standard
 test-ubuntu-bug-1990586
 test-ubuntu-bug-2025462-phased-dist-upgrade

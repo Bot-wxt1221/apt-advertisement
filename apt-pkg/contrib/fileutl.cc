@@ -2,20 +2,20 @@
 // SPDX-License-Identifier: GPL-2.0+
 // Description								/*{{{*/
 /* ######################################################################
-   
+
    File Utilities
-   
+
    CopyFile - Buffered copy of a single file
    GetLock - dpkg compatible lock file manipulation (fcntl)
-   
+
    This file had this historic note, but now includes further changes
    under the GPL-2.0+:
 
-   Most of this source is placed in the Public Domain, do with it what 
+   Most of this source is placed in the Public Domain, do with it what
    you will
    It was originally written by Jason Gunthorpe <jgg@debian.org>.
    FileFd gzip support added by Martin Pitt <martin.pitt@canonical.com>
-   
+
    The exception is RunScripts() it is under the GPLv2
 
    We believe that this reference to GPLv2 was not meant to exclude later
@@ -59,6 +59,7 @@
 #include <unistd.h>
 
 #include <algorithm>
+#include <array>
 #include <memory>
 #include <set>
 
@@ -104,16 +105,16 @@ bool RunScripts(const char *Cnf)
 
    // Fork for running the system calls
    pid_t Child = ExecFork();
-   
+
    // This is the child
    if (Child == 0)
    {
       if (_system != nullptr && _system->IsLocked() == true && (stringcasecmp(Cnf, "dpkg::post-invoke") == 0 || stringcasecmp(Cnf, "dpkg::pre-invoke") == 0))
 	 setenv("DPKG_FRONTEND_LOCKED", "true", 1);
-      if (_config->FindDir("DPkg::Chroot-Directory","/") != "/") 
+      if (_config->FindDir("DPkg::Chroot-Directory","/") != "/")
       {
-         std::cerr << "Chrooting into " 
-                   << _config->FindDir("DPkg::Chroot-Directory") 
+         std::cerr << "Chrooting into "
+                   << _config->FindDir("DPkg::Chroot-Directory")
                    << std::endl;
          if (chroot(_config->FindDir("DPkg::Chroot-Directory","/").c_str()) != 0)
             _exit(100);
@@ -121,7 +122,7 @@ bool RunScripts(const char *Cnf)
 
       if (chdir("/tmp/") != 0)
 	 _exit(100);
-	 
+
       unsigned int Count = 1;
       for (; Opts != 0; Opts = Opts->Next, Count++)
       {
@@ -136,7 +137,7 @@ bool RunScripts(const char *Cnf)
 	    _exit(100+Count);
       }
       _exit(0);
-   }      
+   }
 
    // Wait for the child
    int Status = 0;
@@ -157,10 +158,10 @@ bool RunScripts(const char *Cnf)
 	 for (; Opts != 0 && Count != 1; Opts = Opts->Next, Count--);
 	 _error->Error("Problem executing scripts %s '%s'",Cnf,Opts->Value.c_str());
       }
-      
+
       return _error->Error("Sub-process returned an error code");
    }
-   
+
    return true;
 }
 									/*}}}*/
@@ -175,12 +176,11 @@ bool CopyFile(FileFd &From,FileFd &To)
       return false;
 
    // Buffered copy between fds
-   constexpr size_t BufSize = APT_BUFFER_SIZE;
-   std::unique_ptr<unsigned char[]> Buf(new unsigned char[BufSize]);
+   std::array<unsigned char, APT_BUFFER_SIZE> Buf;
    unsigned long long ToRead = 0;
    do {
-      if (From.Read(Buf.get(),BufSize, &ToRead) == false ||
-	  To.Write(Buf.get(),ToRead) == false)
+      if (From.Read(Buf.data(),Buf.size(), &ToRead) == false ||
+	  To.Write(Buf.data(),ToRead) == false)
 	 return false;
    } while (ToRead != 0);
 
@@ -260,7 +260,7 @@ int GetLock(string File,bool Errors)
 	 _error->Warning(_("Not using locking for read only lock file %s"),File.c_str());
 	 return dup(0);       // Need something for the caller to close
       }
-      
+
       if (Errors == true)
 	 _error->Errno("open",_("Could not open lock file %s"),File.c_str());
 
@@ -269,7 +269,7 @@ int GetLock(string File,bool Errors)
       return -1;
    }
    SetCloseExec(FD,true);
-      
+
    // Acquire a write lock
    struct flock fl;
    fl.l_type = F_WRLCK;
@@ -300,9 +300,9 @@ int GetLock(string File,bool Errors)
       if (errno == ENOLCK)
       {
 	 _error->Warning(_("Not using locking for nfs mounted lock file %s"),File.c_str());
-	 return dup(0);       // Need something for the caller to close	 
+	 return dup(0);       // Need something for the caller to close
       }
-  
+
       if (Errors == true)
       {
 	 // We only do the lookup in the if ((errno == EACCES || errno == EAGAIN))
@@ -462,7 +462,7 @@ std::vector<string> GetListOfFilesInDir(string const &Dir, std::vector<string> c
 
    Configuration::MatchAgainstConfig SilentIgnore("Dir::Ignore-Files-Silently");
    DIR *D = opendir(Dir.c_str());
-   if (D == 0) 
+   if (D == 0)
    {
       if (errno == EACCES)
 	 _error->WarningE("opendir", _("Unable to read %s"), Dir.c_str());
@@ -471,7 +471,7 @@ std::vector<string> GetListOfFilesInDir(string const &Dir, std::vector<string> c
       return List;
    }
 
-   for (struct dirent *Ent = readdir(D); Ent != 0; Ent = readdir(D)) 
+   for (struct dirent *Ent = readdir(D); Ent != 0; Ent = readdir(D))
    {
       // skip "hidden" files
       if (Ent->d_name[0] == '.')
@@ -586,7 +586,7 @@ std::vector<string> GetListOfFilesInDir(string const &Dir, bool SortList)
       return List;
    }
 
-   for (struct dirent *Ent = readdir(D); Ent != 0; Ent = readdir(D)) 
+   for (struct dirent *Ent = readdir(D); Ent != 0; Ent = readdir(D))
    {
       // skip "hidden" files
       if (Ent->d_name[0] == '.')
@@ -713,9 +713,9 @@ string flNoLink(string File)
       return File;
    if (stat(File.c_str(),&St) != 0)
       return File;
-   
-   /* Loop resolving the link. There is no need to limit the number of 
-      loops because the stat call above ensures that the symlink is not 
+
+   /* Loop resolving the link. There is no need to limit the number of
+      loops because the stat call above ensures that the symlink is not
       circular */
    char Buffer[1024];
    string NFile = File;
@@ -723,23 +723,23 @@ string flNoLink(string File)
    {
       // Read the link
       ssize_t Res;
-      if ((Res = readlink(NFile.c_str(),Buffer,sizeof(Buffer))) <= 0 || 
+      if ((Res = readlink(NFile.c_str(),Buffer,sizeof(Buffer))) <= 0 ||
 	  (size_t)Res >= sizeof(Buffer))
 	  return File;
-      
+
       // Append or replace the previous path
       Buffer[Res] = 0;
       if (Buffer[0] == '/')
 	 NFile = Buffer;
       else
 	 NFile = flNotFile(NFile) + Buffer;
-      
+
       // See if we are done
       if (lstat(NFile.c_str(),&St) != 0)
 	 return File;
       if (S_ISLNK(St.st_mode) == 0)
-	 return NFile;      
-   }   
+	 return NFile;
+   }
 }
 									/*}}}*/
 // flCombine - Combine a file and a directory				/*{{{*/
@@ -750,14 +750,16 @@ string flCombine(string Dir,string File)
 {
    if (File.empty() == true)
       return string();
-   
+
    if (File[0] == '/' || Dir.empty() == true)
       return File;
    if (File.length() >= 2 && File[0] == '.' && File[1] == '/')
       return File;
-   if (Dir[Dir.length()-1] == '/')
-      return Dir + File;
-   return Dir + '/' + File;
+
+   if (Dir.back() != '/')
+      Dir.append("/");
+   Dir.append(File);
+   return Dir;
 }
 									/*}}}*/
 // flAbsPath - Return the absolute path of the filename			/*{{{*/
@@ -799,7 +801,7 @@ std::string flNormalize(std::string file)				/*{{{*/
 // ---------------------------------------------------------------------
 /* */
 void SetCloseExec(int Fd,bool Close)
-{   
+{
    if (fcntl(Fd,F_SETFD,(Close == false)?0:FD_CLOEXEC) != 0)
    {
       cerr << "FATAL -> Could not set close on exec " << strerror(errno) << endl;
@@ -811,7 +813,7 @@ void SetCloseExec(int Fd,bool Close)
 // ---------------------------------------------------------------------
 /* */
 void SetNonBlock(int Fd,bool Block)
-{   
+{
    int Flags = fcntl(Fd,F_GETFL) & (~O_NONBLOCK);
    if (fcntl(Fd,F_SETFL,Flags | ((Block == false)?0:O_NONBLOCK)) != 0)
    {
@@ -823,7 +825,7 @@ void SetNonBlock(int Fd,bool Block)
 // WaitFd - Wait for a FD to become readable				/*{{{*/
 // ---------------------------------------------------------------------
 /* This waits for a FD to become readable using select. It is useful for
-   applications making use of non-blocking sockets. The timeout is 
+   applications making use of non-blocking sockets. The timeout is
    in seconds. */
 bool WaitFd(int Fd,bool write,unsigned long timeout)
 {
@@ -833,19 +835,19 @@ bool WaitFd(int Fd,bool write,unsigned long timeout)
    FD_SET(Fd,&Set);
    tv.tv_sec = timeout;
    tv.tv_usec = 0;
-   if (write == true) 
-   {      
+   if (write == true)
+   {
       int Res;
       do
       {
 	 Res = select(Fd+1,0,&Set,0,(timeout != 0?&tv:0));
       }
       while (Res < 0 && errno == EINTR);
-      
+
       if (Res <= 0)
 	 return false;
-   } 
-   else 
+   }
+   else
    {
       int Res;
       do
@@ -853,11 +855,11 @@ bool WaitFd(int Fd,bool write,unsigned long timeout)
 	 Res = select(Fd+1,&Set,0,0,(timeout != 0?&tv:0));
       }
       while (Res < 0 && errno == EINTR);
-      
+
       if (Res <= 0)
 	 return false;
    }
-   
+
    return true;
 }
 									/*}}}*/
@@ -884,13 +886,13 @@ void MergeKeepFdsFromConfiguration(std::set<int> &KeepFDs)
 									/*}}}*/
 // ExecFork - Magical fork that sanitizes the context before execing	/*{{{*/
 // ---------------------------------------------------------------------
-/* This is used if you want to cleanse the environment for the forked 
+/* This is used if you want to cleanse the environment for the forked
    child, it fixes up the important signals and nukes all of the fds,
    otherwise acts like normal fork. */
 pid_t ExecFork()
 {
       set<int> KeepFDs;
-      // we need to merge the Keep-Fds as external tools like 
+      // we need to merge the Keep-Fds as external tools like
       // debconf-apt-progress use it
       MergeKeepFdsFromConfiguration(KeepFDs);
       return ExecFork(KeepFDs);
@@ -939,20 +941,20 @@ pid_t ExecFork(std::set<int> KeepFDs)
 	 }
       }
    }
-   
+
    return Process;
 }
 									/*}}}*/
 // ExecWait - Fancy waitpid						/*{{{*/
 // ---------------------------------------------------------------------
-/* Waits for the given sub process. If Reap is set then no errors are 
+/* Waits for the given sub process. If Reap is set then no errors are
    generated. Otherwise a failed subprocess will generate a proper descriptive
    message */
 bool ExecWait(pid_t Pid,const char *Name,bool Reap)
 {
    if (Pid <= 1)
       return true;
-   
+
    // Wait and collect the error code
    int Status;
    while (waitpid(Pid,&Status,0) != Pid)
@@ -962,11 +964,11 @@ bool ExecWait(pid_t Pid,const char *Name,bool Reap)
 
       if (Reap == true)
 	 return false;
-      
+
       return _error->Error(_("Waited for %s but it wasn't there"),Name);
    }
 
-   
+
    // Check for an error code.
    if (WIFEXITED(Status) == 0 || WEXITSTATUS(Status) != 0)
    {
@@ -976,16 +978,16 @@ bool ExecWait(pid_t Pid,const char *Name,bool Reap)
       {
 	 if( WTERMSIG(Status) == SIGSEGV)
 	    return _error->Error(_("Sub-process %s received a segmentation fault."),Name);
-	 else 
+	 else
 	    return _error->Error(_("Sub-process %s received signal %u."),Name, WTERMSIG(Status));
       }
 
       if (WIFEXITED(Status) != 0)
 	 return _error->Error(_("Sub-process %s returned an error code (%u)"),Name,WEXITSTATUS(Status));
-      
+
       return _error->Error(_("Sub-process %s exited unexpectedly"),Name);
-   }      
-   
+   }
+
    return true;
 }
 									/*}}}*/
@@ -999,24 +1001,18 @@ bool StartsWithGPGClearTextSignature(string const &FileName)
    char * lineptr = nullptr;
    size_t n = 0;
    errno = 0;
+   DEFER([&] { fclose(gpg); free(lineptr); });
    ssize_t const result = getline(&lineptr, &n, gpg);
    if (errno != 0)
    {
       _error->Errno("getline", "Could not read from %s", FileName.c_str());
-      fclose(gpg);
-      free(lineptr);
       return false;
    }
-   fclose(gpg);
 
    _strrstrip(lineptr);
    static const char* SIGMSG = "-----BEGIN PGP SIGNED MESSAGE-----";
    if (result == -1 || strcmp(lineptr, SIGMSG) != 0)
-   {
-      free(lineptr);
       return false;
-   }
-   free(lineptr);
    return true;
 }
 									/*}}}*/
@@ -1074,7 +1070,7 @@ struct APT_HIDDEN simple_buffer {							/*{{{*/
       reset();
    }
    void reset() { bufferend = bufferstart = 0; }
-   ssize_t read(void *to, unsigned long long requested_size) APT_MUSTCHECK
+   [[nodiscard]] ssize_t read(void *to, unsigned long long requested_size)
    {
       if (size() < requested_size)
 	 requested_size = size();
@@ -1084,7 +1080,7 @@ struct APT_HIDDEN simple_buffer {							/*{{{*/
 	 bufferstart = bufferend = 0;
       return requested_size;
    }
-   ssize_t write(const void *from, unsigned long long requested_size) APT_MUSTCHECK
+   [[nodiscard]] ssize_t write(const void *from, unsigned long long requested_size)
    {
       if (free() < requested_size)
 	 requested_size = free();
@@ -1246,12 +1242,11 @@ public:
    }
    virtual bool InternalSkip(unsigned long long Over)
    {
-      unsigned long long constexpr buffersize = 1024;
-      char buffer[buffersize];
+      std::array<char, APT_BUFFER_SIZE> buffer;
       while (Over != 0)
       {
-	 unsigned long long toread = std::min(buffersize, Over);
-	 if (filefd->Read(buffer, toread) == false)
+	 auto toread = std::min<unsigned long long>(buffer.size(), Over);
+	 if (filefd->Read(buffer.data(), toread) == false)
 	    return filefd->FileFdError("Unable to seek ahead %llu",Over);
 	 Over -= toread;
       }
@@ -1273,11 +1268,10 @@ public:
    {
       unsigned long long size = 0;
       unsigned long long const oldSeek = filefd->Tell();
-      unsigned long long constexpr ignoresize = 1024;
-      char ignore[ignoresize];
+      std::array<char, APT_BUFFER_SIZE> ignore;
       unsigned long long read = 0;
       do {
-	 if (filefd->Read(ignore, ignoresize, &read) == false)
+	 if (filefd->Read(ignore.data(), ignore.size(), &read) == false)
 	 {
 	    filefd->Seek(oldSeek);
 	    return 0;
@@ -1304,63 +1298,63 @@ public:
    explicit BufferedWriteFileFdPrivate(FileFdPrivate *Priv) :
       FileFdPrivate(Priv->filefd), wrapped(Priv) {};
 
-   virtual APT::Configuration::Compressor get_compressor() const APT_OVERRIDE
+   [[nodiscard]] APT::Configuration::Compressor get_compressor() const override
    {
       return wrapped->get_compressor();
    }
-   virtual void set_compressor(APT::Configuration::Compressor const &compressor)  APT_OVERRIDE
+   void set_compressor(APT::Configuration::Compressor const &compressor) override
    {
       return wrapped->set_compressor(compressor);
    }
-   virtual unsigned int get_openmode() const  APT_OVERRIDE
+   [[nodiscard]] unsigned int get_openmode() const override
    {
       return wrapped->get_openmode();
    }
-   virtual void set_openmode(unsigned int openmode)  APT_OVERRIDE
+   void set_openmode(unsigned int openmode) override
    {
       return wrapped->set_openmode(openmode);
    }
-   virtual bool get_is_pipe() const  APT_OVERRIDE
+   [[nodiscard]] bool get_is_pipe() const override
    {
       return wrapped->get_is_pipe();
    }
-   virtual void set_is_pipe(bool is_pipe) APT_OVERRIDE
+   void set_is_pipe(bool is_pipe) override
    {
       FileFdPrivate::set_is_pipe(is_pipe);
       wrapped->set_is_pipe(is_pipe);
    }
-   virtual unsigned long long get_seekpos() const APT_OVERRIDE
+   [[nodiscard]] unsigned long long get_seekpos() const override
    {
       return wrapped->get_seekpos();
    }
-   virtual void set_seekpos(unsigned long long seekpos) APT_OVERRIDE
+   void set_seekpos(unsigned long long seekpos) override
    {
       return wrapped->set_seekpos(seekpos);
    }
-   virtual bool InternalOpen(int const iFd, unsigned int const Mode) APT_OVERRIDE
+   bool InternalOpen(int const iFd, unsigned int const Mode) override
    {
       if (InternalFlush() == false)
 	 return false;
       return wrapped->InternalOpen(iFd, Mode);
    }
-   virtual ssize_t InternalUnbufferedRead(void * const To, unsigned long long const Size) APT_OVERRIDE
+   ssize_t InternalUnbufferedRead(void *const To, unsigned long long const Size) override
    {
       if (InternalFlush() == false)
 	 return -1;
       return wrapped->InternalUnbufferedRead(To, Size);
 
    }
-   virtual bool InternalReadError() APT_OVERRIDE
+   bool InternalReadError() override
    {
       return wrapped->InternalReadError();
    }
-   virtual char * InternalReadLine(char * To, unsigned long long Size) APT_OVERRIDE
+   char *InternalReadLine(char *To, unsigned long long Size) override
    {
       if (InternalFlush() == false)
 	 return nullptr;
       return wrapped->InternalReadLine(To, Size);
    }
-   virtual bool InternalFlush() APT_OVERRIDE
+   bool InternalFlush() override
    {
       while (writebuffer.empty() == false) {
 	 auto written = wrapped->InternalWrite(writebuffer.get(),
@@ -1376,7 +1370,7 @@ public:
       writebuffer.reset();
       return wrapped->InternalFlush();
    }
-   virtual ssize_t InternalWrite(void const * const From, unsigned long long const Size) APT_OVERRIDE
+   ssize_t InternalWrite(void const *const From, unsigned long long const Size) override
    {
       // Optimisation: If the buffer is empty and we have more to write than
       // would fit in the buffer (or equal number of bytes), write directly.
@@ -1391,45 +1385,45 @@ public:
 
       return written;
    }
-   virtual bool InternalWriteError() APT_OVERRIDE
+   bool InternalWriteError() override
    {
       return wrapped->InternalWriteError();
    }
-   virtual bool InternalSeek(unsigned long long const To) APT_OVERRIDE
+   bool InternalSeek(unsigned long long const To) override
    {
       if (InternalFlush() == false)
 	 return false;
       return wrapped->InternalSeek(To);
    }
-   virtual bool InternalSkip(unsigned long long Over) APT_OVERRIDE
+   bool InternalSkip(unsigned long long Over) override
    {
       if (InternalFlush() == false)
 	 return false;
       return wrapped->InternalSkip(Over);
    }
-   virtual bool InternalTruncate(unsigned long long const Size) APT_OVERRIDE
+   bool InternalTruncate(unsigned long long const Size) override
    {
       if (InternalFlush() == false)
 	 return false;
       return wrapped->InternalTruncate(Size);
    }
-   virtual unsigned long long InternalTell() APT_OVERRIDE
+   unsigned long long InternalTell() override
    {
       if (InternalFlush() == false)
 	 return -1;
       return wrapped->InternalTell();
    }
-   virtual unsigned long long InternalSize() APT_OVERRIDE
+   unsigned long long InternalSize() override
    {
       if (InternalFlush() == false)
 	 return -1;
       return wrapped->InternalSize();
    }
-   virtual bool InternalClose(std::string const &FileName) APT_OVERRIDE
+   bool InternalClose(std::string const &FileName) override
    {
       return wrapped->InternalClose(FileName);
    }
-   virtual bool InternalAlwaysAutoClose() const APT_OVERRIDE
+   [[nodiscard]] bool InternalAlwaysAutoClose() const override
    {
       return wrapped->InternalAlwaysAutoClose();
    }
@@ -1443,7 +1437,7 @@ class APT_HIDDEN GzipFileFdPrivate: public FileFdPrivate {				/*{{{*/
 #ifdef HAVE_ZLIB
 public:
    gzFile gz;
-   virtual bool InternalOpen(int const iFd, unsigned int const Mode) APT_OVERRIDE
+   bool InternalOpen(int const iFd, unsigned int const Mode) override
    {
       if ((Mode & FileFd::ReadWrite) == FileFd::ReadWrite)
 	 gz = gzdopen(iFd, "r+");
@@ -1454,11 +1448,11 @@ public:
       filefd->Flags |= FileFd::Compressed;
       return gz != nullptr;
    }
-   virtual ssize_t InternalUnbufferedRead(void * const To, unsigned long long const Size) APT_OVERRIDE
+   ssize_t InternalUnbufferedRead(void *const To, unsigned long long const Size) override
    {
       return gzread(gz, To, Size);
    }
-   virtual bool InternalReadError() APT_OVERRIDE
+   bool InternalReadError() override
    {
       int err;
       char const * const errmsg = gzerror(gz, &err);
@@ -1466,15 +1460,15 @@ public:
 	 return filefd->FileFdError("gzread: %s (%d: %s)", _("Read error"), err, errmsg);
       return FileFdPrivate::InternalReadError();
    }
-   virtual char * InternalReadLine(char * To, unsigned long long Size) APT_OVERRIDE
+   char *InternalReadLine(char *To, unsigned long long Size) override
    {
       return gzgets(gz, To, Size);
    }
-   virtual ssize_t InternalWrite(void const * const From, unsigned long long const Size) APT_OVERRIDE
+   ssize_t InternalWrite(void const *const From, unsigned long long const Size) override
    {
       return gzwrite(gz,From,Size);
    }
-   virtual bool InternalWriteError() APT_OVERRIDE
+   bool InternalWriteError() override
    {
       int err;
       char const * const errmsg = gzerror(gz, &err);
@@ -1482,7 +1476,7 @@ public:
 	 return filefd->FileFdError("gzwrite: %s (%d: %s)", _("Write error"), err, errmsg);
       return FileFdPrivate::InternalWriteError();
    }
-   virtual bool InternalSeek(unsigned long long const To) APT_OVERRIDE
+   bool InternalSeek(unsigned long long const To) override
    {
       off_t const res = gzseek(gz, To, SEEK_SET);
       if (res != (off_t)To)
@@ -1491,7 +1485,7 @@ public:
       buffer.reset();
       return true;
    }
-   virtual bool InternalSkip(unsigned long long Over) APT_OVERRIDE
+   bool InternalSkip(unsigned long long Over) override
    {
       if (Over >= buffer.size())
       {
@@ -1511,11 +1505,11 @@ public:
       seekpos = res;
       return true;
    }
-   virtual unsigned long long InternalTell() APT_OVERRIDE
+   unsigned long long InternalTell() override
    {
       return gztell(gz) - buffer.size();
    }
-   virtual unsigned long long InternalSize() APT_OVERRIDE
+   unsigned long long InternalSize() override
    {
       unsigned long long filesize = FileFdPrivate::InternalSize();
       // only check gzsize if we are actually a gzip file, just checking for
@@ -1549,7 +1543,7 @@ public:
       }
       return size;
    }
-   virtual bool InternalClose(std::string const &FileName) APT_OVERRIDE
+   bool InternalClose(std::string const &FileName) override
    {
       if (gz == nullptr)
 	 return true;
@@ -1570,22 +1564,22 @@ class APT_HIDDEN Bz2FileFdPrivate: public FileFdPrivate {				/*{{{*/
 #ifdef HAVE_BZ2
    BZFILE* bz2;
 public:
-   virtual bool InternalOpen(int const iFd, unsigned int const Mode) APT_OVERRIDE
-   {
-      if ((Mode & FileFd::ReadWrite) == FileFd::ReadWrite)
-	 bz2 = BZ2_bzdopen(iFd, "r+");
-      else if ((Mode & FileFd::WriteOnly) == FileFd::WriteOnly)
-	 bz2 = BZ2_bzdopen(iFd, "w");
-      else
-	 bz2 = BZ2_bzdopen(iFd, "r");
-      filefd->Flags |= FileFd::Compressed;
-      return bz2 != nullptr;
+bool InternalOpen(int const iFd, unsigned int const Mode) override
+{
+   if ((Mode & FileFd::ReadWrite) == FileFd::ReadWrite)
+      bz2 = BZ2_bzdopen(iFd, "r+");
+   else if ((Mode & FileFd::WriteOnly) == FileFd::WriteOnly)
+      bz2 = BZ2_bzdopen(iFd, "w");
+   else
+      bz2 = BZ2_bzdopen(iFd, "r");
+   filefd->Flags |= FileFd::Compressed;
+   return bz2 != nullptr;
    }
-   virtual ssize_t InternalUnbufferedRead(void * const To, unsigned long long const Size) APT_OVERRIDE
+   ssize_t InternalUnbufferedRead(void *const To, unsigned long long const Size) override
    {
       return BZ2_bzread(bz2, To, Size);
    }
-   virtual bool InternalReadError() APT_OVERRIDE
+   bool InternalReadError() override
    {
       int err;
       char const * const errmsg = BZ2_bzerror(bz2, &err);
@@ -1593,11 +1587,11 @@ public:
 	 return filefd->FileFdError("BZ2_bzread: %s %s (%d: %s)", filefd->FileName.c_str(), _("Read error"), err, errmsg);
       return FileFdPrivate::InternalReadError();
    }
-   virtual ssize_t InternalWrite(void const * const From, unsigned long long const Size) APT_OVERRIDE
+   ssize_t InternalWrite(void const *const From, unsigned long long const Size) override
    {
       return BZ2_bzwrite(bz2, (void*)From, Size);
    }
-   virtual bool InternalWriteError() APT_OVERRIDE
+   bool InternalWriteError() override
    {
       int err;
       char const * const errmsg = BZ2_bzerror(bz2, &err);
@@ -1605,8 +1599,8 @@ public:
 	 return filefd->FileFdError("BZ2_bzwrite: %s %s (%d: %s)", filefd->FileName.c_str(), _("Write error"), err, errmsg);
       return FileFdPrivate::InternalWriteError();
    }
-   virtual bool InternalStream() const APT_OVERRIDE { return true; }
-   virtual bool InternalClose(std::string const &) APT_OVERRIDE
+   [[nodiscard]] bool InternalStream() const override { return true; }
+   bool InternalClose(std::string const &/*FileName*/) override
    {
       if (bz2 == nullptr)
 	 return true;
@@ -1632,40 +1626,42 @@ class APT_HIDDEN Lz4FileFdPrivate: public FileFdPrivate {				/*{{{*/
    // Count of bytes that the decompressor expects to read next, or buffer size.
    size_t next_to_load = APT_BUFFER_SIZE;
 public:
-   virtual bool InternalOpen(int const iFd, unsigned int const Mode) APT_OVERRIDE
+bool InternalOpen(int const iFd, unsigned int const Mode) override
+{
+   if ((Mode & FileFd::ReadWrite) == FileFd::ReadWrite)
+      return _error->Error("lz4 only supports write or read mode");
+
+   if ((Mode & FileFd::WriteOnly) == FileFd::WriteOnly)
    {
-      if ((Mode & FileFd::ReadWrite) == FileFd::ReadWrite)
-	 return _error->Error("lz4 only supports write or read mode");
-
-      if ((Mode & FileFd::WriteOnly) == FileFd::WriteOnly) {
-	 res = LZ4F_createCompressionContext(&cctx, LZ4F_VERSION);
-	 lz4_buffer.reset(LZ4F_compressBound(APT_BUFFER_SIZE, nullptr)
-			  + LZ4_HEADER_SIZE + LZ4_FOOTER_SIZE);
-      } else {
-	 res = LZ4F_createDecompressionContext(&dctx, LZ4F_VERSION);
-	 lz4_buffer.reset(APT_BUFFER_SIZE);
-      }
-
-      filefd->Flags |= FileFd::Compressed;
-
-      if (LZ4F_isError(res))
-	 return false;
-
-      unsigned int flags = (Mode & (FileFd::WriteOnly|FileFd::ReadOnly));
-      if (backend.OpenDescriptor(iFd, flags, FileFd::None, true) == false)
-	 return false;
-
-      // Write the file header
-      if ((Mode & FileFd::WriteOnly) == FileFd::WriteOnly)
-      {
-	 res = LZ4F_compressBegin(cctx, lz4_buffer.buffer, lz4_buffer.buffersize_max, nullptr);
-	 if (LZ4F_isError(res) || backend.Write(lz4_buffer.buffer, res) == false)
-	    return false;
-      }
-
-      return true;
+      res = LZ4F_createCompressionContext(&cctx, LZ4F_VERSION);
+      lz4_buffer.reset(LZ4F_compressBound(APT_BUFFER_SIZE, nullptr) + LZ4_HEADER_SIZE + LZ4_FOOTER_SIZE);
    }
-   virtual ssize_t InternalUnbufferedRead(void * const To, unsigned long long const Size) APT_OVERRIDE
+   else
+   {
+      res = LZ4F_createDecompressionContext(&dctx, LZ4F_VERSION);
+      lz4_buffer.reset(APT_BUFFER_SIZE);
+   }
+
+   filefd->Flags |= FileFd::Compressed;
+
+   if (LZ4F_isError(res))
+      return false;
+
+   unsigned int flags = (Mode & (FileFd::WriteOnly | FileFd::ReadOnly));
+   if (backend.OpenDescriptor(iFd, flags, FileFd::None, true) == false)
+      return false;
+
+   // Write the file header
+   if ((Mode & FileFd::WriteOnly) == FileFd::WriteOnly)
+   {
+      res = LZ4F_compressBegin(cctx, lz4_buffer.buffer, lz4_buffer.buffersize_max, nullptr);
+      if (LZ4F_isError(res) || backend.Write(lz4_buffer.buffer, res) == false)
+	 return false;
+   }
+
+   return true;
+   }
+   ssize_t InternalUnbufferedRead(void *const To, unsigned long long const Size) override
    {
       /* Keep reading as long as the compressor still wants to read */
       while (next_to_load) {
@@ -1703,13 +1699,13 @@ public:
 
       return 0;
    }
-   virtual bool InternalReadError() APT_OVERRIDE
+   bool InternalReadError() override
    {
       char const * const errmsg = LZ4F_getErrorName(res);
 
       return filefd->FileFdError("LZ4F: %s %s (%zu: %s)", filefd->FileName.c_str(), _("Read error"), res, errmsg);
    }
-   virtual ssize_t InternalWrite(void const * const From, unsigned long long const Size) APT_OVERRIDE
+   ssize_t InternalWrite(void const *const From, unsigned long long const Size) override
    {
       unsigned long long const towrite = std::min(APT_BUFFER_SIZE, Size);
 
@@ -1722,20 +1718,20 @@ public:
 
       return towrite;
    }
-   virtual bool InternalWriteError() APT_OVERRIDE
+   bool InternalWriteError() override
    {
       char const * const errmsg = LZ4F_getErrorName(res);
 
       return filefd->FileFdError("LZ4F: %s %s (%zu: %s)", filefd->FileName.c_str(), _("Write error"), res, errmsg);
    }
-   virtual bool InternalStream() const APT_OVERRIDE { return true; }
+   [[nodiscard]] bool InternalStream() const override { return true; }
 
-   virtual bool InternalFlush() APT_OVERRIDE
+   bool InternalFlush() override
    {
       return backend.Flush();
    }
 
-   virtual bool InternalClose(std::string const &) APT_OVERRIDE
+   bool InternalClose(std::string const &/*FileName*/) override
    {
       /* Reset variables */
       res = 0;
@@ -1791,7 +1787,7 @@ class APT_HIDDEN ZstdFileFdPrivate : public FileFdPrivate		/*{{{*/
    size_t next_to_load = APT_BUFFER_SIZE;
 
    public:
-   virtual bool InternalOpen(int const iFd, unsigned int const Mode) APT_OVERRIDE
+   bool InternalOpen(int const iFd, unsigned int const Mode) override
    {
       if ((Mode & FileFd::ReadWrite) == FileFd::ReadWrite)
 	 return _error->Error("zstd only supports write or read mode");
@@ -1820,7 +1816,7 @@ class APT_HIDDEN ZstdFileFdPrivate : public FileFdPrivate		/*{{{*/
 
       return true;
    }
-   virtual ssize_t InternalUnbufferedRead(void *const To, unsigned long long const Size) APT_OVERRIDE
+   ssize_t InternalUnbufferedRead(void *const To, unsigned long long const Size) override
    {
       /* Keep reading as long as the compressor still wants to read */
       while (true)
@@ -1878,13 +1874,13 @@ class APT_HIDDEN ZstdFileFdPrivate : public FileFdPrivate		/*{{{*/
 
       return 0;
    }
-   virtual bool InternalReadError() APT_OVERRIDE
+   bool InternalReadError() override
    {
       char const *const errmsg = ZSTD_getErrorName(res);
 
       return filefd->FileFdError("ZSTD: %s %s (%zu: %s)", filefd->FileName.c_str(), _("Read error"), res, errmsg);
    }
-   virtual ssize_t InternalWrite(void const *const From, unsigned long long const Size) APT_OVERRIDE
+   ssize_t InternalWrite(void const *const From, unsigned long long const Size) override
    {
       // Drain compressed buffer as far as possible.
       ZSTD_outBuffer out = {
@@ -1906,20 +1902,20 @@ class APT_HIDDEN ZstdFileFdPrivate : public FileFdPrivate		/*{{{*/
       return in.pos;
    }
 
-   virtual bool InternalWriteError() APT_OVERRIDE
+   bool InternalWriteError() override
    {
       char const *const errmsg = ZSTD_getErrorName(res);
 
       return filefd->FileFdError("ZSTD: %s %s (%zu: %s)", filefd->FileName.c_str(), _("Write error"), res, errmsg);
    }
-   virtual bool InternalStream() const APT_OVERRIDE { return true; }
+   [[nodiscard]] bool InternalStream() const override { return true; }
 
-   virtual bool InternalFlush() APT_OVERRIDE
+   bool InternalFlush() override
    {
       return backend.Flush();
    }
 
-   virtual bool InternalClose(std::string const &) APT_OVERRIDE
+   bool InternalClose(std::string const &/*FileName*/) override
    {
       /* Reset variables */
       res = 0;
@@ -1995,7 +1991,7 @@ class APT_HIDDEN LzmaFileFdPrivate: public FileFdPrivate {		/*{{{*/
    struct LZMAFILE {
       FILE* file;
       FileFd * const filefd;
-      uint8_t buffer[4096];
+      std::array<unsigned char, APT_BUFFER_SIZE> buffer;
       lzma_stream stream;
       lzma_ret err;
       bool eof;
@@ -2006,19 +2002,18 @@ class APT_HIDDEN LzmaFileFdPrivate: public FileFdPrivate {		/*{{{*/
       {
 	 if (compressing == true && filefd->Failed() == false)
 	 {
-	    size_t constexpr buffersize = sizeof(buffer)/sizeof(buffer[0]);
 	    while(true)
 	    {
-	       stream.avail_out = buffersize;
-	       stream.next_out = buffer;
+	       stream.avail_out = buffer.size();
+	       stream.next_out = buffer.data();
 	       err = lzma_code(&stream, LZMA_FINISH);
 	       if (err != LZMA_OK && err != LZMA_STREAM_END)
 	       {
 		  _error->Error("~LZMAFILE: Compress finalisation failed");
 		  break;
 	       }
-	       size_t const n =  buffersize - stream.avail_out;
-	       if (n && fwrite(buffer, 1, n, file) != n)
+	       size_t const n =  buffer.size() - stream.avail_out;
+	       if (n && fwrite(buffer.data(), 1, n, file) != n)
 	       {
 		  _error->Errno("~LZMAFILE",_("Write error"));
 		  break;
@@ -2059,51 +2054,51 @@ class APT_HIDDEN LzmaFileFdPrivate: public FileFdPrivate {		/*{{{*/
       return 6;
    }
 public:
-   virtual bool InternalOpen(int const iFd, unsigned int const Mode) APT_OVERRIDE
+bool InternalOpen(int const iFd, unsigned int const Mode) override
+{
+   if ((Mode & FileFd::ReadWrite) == FileFd::ReadWrite)
+      return filefd->FileFdError("ReadWrite mode is not supported for lzma/xz files %s", filefd->FileName.c_str());
+
+   if (lzma == nullptr)
+      lzma = new LzmaFileFdPrivate::LZMAFILE(filefd);
+   if ((Mode & FileFd::WriteOnly) == FileFd::WriteOnly)
+      lzma->file = fdopen(iFd, "w");
+   else
+      lzma->file = fdopen(iFd, "r");
+   filefd->Flags |= FileFd::Compressed;
+   if (lzma->file == nullptr)
+      return false;
+
+   lzma_stream tmp_stream = LZMA_STREAM_INIT;
+   lzma->stream = tmp_stream;
+
+   if ((Mode & FileFd::WriteOnly) == FileFd::WriteOnly)
    {
-      if ((Mode & FileFd::ReadWrite) == FileFd::ReadWrite)
-	 return filefd->FileFdError("ReadWrite mode is not supported for lzma/xz files %s", filefd->FileName.c_str());
-
-      if (lzma == nullptr)
-	 lzma = new LzmaFileFdPrivate::LZMAFILE(filefd);
-      if ((Mode & FileFd::WriteOnly) == FileFd::WriteOnly)
-	 lzma->file = fdopen(iFd, "w");
-      else
-	 lzma->file = fdopen(iFd, "r");
-      filefd->Flags |= FileFd::Compressed;
-      if (lzma->file == nullptr)
-	 return false;
-
-      lzma_stream tmp_stream = LZMA_STREAM_INIT;
-      lzma->stream = tmp_stream;
-
-      if ((Mode & FileFd::WriteOnly) == FileFd::WriteOnly)
+      uint32_t const xzlevel = findXZlevel(compressor.CompressArgs);
+      if (compressor.Name == "xz")
       {
-	 uint32_t const xzlevel = findXZlevel(compressor.CompressArgs);
-	 if (compressor.Name == "xz")
-	 {
-	    if (lzma_easy_encoder(&lzma->stream, xzlevel, LZMA_CHECK_CRC64) != LZMA_OK)
-	       return false;
-	 }
-	 else
-	 {
-	    lzma_options_lzma options;
-	    lzma_lzma_preset(&options, xzlevel);
-	    if (lzma_alone_encoder(&lzma->stream, &options) != LZMA_OK)
-	       return false;
-	 }
-	 lzma->compressing = true;
-      }
-      else
-      {
-	 uint64_t constexpr memlimit = 1024 * 1024 * 500;
-	 if (lzma_auto_decoder(&lzma->stream, memlimit, 0) != LZMA_OK)
+	 if (lzma_easy_encoder(&lzma->stream, xzlevel, LZMA_CHECK_CRC64) != LZMA_OK)
 	    return false;
-	 lzma->compressing = false;
       }
-      return true;
+      else
+      {
+	 lzma_options_lzma options;
+	 lzma_lzma_preset(&options, xzlevel);
+	 if (lzma_alone_encoder(&lzma->stream, &options) != LZMA_OK)
+	    return false;
+      }
+      lzma->compressing = true;
    }
-   virtual ssize_t InternalUnbufferedRead(void * const To, unsigned long long const Size) APT_OVERRIDE
+   else
+   {
+      uint64_t constexpr memlimit = 1024 * 1024 * 500;
+      if (lzma_auto_decoder(&lzma->stream, memlimit, 0) != LZMA_OK)
+	 return false;
+      lzma->compressing = false;
+   }
+   return true;
+   }
+   ssize_t InternalUnbufferedRead(void *const To, unsigned long long const Size) override
    {
       ssize_t Res;
       if (lzma->eof == true)
@@ -2113,8 +2108,8 @@ public:
       lzma->stream.avail_out = Size;
       if (lzma->stream.avail_in == 0)
       {
-	 lzma->stream.next_in = lzma->buffer;
-	 lzma->stream.avail_in = fread(lzma->buffer, 1, sizeof(lzma->buffer)/sizeof(lzma->buffer[0]), lzma->file);
+	 lzma->stream.next_in = lzma->buffer.data();
+	 lzma->stream.avail_in = fread(lzma->buffer.data(), 1, lzma->buffer.size(), lzma->file);
       }
       lzma->err = lzma_code(&lzma->stream, LZMA_RUN);
       if (lzma->err == LZMA_STREAM_END)
@@ -2139,22 +2134,22 @@ public:
       }
       return Res;
    }
-   virtual bool InternalReadError() APT_OVERRIDE
+   bool InternalReadError() override
    {
       return filefd->FileFdError("lzma_read: %s (%d)", _("Read error"), lzma->err);
    }
-   virtual ssize_t InternalWrite(void const * const From, unsigned long long const Size) APT_OVERRIDE
+   ssize_t InternalWrite(void const *const From, unsigned long long const Size) override
    {
       ssize_t Res;
       lzma->stream.next_in = (uint8_t *)From;
       lzma->stream.avail_in = Size;
-      lzma->stream.next_out = lzma->buffer;
-      lzma->stream.avail_out = sizeof(lzma->buffer)/sizeof(lzma->buffer[0]);
+      lzma->stream.next_out = lzma->buffer.data();
+      lzma->stream.avail_out = lzma->buffer.size();
       lzma->err = lzma_code(&lzma->stream, LZMA_RUN);
       if (lzma->err != LZMA_OK)
 	 return -1;
-      size_t const n = sizeof(lzma->buffer)/sizeof(lzma->buffer[0]) - lzma->stream.avail_out;
-      size_t const m = (n == 0) ? 0 : fwrite(lzma->buffer, 1, n, lzma->file);
+      size_t const n = lzma->buffer.size() - lzma->stream.avail_out;
+      size_t const m = (n == 0) ? 0 : fwrite(lzma->buffer.data(), 1, n, lzma->file);
       if (m != n)
       {
 	 Res = -1;
@@ -2172,12 +2167,12 @@ public:
       }
       return Res;
    }
-   virtual bool InternalWriteError() APT_OVERRIDE
+   bool InternalWriteError() override
    {
       return filefd->FileFdError("lzma_write: %s (%d)", _("Write error"), lzma->err);
    }
-   virtual bool InternalStream() const APT_OVERRIDE { return true; }
-   virtual bool InternalClose(std::string const &) APT_OVERRIDE
+   [[nodiscard]] bool InternalStream() const override { return true; }
+   bool InternalClose(std::string const &/*FileName*/) override
    {
       delete lzma;
       lzma = nullptr;
@@ -2194,117 +2189,118 @@ class APT_HIDDEN PipedFileFdPrivate: public FileFdPrivate				/*{{{*/
    by executing a specified binary and pipe in/out what we need */
 {
 public:
-   virtual bool InternalOpen(int const, unsigned int const Mode) APT_OVERRIDE
+bool InternalOpen(int const /*iFd*/, unsigned int const Mode) override
+{
+   // collect zombies here in case we reopen
+   if (compressor_pid > 0)
+      ExecWait(compressor_pid, "FileFdCompressor", true);
+
+   if ((Mode & FileFd::ReadWrite) == FileFd::ReadWrite)
+      return filefd->FileFdError("ReadWrite mode is not supported for file %s", filefd->FileName.c_str());
+   if (compressor.Binary == "false")
+      return filefd->FileFdError("libapt has inbuilt support for the %s compression,"
+				 " but was forced to ignore it in favor of an external binary – which isn't installed.",
+				 compressor.Name.c_str());
+
+   bool const Comp = (Mode & FileFd::WriteOnly) == FileFd::WriteOnly;
+   if (Comp == false && filefd->iFd != -1)
    {
-      // collect zombies here in case we reopen
-      if (compressor_pid > 0)
-	 ExecWait(compressor_pid, "FileFdCompressor", true);
+      // Handle 'decompression' of empty files
+      struct stat Buf;
+      if (fstat(filefd->iFd, &Buf) != 0)
+	 return filefd->FileFdErrno("fstat", "Could not stat fd %d for file %s", filefd->iFd, filefd->FileName.c_str());
+      if (Buf.st_size == 0 && S_ISFIFO(Buf.st_mode) == false)
+	 return true;
 
-      if ((Mode & FileFd::ReadWrite) == FileFd::ReadWrite)
-	 return filefd->FileFdError("ReadWrite mode is not supported for file %s", filefd->FileName.c_str());
-      if (compressor.Binary == "false")
-	 return filefd->FileFdError("libapt has inbuilt support for the %s compression,"
-	       " but was forced to ignore it in favor of an external binary – which isn't installed.", compressor.Name.c_str());
-
-      bool const Comp = (Mode & FileFd::WriteOnly) == FileFd::WriteOnly;
-      if (Comp == false && filefd->iFd != -1)
+      // We don't need the file open - instead let the compressor open it
+      // as he properly knows better how to efficiently read from 'his' file
+      if (filefd->FileName.empty() == false)
       {
-	 // Handle 'decompression' of empty files
-	 struct stat Buf;
-	 if (fstat(filefd->iFd, &Buf) != 0)
-	    return filefd->FileFdErrno("fstat", "Could not stat fd %d for file %s", filefd->iFd, filefd->FileName.c_str());
-	 if (Buf.st_size == 0 && S_ISFIFO(Buf.st_mode) == false)
-	    return true;
-
-	 // We don't need the file open - instead let the compressor open it
-	 // as he properly knows better how to efficiently read from 'his' file
-	 if (filefd->FileName.empty() == false)
-	 {
-	    close(filefd->iFd);
-	    filefd->iFd = -1;
-	 }
+	 close(filefd->iFd);
+	 filefd->iFd = -1;
       }
-
-      // Create a data pipe
-      int Pipe[2] = {-1,-1};
-      if (pipe(Pipe) != 0)
-	 return filefd->FileFdErrno("pipe",_("Failed to create subprocess IPC"));
-      for (int J = 0; J != 2; J++)
-	 SetCloseExec(Pipe[J],true);
-
-      compressed_fd = filefd->iFd;
-      set_is_pipe(true);
-
-      if (Comp == true)
-	 filefd->iFd = Pipe[1];
-      else
-	 filefd->iFd = Pipe[0];
-
-      // The child..
-      compressor_pid = ExecFork();
-      if (compressor_pid == 0)
-      {
-	 if (Comp == true)
-	 {
-	    dup2(compressed_fd,STDOUT_FILENO);
-	    dup2(Pipe[0],STDIN_FILENO);
-	 }
-	 else
-	 {
-	    if (compressed_fd != -1)
-	       dup2(compressed_fd,STDIN_FILENO);
-	    dup2(Pipe[1],STDOUT_FILENO);
-	 }
-	 int const nullfd = open("/dev/null", O_WRONLY);
-	 if (nullfd != -1)
-	 {
-	    dup2(nullfd,STDERR_FILENO);
-	    close(nullfd);
-	 }
-
-	 SetCloseExec(STDOUT_FILENO,false);
-	 SetCloseExec(STDIN_FILENO,false);
-
-	 std::vector<char const*> Args;
-	 Args.push_back(compressor.Binary.c_str());
-	 std::vector<std::string> const * const addArgs =
-	    (Comp == true) ? &(compressor.CompressArgs) : &(compressor.UncompressArgs);
-	 for (std::vector<std::string>::const_iterator a = addArgs->begin();
-	       a != addArgs->end(); ++a)
-	    Args.push_back(a->c_str());
-	 if (Comp == false && filefd->FileName.empty() == false)
-	 {
-	    // commands not needing arguments, do not need to be told about using standard output
-	    // in reality, only testcases with tools like cat, rev, rot13, … are able to trigger this
-	    if (compressor.CompressArgs.empty() == false && compressor.UncompressArgs.empty() == false)
-	       Args.push_back("--stdout");
-	    if (filefd->TemporaryFileName.empty() == false)
-	       Args.push_back(filefd->TemporaryFileName.c_str());
-	    else
-	       Args.push_back(filefd->FileName.c_str());
-	 }
-	 Args.push_back(NULL);
-
-	 execvp(Args[0],(char **)&Args[0]);
-	 cerr << _("Failed to exec compressor ") << Args[0] << endl;
-	 _exit(100);
-      }
-      if (Comp == true)
-	 close(Pipe[0]);
-      else
-	 close(Pipe[1]);
-
-      return true;
    }
-   virtual ssize_t InternalUnbufferedRead(void * const To, unsigned long long const Size) APT_OVERRIDE
+
+   // Create a data pipe
+   int Pipe[2] = {-1, -1};
+   if (pipe(Pipe) != 0)
+      return filefd->FileFdErrno("pipe", _("Failed to create subprocess IPC"));
+   for (int J = 0; J != 2; J++)
+      SetCloseExec(Pipe[J], true);
+
+   compressed_fd = filefd->iFd;
+   set_is_pipe(true);
+
+   if (Comp == true)
+      filefd->iFd = Pipe[1];
+   else
+      filefd->iFd = Pipe[0];
+
+   // The child..
+   compressor_pid = ExecFork();
+   if (compressor_pid == 0)
+   {
+      if (Comp == true)
+      {
+	 dup2(compressed_fd, STDOUT_FILENO);
+	 dup2(Pipe[0], STDIN_FILENO);
+      }
+      else
+      {
+	 if (compressed_fd != -1)
+	    dup2(compressed_fd, STDIN_FILENO);
+	 dup2(Pipe[1], STDOUT_FILENO);
+      }
+      int const nullfd = open("/dev/null", O_WRONLY);
+      if (nullfd != -1)
+      {
+	 dup2(nullfd, STDERR_FILENO);
+	 close(nullfd);
+      }
+
+      SetCloseExec(STDOUT_FILENO, false);
+      SetCloseExec(STDIN_FILENO, false);
+
+      std::vector<char const *> Args;
+      Args.push_back(compressor.Binary.c_str());
+      std::vector<std::string> const *const addArgs =
+	 (Comp == true) ? &(compressor.CompressArgs) : &(compressor.UncompressArgs);
+      for (std::vector<std::string>::const_iterator a = addArgs->begin();
+	   a != addArgs->end(); ++a)
+	 Args.push_back(a->c_str());
+      if (Comp == false && filefd->FileName.empty() == false)
+      {
+	 // commands not needing arguments, do not need to be told about using standard output
+	 // in reality, only testcases with tools like cat, rev, rot13, … are able to trigger this
+	 if (compressor.CompressArgs.empty() == false && compressor.UncompressArgs.empty() == false)
+	    Args.push_back("--stdout");
+	 if (filefd->TemporaryFileName.empty() == false)
+	    Args.push_back(filefd->TemporaryFileName.c_str());
+	 else
+	    Args.push_back(filefd->FileName.c_str());
+      }
+      Args.push_back(NULL);
+
+      execvp(Args[0], (char **)&Args[0]);
+      cerr << _("Failed to exec compressor ") << Args[0] << endl;
+      _exit(100);
+   }
+   if (Comp == true)
+      close(Pipe[0]);
+   else
+      close(Pipe[1]);
+
+   return true;
+   }
+   ssize_t InternalUnbufferedRead(void *const To, unsigned long long const Size) override
    {
       return read(filefd->iFd, To, Size);
    }
-   virtual ssize_t InternalWrite(void const * const From, unsigned long long const Size) APT_OVERRIDE
+   ssize_t InternalWrite(void const *const From, unsigned long long const Size) override
    {
       return write(filefd->iFd, From, Size);
    }
-   virtual bool InternalClose(std::string const &) APT_OVERRIDE
+   bool InternalClose(std::string const &/*FileName*/) override
    {
       bool Ret = true;
       if (filefd->iFd != -1)
@@ -2324,12 +2320,12 @@ public:
 class APT_HIDDEN DirectFileFdPrivate: public FileFdPrivate				/*{{{*/
 {
 public:
-   virtual bool InternalOpen(int const, unsigned int const) APT_OVERRIDE { return true; }
-   virtual ssize_t InternalUnbufferedRead(void * const To, unsigned long long const Size) APT_OVERRIDE
-   {
-      return read(filefd->iFd, To, Size);
+bool InternalOpen(int const /*iFd*/, unsigned int const /*Mode*/) override { return true; }
+ssize_t InternalUnbufferedRead(void *const To, unsigned long long const Size) override
+{
+   return read(filefd->iFd, To, Size);
    }
-   virtual ssize_t InternalWrite(void const * const From, unsigned long long const Size) APT_OVERRIDE
+   ssize_t InternalWrite(void const *const From, unsigned long long const Size) override
    {
       // files opened read+write are strange and only really "supported" for direct files
       if (buffer.size() != 0)
@@ -2339,7 +2335,7 @@ public:
       }
       return write(filefd->iFd, From, Size);
    }
-   virtual bool InternalSeek(unsigned long long const To) APT_OVERRIDE
+   bool InternalSeek(unsigned long long const To) override
    {
       off_t const res = lseek(filefd->iFd, To, SEEK_SET);
       if (res != (off_t)To)
@@ -2348,7 +2344,7 @@ public:
       buffer.reset();
       return true;
    }
-   virtual bool InternalSkip(unsigned long long Over) APT_OVERRIDE
+   bool InternalSkip(unsigned long long Over) override
    {
       if (Over >= buffer.size())
       {
@@ -2368,7 +2364,7 @@ public:
       seekpos = res;
       return true;
    }
-   virtual bool InternalTruncate(unsigned long long const To) APT_OVERRIDE
+   bool InternalTruncate(unsigned long long const To) override
    {
       if (buffer.size() != 0)
       {
@@ -2384,16 +2380,16 @@ public:
 	 return filefd->FileFdError("Unable to truncate to %llu",To);
       return true;
    }
-   virtual unsigned long long InternalTell() APT_OVERRIDE
+   unsigned long long InternalTell() override
    {
       return lseek(filefd->iFd,0,SEEK_CUR) - buffer.size();
    }
-   virtual unsigned long long InternalSize() APT_OVERRIDE
+   unsigned long long InternalSize() override
    {
       return filefd->FileSize();
    }
-   virtual bool InternalClose(std::string const &) APT_OVERRIDE { return true; }
-   virtual bool InternalAlwaysAutoClose() const APT_OVERRIDE { return false; }
+   bool InternalClose(std::string const &/*FileName*/) override { return true; }
+   [[nodiscard]] bool InternalAlwaysAutoClose() const override { return false; }
 
    explicit DirectFileFdPrivate(FileFd * const filefd) : FileFdPrivate(filefd) {}
    virtual ~DirectFileFdPrivate() { InternalClose(""); }
@@ -2732,10 +2728,10 @@ bool FileFd::Read(void *To,unsigned long long Size,unsigned long long *Actual)
       if (Actual != nullptr)
 	 *Actual += Res;
    }
-   
+
    if (Size == 0)
       return true;
-   
+
    // Eof handling
    if (Actual != 0)
    {
@@ -3239,7 +3235,7 @@ bool Popen(const char *Args[], FileFd &Fd, pid_t &Child, FileFd::OpenMode Mode, 
       } else if(Mode == FileFd::WriteOnly)
          dup2(fd, 0);
 
-      execv(Args[0], (char**)Args);
+      execvp(Args[0], (char **)Args);
       _exit(100);
    }
    if(Mode == FileFd::ReadOnly)

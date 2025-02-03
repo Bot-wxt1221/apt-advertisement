@@ -245,7 +245,8 @@ class APT_PUBLIC pkgCache								/*{{{*/
 
    // Useful transformation things
    static const char *Priority(unsigned char Priority);
-   
+   static std::string_view Priority_NoL10n(unsigned char Prio);
+
    // Accessors
    GrpIterator FindGrp(APT::StringView Name);
    PkgIterator FindPkg(APT::StringView Name);
@@ -278,6 +279,7 @@ class APT_PUBLIC pkgCache								/*{{{*/
    static const char *CompTypeDeb(unsigned char Comp) APT_PURE;
    static const char *CompType(unsigned char Comp) APT_PURE;
    static const char *DepType(unsigned char Dep);
+   static std::string_view DepType_NoL10n(unsigned char Dep);
 
    pkgCache(MMap *Map,bool DoMap = true);
    virtual ~pkgCache();
@@ -339,8 +341,13 @@ struct pkgCache::Header
    map_id_t DependsDataCount;
    map_fileid_t ReleaseFileCount;
    map_fileid_t PackageFileCount;
+#if APT_PKG_ABI <= 600
    map_fileid_t VerFileCount;
    map_fileid_t DescFileCount;
+#else
+   map_id_t VerFileCount;
+   map_id_t DescFileCount;
+#endif
    map_id_t ProvidesCount;
 
    /** \brief index of the first PackageFile structure
@@ -597,8 +604,9 @@ struct pkgCache::VerFile
    map_pointer<VerFile> NextFile;
    /** \brief position in the package file */
    map_filesize_t Offset;         // File offset
-   /** @TODO document pkgCache::VerFile::Size */
-   map_filesize_t Size;
+#if APT_PKG_ABI <= 600
+   [[deprecated("No usage in src:apt, try MaxVerFileSize instead")]] map_filesize_t Size;
+#endif
 };
 									/*}}}*/
 // DescFile structure							/*{{{*/
@@ -611,8 +619,9 @@ struct pkgCache::DescFile
    map_pointer<DescFile> NextFile;
    /** \brief position in the file */
    map_filesize_t Offset;         // File offset
-   /** @TODO document pkgCache::DescFile::Size */
-   map_filesize_t Size;
+#if APT_PKG_ABI <= 600
+   [[deprecated("No usage in src:apt, try MaxDescFileSize instead")]] map_filesize_t Size;
+#endif
 };
 									/*}}}*/
 // Version structure							/*{{{*/

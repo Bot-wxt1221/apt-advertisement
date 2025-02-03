@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt 1.0.5\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2024-07-30 04:29+0000\n"
+"POT-Creation-Date: 2025-01-28 18:52+0000\n"
 "PO-Revision-Date: 2020-12-30 12:20+0200\n"
 "Last-Translator: Vangelis Skarmoutsos <skarmoutsosv@gmail.com>\n"
 "Language-Team: Greek <debian-l10n-greek@lists.debian.org>\n"
@@ -67,8 +67,8 @@ msgstr "Το αποθετήριο '%s' δεν έχει πια ένα αρχεί�
 
 #: apt-pkg/acquire-item.cc
 msgid ""
-"This is normally not allowed, but the option Acquire::"
-"AllowDowngradeToInsecureRepositories was given to override it."
+"This is normally not allowed, but the option "
+"Acquire::AllowDowngradeToInsecureRepositories was given to override it."
 msgstr ""
 
 #: apt-pkg/acquire-item.cc
@@ -195,8 +195,7 @@ msgstr ""
 msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr ""
 
-#. Both messages are reused from the ReleaseInfoChange feature in acquire-item.cc
-#: apt-pkg/acquire-item.cc apt-private/private-update.cc
+#: apt-pkg/acquire-item.cc
 #, c-format
 msgid "Repository '%s' changed its '%s' value from '%s' to '%s'"
 msgstr ""
@@ -207,7 +206,7 @@ msgid "Repository '%s' changed its default priority for %s from %hi to %hi."
 msgstr ""
 
 #. TRANSLATOR: the "this" refers to changes in the repository like a new release or owner change
-#: apt-pkg/acquire-item.cc apt-private/private-update.cc
+#: apt-pkg/acquire-item.cc
 #, c-format
 msgid ""
 "More information about this can be found online in the Release notes at: %s"
@@ -252,13 +251,6 @@ msgstr ""
 #, c-format
 msgid "Changelog unavailable for %s=%s"
 msgstr "Το changelog δεν είναι διαθέσιμο για %s=%s"
-
-#: apt-pkg/acquire-worker.cc
-#, c-format
-msgid ""
-"The method '%s' is unsupported and disabled by default. Consider switching "
-"to http(s). Set Dir::Bin::Methods::%s to \"%s\" to enable it again."
-msgstr ""
 
 #: apt-pkg/acquire-worker.cc
 #, c-format
@@ -791,11 +783,11 @@ msgstr "Η υποδιεργασία %s επέστρεψε ένα κωδικός 
 msgid "Sub-process %s exited unexpectedly"
 msgstr "Η υποδιεργασία %s εγκατέλειψε απρόσμενα"
 
-#: apt-pkg/contrib/fileutl.cc methods/ftp.cc methods/rsh.cc
+#: apt-pkg/contrib/fileutl.cc
 msgid "Read error"
 msgstr "Σφάλμα ανάγνωσης"
 
-#: apt-pkg/contrib/fileutl.cc methods/ftp.cc methods/rsh.cc
+#: apt-pkg/contrib/fileutl.cc
 msgid "Write error"
 msgstr "Σφάλμα εγγραφής"
 
@@ -1097,6 +1089,12 @@ msgstr "Αδύνατο το κλείδωμα του διαχειριστικού
 #: apt-pkg/deb/debsystem.cc
 msgid "Not locked"
 msgstr "Μη κλειδωμένο"
+
+#: apt-pkg/deb/debsystem.cc
+msgid ""
+"The dpkg executable set in Dir::Bin::dpkg is missing, falling back to using "
+"default dpkg."
+msgstr ""
 
 #. we don't care for the difference
 #: apt-pkg/deb/dpkgpm.cc
@@ -1919,8 +1917,8 @@ msgstr "Εσωτερικό Σφάλμα, η Ταξινόμηση δεν ολοκ
 #: apt-private/private-install.cc
 msgid "How odd... The sizes didn't match, email apt@packages.debian.org"
 msgstr ""
-"Πολύ περίεργο! Τα μεγέθη δεν ταιριάζουν, στείλτε μήνυμα στο apt@packages."
-"debian.org"
+"Πολύ περίεργο! Τα μεγέθη δεν ταιριάζουν, στείλτε μήνυμα στο "
+"apt@packages.debian.org"
 
 #: apt-private/private-install.cc
 #, fuzzy, c-format
@@ -2413,7 +2411,7 @@ msgid "Y"
 msgstr "Y"
 
 #. TRANSLATOR: "No" answer printed for a yes/no question if --assume-no is set
-#: apt-private/private-output.cc
+#: apt-private/private-output.cc apt-private/private-sources.cc
 msgid "N"
 msgstr "Ο"
 
@@ -2589,8 +2587,8 @@ msgstr "το %s δεν έχει εξαρτήσεις χτισίματος.\n"
 #: apt-private/private-source.cc
 #, c-format
 msgid ""
-"No architecture information available for %s. See apt.conf(5) APT::"
-"Architectures for setup"
+"No architecture information available for %s. See apt.conf(5) "
+"APT::Architectures for setup"
 msgstr ""
 
 #: apt-private/private-source.cc
@@ -2628,6 +2626,11 @@ msgstr "Αποτυχία ανάλυσης του %s. Επεξεργασία ξα
 msgid "Your '%s' file changed, please run 'apt-get update'.\n"
 msgstr "Το αρχείο '%s' άλλαξε, παρακαλώ τρέξτε το 'apt-get update'.\n"
 
+#: apt-private/private-sources.cc
+#, c-format
+msgid "Rewrite %zu sources?"
+msgstr ""
+
 #: apt-private/private-unmet.cc
 #, c-format
 msgid "Package %s version %s has an unmet dep:\n"
@@ -2648,7 +2651,32 @@ msgstr ""
 #. TRANSLATOR: the first is manpage reference, the last the URI from a sources.list
 #: apt-private/private-update.cc
 #, c-format
+msgid "The %s entry for '%s' should be upgraded to deb822 .sources"
+msgstr ""
+
+#. TRANSLATOR: the first is manpage reference, the last the URI from a sources.list
+#: apt-private/private-update.cc
+#, c-format
 msgid "Missing Signed-By in the %s entry for '%s'"
+msgstr ""
+
+#: apt-private/private-update.cc
+msgid ""
+"Consider migrating all sources.list(5) entries to the deb822 .sources format"
+msgstr ""
+
+#: apt-private/private-update.cc
+msgid ""
+"The deb822 .sources format supports both embedded as well as external "
+"OpenPGP keys"
+msgstr ""
+
+#: apt-private/private-update.cc
+msgid "See apt-secure(8) for best practices in configuring repository signing."
+msgstr ""
+
+#: apt-private/private-update.cc
+msgid "Some sources can be modernized. Run 'apt modernize-sources' to do so."
 msgstr ""
 
 #: apt-private/private-update.cc
@@ -3023,6 +3051,12 @@ msgid "concatenate files, with automatic decompression"
 msgstr ""
 
 #: cmdline/apt-helper.cc
+#, fuzzy
+#| msgid "Problem hashing file"
+msgid "hash file"
+msgstr "Πρόβλημα κατά το hashing του αρχείου"
+
+#: cmdline/apt-helper.cc
 msgid "detect proxy using apt.conf"
 msgstr ""
 
@@ -3247,6 +3281,10 @@ msgid "edit the source information file"
 msgstr "επεξεργασία του αρχείου με τις πληροφορίες πηγής"
 
 #: cmdline/apt.cc
+msgid "modernize .list files to .sources files"
+msgstr ""
+
+#: cmdline/apt.cc
 msgid "satisfy dependency strings"
 msgstr "εκπλήρωση των συμβολοσειρών εξαρτήσεων"
 
@@ -3451,7 +3489,7 @@ msgstr "Άγνωστος Αλγόριθμος Συμπίεσης '%s'"
 msgid "Compressed output %s needs a compression set"
 msgstr "Η συμπιεσμένη έξοδος του %s χρειάζεται καθορισμό συμπίεσης"
 
-#: ftparchive/multicompress.cc methods/rsh.cc
+#: ftparchive/multicompress.cc
 msgid "Failed to create IPC pipe to subprocess"
 msgstr "Αποτυχία κατά τη δημιουργία διασωλήνωσης IPC στην υποδιεργασία"
 
@@ -3570,23 +3608,23 @@ msgstr "Η αρχειοθήκη δεν περιέχει πεδίο πακέτω�
 
 #: ftparchive/writer.cc
 #, c-format
-msgid "  %s has no override entry\n"
-msgstr "  %s δεν περιέχει εγγραφή παράκαμψης\n"
+msgid "  %.*s has no override entry\n"
+msgstr "  %.*s δεν περιέχει εγγραφή παράκαμψης\n"
 
 #: ftparchive/writer.cc
 #, c-format
-msgid "  %s maintainer is %s not %s\n"
-msgstr "  %s συντηρητής είναι ο %s όχι ο %s\n"
+msgid "  %.*s maintainer is %.*s not %s\n"
+msgstr "  %.*s συντηρητής είναι ο %.*s όχι ο %s\n"
 
 #: ftparchive/writer.cc
 #, c-format
-msgid "  %s has no source override entry\n"
-msgstr "  %s δεν έχει εγγραφή πηγαίας παράκαμψης\n"
+msgid "  %.*s has no source override entry\n"
+msgstr "  %.*s δεν έχει εγγραφή πηγαίας παράκαμψης\n"
 
 #: ftparchive/writer.cc
 #, c-format
-msgid "  %s has no binary override entry either\n"
-msgstr "  %s δεν έχει ούτε εγγραφή δυαδικής παράκαμψης\n"
+msgid "  %.*s has no binary override entry either\n"
+msgstr "  %.*s δεν έχει ούτε εγγραφή δυαδικής παράκαμψης\n"
 
 #: methods/basehttp.cc
 msgid "Waiting for headers"
@@ -3624,7 +3662,7 @@ msgstr "Ελαττωματικά δεδομένα επικεφαλίδας"
 msgid "Connection failed"
 msgstr "Η σύνδεση απέτυχε"
 
-#: methods/basehttp.cc methods/ftp.cc methods/http.cc
+#: methods/basehttp.cc methods/http.cc
 #, c-format
 msgid "File has unexpected size (%llu != %llu). Mirror sync in progress?"
 msgstr ""
@@ -3666,7 +3704,7 @@ msgstr "Αδυναμία απόσυναρμογής του CD-ROM στο %s, μ�
 msgid "Disk not found."
 msgstr "Ο δίσκος δεν βρέθηκε."
 
-#: methods/cdrom.cc methods/file.cc methods/rsh.cc
+#: methods/cdrom.cc methods/file.cc
 msgid "File not found"
 msgstr "Το αρχείο Δε Βρέθηκε"
 
@@ -3701,7 +3739,7 @@ msgstr "Αδύνατη η δημιουργία υποδοχής για το %s (
 msgid "Cannot initiate the connection to %s:%s (%s)."
 msgstr "Αδύνατη η αρχικοποίηση της σύνδεσης στο %s:%s (%s)."
 
-#: methods/connect.cc methods/ftp.cc methods/rsh.cc
+#: methods/connect.cc
 msgid "Failed"
 msgstr "Απέτυχε"
 
@@ -3715,9 +3753,7 @@ msgstr "Αδύνατη η σύνδεση στο %s:%s (%s)."
 msgid "Could not connect to %s:%s (%s), connection timed out"
 msgstr "Αδύνατη η σύνδεση στο %s:%s (%s), λήξη χρόνου σύνδεσης"
 
-#. We say this mainly because the pause here is for the
-#. ssh connection that is still going
-#: methods/connect.cc methods/rsh.cc
+#: methods/connect.cc
 #, c-format
 msgid "Connecting to %s"
 msgstr "Σύνδεση στο %s"
@@ -3755,145 +3791,6 @@ msgstr "Αποτυχία εύρεσης της κατάστασης"
 msgid "Invalid URI, local URIS must not start with //"
 msgstr "Μη έγκυρο URI, τα τοπικά URI δεν πρέπει να αρχίζουν με //"
 
-#. Login must be before getpeername otherwise dante won't work.
-#: methods/ftp.cc
-msgid "Logging in"
-msgstr "Σύνδεση στο σύστημα"
-
-#: methods/ftp.cc
-msgid "Unable to determine the peer name"
-msgstr "Αδύνατος ο καθορισμός του ονόματος του ομότιμου (peer)"
-
-#: methods/ftp.cc
-msgid "Unable to determine the local name"
-msgstr "Αδύνατος ο καθορισμός του τοπικού ονόματος"
-
-#: methods/ftp.cc
-#, c-format
-msgid "The server refused the connection and said: %s"
-msgstr "Ο διακομιστής αρνήθηκε την σύνδεση με μήνυμα: %s"
-
-#: methods/ftp.cc
-#, c-format
-msgid "USER failed, server said: %s"
-msgstr "Η εντολή USER απέτυχε, ο διακομιστής απάντησε: %s"
-
-#: methods/ftp.cc
-#, c-format
-msgid "PASS failed, server said: %s"
-msgstr "Η εντολή PASS απέτυχε, ο διακομιστής απάντησε: %s"
-
-#: methods/ftp.cc
-msgid ""
-"A proxy server was specified but no login script, Acquire::ftp::ProxyLogin "
-"is empty."
-msgstr ""
-"Ο διαμεσολαβητής έχει οριστεί αλλά χωρίς σενάριο εισόδου, το Acquire::ftp::"
-"ProxyLogin είναι άδειο."
-
-#: methods/ftp.cc
-#, c-format
-msgid "Login script command '%s' failed, server said: %s"
-msgstr "Η εντολή '%s' στο σενάριο εισόδου απέτυχε, ο διακομιστής απάντησε: %s"
-
-#: methods/ftp.cc
-#, c-format
-msgid "TYPE failed, server said: %s"
-msgstr "Η εντολή TYPE απέτυχε, ο διακομιστής απάντησε: %s"
-
-#: methods/ftp.cc methods/rsh.cc
-msgid "Connection timeout"
-msgstr "Λήξη χρόνου σύνδεσης"
-
-#: methods/ftp.cc
-msgid "Server closed the connection"
-msgstr "Ο διακομιστής έκλεισε την σύνδεση"
-
-#: methods/ftp.cc methods/rsh.cc
-msgid "A response overflowed the buffer."
-msgstr "Το μήνυμα απάντησης υπερχείλισε την ενδιάμεση μνήμη."
-
-#: methods/ftp.cc
-msgid "Protocol corruption"
-msgstr "Αλλοίωση του πρωτοκόλλου"
-
-#: methods/ftp.cc
-msgid "Could not create a socket"
-msgstr "Αδύνατη η δημιουργία μιας υποδοχής (socket)"
-
-#: methods/ftp.cc
-msgid "Could not connect data socket, connection timed out"
-msgstr "Αδύνατη η σύνδεση υποδοχής δεδομένων, λήξη χρόνου σύνδεσης"
-
-#: methods/ftp.cc
-msgid "Could not connect passive socket."
-msgstr "Αδύνατη η σύνδεση σε παθητική υποδοχή (socket)."
-
-#: methods/ftp.cc
-msgid "getaddrinfo was unable to get a listening socket"
-msgstr "Το getaddrinfo ήταν αδύνατο να δεσμεύσει υποδοχή παρακολούθησης"
-
-#: methods/ftp.cc
-msgid "Could not bind a socket"
-msgstr "Αδύνατη η πρόσδεση στην υποδοχή (socket)"
-
-#: methods/ftp.cc
-msgid "Could not listen on the socket"
-msgstr "Αδύνατη η παρακολούθηση της υποδοχής (socket)"
-
-#: methods/ftp.cc
-msgid "Could not determine the socket's name"
-msgstr "Αδύνατος ο καθορισμός του ονόματος της υποδοχής (socket)"
-
-#: methods/ftp.cc
-msgid "Unable to send PORT command"
-msgstr "Αδύνατη η αποστολή της εντολής PORT"
-
-#: methods/ftp.cc
-#, c-format
-msgid "Unknown address family %u (AF_*)"
-msgstr "Άγνωστη οικογένεια διευθύνσεων %u (AF_*)"
-
-#: methods/ftp.cc
-#, c-format
-msgid "EPRT failed, server said: %s"
-msgstr "Το EPRT απέτυχε, ο διακομιστής απάντησε: %s"
-
-#: methods/ftp.cc
-msgid "Data socket connect timed out"
-msgstr "Λήξη χρόνου σύνδεσης στην υποδοχή δεδομένων"
-
-#: methods/ftp.cc
-msgid "Unable to accept connection"
-msgstr "Αδύνατη η αποδοχή συνδέσεων"
-
-#: methods/ftp.cc methods/http.cc methods/rsh.cc
-msgid "Problem hashing file"
-msgstr "Πρόβλημα κατά το hashing του αρχείου"
-
-#: methods/ftp.cc
-#, c-format
-msgid "Unable to fetch file, server said '%s'"
-msgstr "Αδυναμία λήψης του αρχείου, ο διακομιστής απάντησε '%s'"
-
-#: methods/ftp.cc methods/rsh.cc
-msgid "Data socket timed out"
-msgstr "Λήξη χρόνου υποδοχής δεδομένων"
-
-#: methods/ftp.cc
-#, c-format
-msgid "Data transfer failed, server said '%s'"
-msgstr "Αποτυχία κατά τη μεταφορά δεδομένων, ο διακομιστής απάντησε '%s'"
-
-#. Get the files information
-#: methods/ftp.cc
-msgid "Query"
-msgstr "Επερώτηση"
-
-#: methods/ftp.cc
-msgid "Unable to invoke "
-msgstr "Αδύνατη η επίκληση "
-
 #: methods/gpgv.cc
 #, c-format
 msgid "untrusted public key algorithm: %s"
@@ -3923,21 +3820,19 @@ msgstr ""
 "αποτυπώματος?!"
 
 #: methods/gpgv.cc
-msgid "Could not execute 'apt-key' to verify signature (is gnupg installed?)"
+#, fuzzy
+#| msgid ""
+#| "Could not execute 'apt-key' to verify signature (is gnupg installed?)"
+msgid "Could not execute 'gpgv' to verify signature (is gnupg installed?)"
 msgstr ""
 "Δεν μπόρεσε να εκτελεστεί το 'apt-key' για επιβεβαίωση της υπογραφής (είναι "
 "εγκατεστημένο το gnupg;)"
 
 #: methods/gpgv.cc
-msgid "Unknown error executing apt-key"
+#, fuzzy
+#| msgid "Unknown error executing apt-key"
+msgid "Unknown error executing gpgv"
 msgstr "Άγνωστο σφάλμα κατά την εκτέλεση του apt-key"
-
-#: methods/gpgv.cc
-#, c-format
-msgid ""
-"Key is stored in legacy trusted.gpg keyring (%s), see the DEPRECATION "
-"section in apt-key(8) for details."
-msgstr ""
 
 #. TRANSLATORS: The second %s is the reason and is untranslated for repository owners.
 #: methods/gpgv.cc
@@ -3978,17 +3873,124 @@ msgstr "Η επιλογή απέτυχε"
 msgid "Connection timed out"
 msgstr "Λήξη χρόνου σύνδεσης"
 
+#: methods/http.cc
+msgid "Problem hashing file"
+msgstr "Πρόβλημα κατά το hashing του αρχείου"
+
 #: methods/rred.cc
 msgid "Failed to set modification time"
 msgstr "Αποτυχία ορισμού του χρόνου τροποποίησης"
 
-#: methods/rsh.cc
-msgid "Connection closed prematurely"
-msgstr "Η σύνδεση έκλεισε πρόωρα"
-
 #: methods/store.cc
 msgid "Empty files can't be valid archives"
 msgstr ""
+
+#~ msgid "Logging in"
+#~ msgstr "Σύνδεση στο σύστημα"
+
+#~ msgid "Unable to determine the peer name"
+#~ msgstr "Αδύνατος ο καθορισμός του ονόματος του ομότιμου (peer)"
+
+#~ msgid "Unable to determine the local name"
+#~ msgstr "Αδύνατος ο καθορισμός του τοπικού ονόματος"
+
+#, c-format
+#~ msgid "The server refused the connection and said: %s"
+#~ msgstr "Ο διακομιστής αρνήθηκε την σύνδεση με μήνυμα: %s"
+
+#, c-format
+#~ msgid "USER failed, server said: %s"
+#~ msgstr "Η εντολή USER απέτυχε, ο διακομιστής απάντησε: %s"
+
+#, c-format
+#~ msgid "PASS failed, server said: %s"
+#~ msgstr "Η εντολή PASS απέτυχε, ο διακομιστής απάντησε: %s"
+
+#~ msgid ""
+#~ "A proxy server was specified but no login script, "
+#~ "Acquire::ftp::ProxyLogin is empty."
+#~ msgstr ""
+#~ "Ο διαμεσολαβητής έχει οριστεί αλλά χωρίς σενάριο εισόδου, το "
+#~ "Acquire::ftp::ProxyLogin είναι άδειο."
+
+#, c-format
+#~ msgid "Login script command '%s' failed, server said: %s"
+#~ msgstr ""
+#~ "Η εντολή '%s' στο σενάριο εισόδου απέτυχε, ο διακομιστής απάντησε: %s"
+
+#, c-format
+#~ msgid "TYPE failed, server said: %s"
+#~ msgstr "Η εντολή TYPE απέτυχε, ο διακομιστής απάντησε: %s"
+
+#~ msgid "Connection timeout"
+#~ msgstr "Λήξη χρόνου σύνδεσης"
+
+#~ msgid "Server closed the connection"
+#~ msgstr "Ο διακομιστής έκλεισε την σύνδεση"
+
+#~ msgid "A response overflowed the buffer."
+#~ msgstr "Το μήνυμα απάντησης υπερχείλισε την ενδιάμεση μνήμη."
+
+#~ msgid "Protocol corruption"
+#~ msgstr "Αλλοίωση του πρωτοκόλλου"
+
+#~ msgid "Could not create a socket"
+#~ msgstr "Αδύνατη η δημιουργία μιας υποδοχής (socket)"
+
+#~ msgid "Could not connect data socket, connection timed out"
+#~ msgstr "Αδύνατη η σύνδεση υποδοχής δεδομένων, λήξη χρόνου σύνδεσης"
+
+#~ msgid "Could not connect passive socket."
+#~ msgstr "Αδύνατη η σύνδεση σε παθητική υποδοχή (socket)."
+
+#~ msgid "getaddrinfo was unable to get a listening socket"
+#~ msgstr "Το getaddrinfo ήταν αδύνατο να δεσμεύσει υποδοχή παρακολούθησης"
+
+#~ msgid "Could not bind a socket"
+#~ msgstr "Αδύνατη η πρόσδεση στην υποδοχή (socket)"
+
+#~ msgid "Could not listen on the socket"
+#~ msgstr "Αδύνατη η παρακολούθηση της υποδοχής (socket)"
+
+#~ msgid "Could not determine the socket's name"
+#~ msgstr "Αδύνατος ο καθορισμός του ονόματος της υποδοχής (socket)"
+
+#~ msgid "Unable to send PORT command"
+#~ msgstr "Αδύνατη η αποστολή της εντολής PORT"
+
+#, c-format
+#~ msgid "Unknown address family %u (AF_*)"
+#~ msgstr "Άγνωστη οικογένεια διευθύνσεων %u (AF_*)"
+
+#, c-format
+#~ msgid "EPRT failed, server said: %s"
+#~ msgstr "Το EPRT απέτυχε, ο διακομιστής απάντησε: %s"
+
+#~ msgid "Data socket connect timed out"
+#~ msgstr "Λήξη χρόνου σύνδεσης στην υποδοχή δεδομένων"
+
+#~ msgid "Unable to accept connection"
+#~ msgstr "Αδύνατη η αποδοχή συνδέσεων"
+
+#, c-format
+#~ msgid "Unable to fetch file, server said '%s'"
+#~ msgstr "Αδυναμία λήψης του αρχείου, ο διακομιστής απάντησε '%s'"
+
+#~ msgid "Data socket timed out"
+#~ msgstr "Λήξη χρόνου υποδοχής δεδομένων"
+
+#, c-format
+#~ msgid "Data transfer failed, server said '%s'"
+#~ msgstr "Αποτυχία κατά τη μεταφορά δεδομένων, ο διακομιστής απάντησε '%s'"
+
+#~ msgid "Query"
+#~ msgstr "Επερώτηση"
+
+#~ msgid "Unable to invoke "
+#~ msgstr "Αδύνατη η επίκληση "
+
+#~ msgid "Connection closed prematurely"
+#~ msgstr "Η σύνδεση έκλεισε πρόωρα"
 
 #, fuzzy, c-format
 #~| msgid "  Installed: "
@@ -4243,8 +4245,8 @@ msgstr ""
 #~ "  -V  Εμφάνισε λεπτομερείς αριθμούς εκδόσεων\n"
 #~ "  -c=? Διάβασε αυτό το αρχείο ρυθμίσεων\n"
 #~ "  -o=? Θέσε μια αυθαίρετη παράμετρο, πχ -o dir::cache=/tmp\n"
-#~ "Δείτε τις σελίδες εγχειριδίου apt-get(8), sources.list(5) και apt."
-#~ "conf(5)\n"
+#~ "Δείτε τις σελίδες εγχειριδίου apt-get(8), sources.list(5) και "
+#~ "apt.conf(5)\n"
 #~ "για περισσότερες πληροφορίες και επιλογές.\n"
 #~ "                       This APT has Super Cow Powers.\n"
 

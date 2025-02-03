@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt 1.4~beta1\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2024-08-12 14:14+0000\n"
+"POT-Creation-Date: 2025-01-28 18:52+0000\n"
 "PO-Revision-Date: 2024-08-08 22:47+0100\n"
 "Last-Translator: Carles Pina i Estany <cpina@debian.org>\n"
 "Language-Team: Catalan <debian-l10n-catalan@lists.debian.org>\n"
@@ -62,11 +62,11 @@ msgstr "El dipòsit «%s» ja no té un fitxer Release."
 
 #: apt-pkg/acquire-item.cc
 msgid ""
-"This is normally not allowed, but the option Acquire::"
-"AllowDowngradeToInsecureRepositories was given to override it."
+"This is normally not allowed, but the option "
+"Acquire::AllowDowngradeToInsecureRepositories was given to override it."
 msgstr ""
-"Això normalment no està permès, però s'ha donat l'opció «Acquire::"
-"AllowDowngradeToInsecureRepositories» per anul·lar-ho."
+"Això normalment no està permès, però s'ha donat l'opció "
+"«Acquire::AllowDowngradeToInsecureRepositories» per anul·lar-ho."
 
 #: apt-pkg/acquire-item.cc
 #, c-format
@@ -209,8 +209,7 @@ msgstr ""
 msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr "Distribució conflictiva: %s (s'esperava %s però s'ha obtingut %s)"
 
-#. Both messages are reused from the ReleaseInfoChange feature in acquire-item.cc
-#: apt-pkg/acquire-item.cc apt-private/private-update.cc
+#: apt-pkg/acquire-item.cc
 #, c-format
 msgid "Repository '%s' changed its '%s' value from '%s' to '%s'"
 msgstr "El dipòsit «%s» ha canviat el seu valor «%s» de «%s» a «%s»"
@@ -223,7 +222,7 @@ msgstr ""
 "%hi."
 
 #. TRANSLATOR: the "this" refers to changes in the repository like a new release or owner change
-#: apt-pkg/acquire-item.cc apt-private/private-update.cc
+#: apt-pkg/acquire-item.cc
 #, c-format
 msgid ""
 "More information about this can be found online in the Release notes at: %s"
@@ -272,15 +271,6 @@ msgstr "No es troba una font per baixar la versió «%s» de «%s»"
 #, c-format
 msgid "Changelog unavailable for %s=%s"
 msgstr "El registre de canvis no està disponible per a %s=%s"
-
-#: apt-pkg/acquire-worker.cc
-#, c-format
-msgid ""
-"The method '%s' is unsupported and disabled by default. Consider switching "
-"to http(s). Set Dir::Bin::Methods::%s to \"%s\" to enable it again."
-msgstr ""
-"No s'admet el mètode «%s» i està desactivat per defecte. Considereu canviar "
-"a http(s). Establiu Dir::Bin::Methods::%s a «%s» per tornar-lo a activar."
 
 #: apt-pkg/acquire-worker.cc
 #, c-format
@@ -829,11 +819,11 @@ msgstr "El subprocés %s ha retornat un codi d'error (%u)"
 msgid "Sub-process %s exited unexpectedly"
 msgstr "El subprocés %s ha sortit inesperadament"
 
-#: apt-pkg/contrib/fileutl.cc methods/ftp.cc methods/rsh.cc
+#: apt-pkg/contrib/fileutl.cc
 msgid "Read error"
 msgstr "Error de lectura"
 
-#: apt-pkg/contrib/fileutl.cc methods/ftp.cc methods/rsh.cc
+#: apt-pkg/contrib/fileutl.cc
 msgid "Write error"
 msgstr "Error d'escriptura"
 
@@ -1160,6 +1150,12 @@ msgstr "No es pot bloquejar el directori d'administració (%s). Sou root?"
 msgid "Not locked"
 msgstr "No bloquejat"
 
+#: apt-pkg/deb/debsystem.cc
+msgid ""
+"The dpkg executable set in Dir::Bin::dpkg is missing, falling back to using "
+"default dpkg."
+msgstr ""
+
 #. we don't care for the difference
 #: apt-pkg/deb/dpkgpm.cc
 #, c-format
@@ -1435,8 +1431,8 @@ msgid ""
 "Could not perform immediate configuration on '%s'. Please see man 5 apt.conf "
 "under APT::Immediate-Configure for details. (%d)"
 msgstr ""
-"No s'ha pogut realitzar la configuració immediata de «%s». Vegeu man 5 apt."
-"conf dins de APT::Immediate-Configure per a més detalls. (%d)"
+"No s'ha pogut realitzar la configuració immediata de «%s». Vegeu man 5 "
+"apt.conf dins de APT::Immediate-Configure per a més detalls. (%d)"
 
 #: apt-pkg/packagemanager.cc
 #, c-format
@@ -2518,7 +2514,7 @@ msgid "Y"
 msgstr "S"
 
 #. TRANSLATOR: "No" answer printed for a yes/no question if --assume-no is set
-#: apt-private/private-output.cc
+#: apt-private/private-output.cc apt-private/private-sources.cc
 msgid "N"
 msgstr "N"
 
@@ -2702,8 +2698,8 @@ msgstr "%s no té dependències de muntatge.\n"
 #: apt-private/private-source.cc
 #, c-format
 msgid ""
-"No architecture information available for %s. See apt.conf(5) APT::"
-"Architectures for setup"
+"No architecture information available for %s. See apt.conf(5) "
+"APT::Architectures for setup"
 msgstr ""
 "No hi ha informació d'arquitectura disponible per a %s. Vegeu apt.conf(5) "
 "APT::Architectures per a configurar-ho"
@@ -2749,6 +2745,11 @@ msgstr "No s'ha pogut analitzar %s. Voleu tornar a editar-lo? "
 msgid "Your '%s' file changed, please run 'apt-get update'.\n"
 msgstr "El fitxer «%s» ha canviat, executeu «apt-get update».\n"
 
+#: apt-private/private-sources.cc
+#, c-format
+msgid "Rewrite %zu sources?"
+msgstr ""
+
 #: apt-private/private-unmet.cc
 #, c-format
 msgid "Package %s version %s has an unmet dep:\n"
@@ -2771,8 +2772,39 @@ msgstr ""
 #. TRANSLATOR: the first is manpage reference, the last the URI from a sources.list
 #: apt-private/private-update.cc
 #, c-format
+msgid "The %s entry for '%s' should be upgraded to deb822 .sources"
+msgstr ""
+
+#. TRANSLATOR: the first is manpage reference, the last the URI from a sources.list
+#: apt-private/private-update.cc
+#, c-format
 msgid "Missing Signed-By in the %s entry for '%s'"
 msgstr "No hi ha «Signed-By» a l'entrada %s de «%s»"
+
+#: apt-private/private-update.cc
+msgid ""
+"Consider migrating all sources.list(5) entries to the deb822 .sources format"
+msgstr ""
+
+#: apt-private/private-update.cc
+msgid ""
+"The deb822 .sources format supports both embedded as well as external "
+"OpenPGP keys"
+msgstr ""
+
+#: apt-private/private-update.cc
+#, fuzzy
+#| msgid ""
+#| "See apt-secure(8) manpage for repository creation and user configuration "
+#| "details."
+msgid "See apt-secure(8) for best practices in configuring repository signing."
+msgstr ""
+"Consulteu la pàgina de manual apt-secure(8) per obtenir detalls sobre la "
+"creació de dipòsits i la configuració d'usuaris."
+
+#: apt-private/private-update.cc
+msgid "Some sources can be modernized. Run 'apt modernize-sources' to do so."
+msgstr ""
 
 #: apt-private/private-update.cc
 #, c-format
@@ -3180,6 +3212,12 @@ msgid "concatenate files, with automatic decompression"
 msgstr "concatena fitxers, amb descompressió automàtica"
 
 #: cmdline/apt-helper.cc
+#, fuzzy
+#| msgid "Problem hashing file"
+msgid "hash file"
+msgstr "Hi ha hagut un problema calcul·lant la suma «hash» del fitxer"
+
+#: cmdline/apt-helper.cc
 msgid "detect proxy using apt.conf"
 msgstr "detecta el servidor intermediari usant apt.conf"
 
@@ -3421,6 +3459,10 @@ msgid "edit the source information file"
 msgstr "edita el fitxer d'informació d'origen"
 
 #: cmdline/apt.cc
+msgid "modernize .list files to .sources files"
+msgstr ""
+
+#: cmdline/apt.cc
 msgid "satisfy dependency strings"
 msgstr "satisfà cadenes de dependència"
 
@@ -3624,7 +3666,7 @@ msgstr "Algorisme de compressió desconegut '%s'"
 msgid "Compressed output %s needs a compression set"
 msgstr "La sortida comprimida %s necessita un conjunt de compressió"
 
-#: ftparchive/multicompress.cc methods/rsh.cc
+#: ftparchive/multicompress.cc
 msgid "Failed to create IPC pipe to subprocess"
 msgstr "No s'ha pogut crear el conducte IPC al subprocés"
 
@@ -3743,23 +3785,23 @@ msgstr "L'arxiu no té cap camp paquet"
 
 #: ftparchive/writer.cc
 #, c-format
-msgid "  %s has no override entry\n"
-msgstr "  %s no té una entrada dominant\n"
+msgid "  %.*s has no override entry\n"
+msgstr "  %.*s no té una entrada dominant\n"
 
 #: ftparchive/writer.cc
 #, c-format
-msgid "  %s maintainer is %s not %s\n"
-msgstr "  el mantenidor de %s és %s, no %s\n"
+msgid "  %.*s maintainer is %.*s not %s\n"
+msgstr "  el mantenidor de %.*s és %.*s, no %s\n"
 
 #: ftparchive/writer.cc
 #, c-format
-msgid "  %s has no source override entry\n"
-msgstr "  %s no té una entrada dominant de font\n"
+msgid "  %.*s has no source override entry\n"
+msgstr "  %.*s no té una entrada dominant de font\n"
 
 #: ftparchive/writer.cc
 #, c-format
-msgid "  %s has no binary override entry either\n"
-msgstr "  %s tampoc no té una entrada dominant de binari\n"
+msgid "  %.*s has no binary override entry either\n"
+msgstr "  %.*s tampoc no té una entrada dominant de binari\n"
 
 #: methods/basehttp.cc
 msgid "Waiting for headers"
@@ -3797,7 +3839,7 @@ msgstr "Capçalera de dades no vàlida"
 msgid "Connection failed"
 msgstr "Ha fallat la connexió"
 
-#: methods/basehttp.cc methods/ftp.cc methods/http.cc
+#: methods/basehttp.cc methods/http.cc
 #, c-format
 msgid "File has unexpected size (%llu != %llu). Mirror sync in progress?"
 msgstr ""
@@ -3843,7 +3885,7 @@ msgstr "No es pot muntar el CD-ROM en %s. Potser s'està utilitzant encara."
 msgid "Disk not found."
 msgstr "No s'ha trobat el disc."
 
-#: methods/cdrom.cc methods/file.cc methods/rsh.cc
+#: methods/cdrom.cc methods/file.cc
 msgid "File not found"
 msgstr "Fitxer no trobat"
 
@@ -3878,7 +3920,7 @@ msgstr "No s'ha pogut crear un sòcol per a %s (f=%u t=%u p=%u)"
 msgid "Cannot initiate the connection to %s:%s (%s)."
 msgstr "No es pot iniciar la connexió a %s:%s (%s)."
 
-#: methods/connect.cc methods/ftp.cc methods/rsh.cc
+#: methods/connect.cc
 msgid "Failed"
 msgstr "Ha fallat"
 
@@ -3893,9 +3935,7 @@ msgid "Could not connect to %s:%s (%s), connection timed out"
 msgstr ""
 "No s'ha pogut connectar a %s:%s (%s). S'ha excedit el temps de connexió"
 
-#. We say this mainly because the pause here is for the
-#. ssh connection that is still going
-#: methods/connect.cc methods/rsh.cc
+#: methods/connect.cc
 #, c-format
 msgid "Connecting to %s"
 msgstr "S'està connectant a %s"
@@ -3933,148 +3973,6 @@ msgstr "No s'ha pogut fer «stat»"
 msgid "Invalid URI, local URIS must not start with //"
 msgstr "URI no vàlid, els URI locals no poden començar per //"
 
-#. Login must be before getpeername otherwise dante won't work.
-#: methods/ftp.cc
-msgid "Logging in"
-msgstr "S'està iniciant sessió"
-
-#: methods/ftp.cc
-msgid "Unable to determine the peer name"
-msgstr "No es pot determinar el nom de la màquina distant"
-
-#: methods/ftp.cc
-msgid "Unable to determine the local name"
-msgstr "No es pot determinar el nom local"
-
-#: methods/ftp.cc
-#, c-format
-msgid "The server refused the connection and said: %s"
-msgstr "El servidor ha rebutjat la connexió i ha dit: %s"
-
-#: methods/ftp.cc
-#, c-format
-msgid "USER failed, server said: %s"
-msgstr "USER ha fallat, el servidor ha dit: %s"
-
-#: methods/ftp.cc
-#, c-format
-msgid "PASS failed, server said: %s"
-msgstr "PASS ha fallat, el servidor ha dit: %s"
-
-#: methods/ftp.cc
-msgid ""
-"A proxy server was specified but no login script, Acquire::ftp::ProxyLogin "
-"is empty."
-msgstr ""
-"S'ha especificat un servidor intermediari però no un script d'accés, "
-"Acquire::ftp::ProxyLogin està buit."
-
-#: methods/ftp.cc
-#, c-format
-msgid "Login script command '%s' failed, server said: %s"
-msgstr "L'ordre «%s» de l'script d'accés ha fallat, el servidor ha dit: %s"
-
-#: methods/ftp.cc
-#, c-format
-msgid "TYPE failed, server said: %s"
-msgstr "TYPE ha fallat, el servidor ha dit: %s"
-
-#: methods/ftp.cc methods/rsh.cc
-msgid "Connection timeout"
-msgstr "S'ha esgotat el temps d'espera de la connexió"
-
-#: methods/ftp.cc
-msgid "Server closed the connection"
-msgstr "El servidor ha tancat la connexió"
-
-#: methods/ftp.cc methods/rsh.cc
-msgid "A response overflowed the buffer."
-msgstr "Una resposta ha desbordat la memòria intermèdia."
-
-#: methods/ftp.cc
-msgid "Protocol corruption"
-msgstr "Protocol malmès"
-
-#: methods/ftp.cc
-msgid "Could not create a socket"
-msgstr "No s'ha pogut crear un sòcol"
-
-#: methods/ftp.cc
-msgid "Could not connect data socket, connection timed out"
-msgstr ""
-"No s'ha pogut connectar amb el sòcol de dades. El temps de connexió s'ha "
-"excedit"
-
-#: methods/ftp.cc
-msgid "Could not connect passive socket."
-msgstr "No s'ha pogut connectar amb el sòcol passiu."
-
-#: methods/ftp.cc
-msgid "getaddrinfo was unable to get a listening socket"
-msgstr "gettaddrinfo no ha pogut obtenir un sòcol d'escolta"
-
-# abastar? huh? jm
-#: methods/ftp.cc
-msgid "Could not bind a socket"
-msgstr "No s'ha pogut vincular a un sòcol"
-
-#: methods/ftp.cc
-msgid "Could not listen on the socket"
-msgstr "No s'ha pogut escoltar al sòcol"
-
-#: methods/ftp.cc
-msgid "Could not determine the socket's name"
-msgstr "No s'ha pogut determinar el nom del sòcol"
-
-#: methods/ftp.cc
-msgid "Unable to send PORT command"
-msgstr "No es pot enviar l'ordre PORT"
-
-#: methods/ftp.cc
-#, c-format
-msgid "Unknown address family %u (AF_*)"
-msgstr "La família d'adreces %u és desconeguda (AF_*)"
-
-#: methods/ftp.cc
-#, c-format
-msgid "EPRT failed, server said: %s"
-msgstr "EPRT ha fallat, el servidor ha dit: %s"
-
-#: methods/ftp.cc
-msgid "Data socket connect timed out"
-msgstr "S'ha esgotat el temps de connexió al sòcol de dades"
-
-#: methods/ftp.cc
-msgid "Unable to accept connection"
-msgstr "No es pot acceptar la connexió"
-
-#: methods/ftp.cc methods/http.cc methods/rsh.cc
-msgid "Problem hashing file"
-msgstr "Hi ha hagut un problema calcul·lant la suma «hash» del fitxer"
-
-#: methods/ftp.cc
-#, c-format
-msgid "Unable to fetch file, server said '%s'"
-msgstr "No és possible obtenir el fitxer, el servidor ha dit «%s»"
-
-#: methods/ftp.cc methods/rsh.cc
-msgid "Data socket timed out"
-msgstr "S'ha esgotat el temps d'espera per al sòcol de dades"
-
-#: methods/ftp.cc
-#, c-format
-msgid "Data transfer failed, server said '%s'"
-msgstr "Ha fallat la transferència de dades, el servidor ha dit '%s'"
-
-#. Get the files information
-#: methods/ftp.cc
-msgid "Query"
-msgstr "Consulta"
-
-#: methods/ftp.cc
-msgid "Unable to invoke "
-msgstr "No es pot invocar "
-
 #: methods/gpgv.cc
 #, c-format
 msgid "untrusted public key algorithm: %s"
@@ -4106,24 +4004,19 @@ msgstr ""
 "l'empremta digital de la clau?!"
 
 #: methods/gpgv.cc
-msgid "Could not execute 'apt-key' to verify signature (is gnupg installed?)"
+#, fuzzy
+#| msgid ""
+#| "Could not execute 'apt-key' to verify signature (is gnupg installed?)"
+msgid "Could not execute 'gpgv' to verify signature (is gnupg installed?)"
 msgstr ""
 "No s'ha pogut executar «apt-key» per a verificar la signatura (està "
 "instal·lat el gnupg?)"
 
 #: methods/gpgv.cc
-msgid "Unknown error executing apt-key"
+#, fuzzy
+#| msgid "Unknown error executing apt-key"
+msgid "Unknown error executing gpgv"
 msgstr "S'ha produït un error desconegut en executar apt-key"
-
-# Si mai es tradueix el «apt-key»(8) canviar de DEPRECATION a la paraula feta servir al manual.
-#: methods/gpgv.cc
-#, c-format
-msgid ""
-"Key is stored in legacy trusted.gpg keyring (%s), see the DEPRECATION "
-"section in apt-key(8) for details."
-msgstr ""
-"La clau està desada en un antic anell de claus «trusted.gpg» (%s); per més "
-"detalls, consulteu la secció DEPRECATION d'«apt-key»(8)."
 
 #. TRANSLATORS: The second %s is the reason and is untranslated for repository owners.
 #: methods/gpgv.cc
@@ -4165,17 +4058,148 @@ msgstr "Ha fallat la selecció"
 msgid "Connection timed out"
 msgstr "S'ha esgotat el temps d'espera de la connexió"
 
+#: methods/http.cc
+msgid "Problem hashing file"
+msgstr "Hi ha hagut un problema calcul·lant la suma «hash» del fitxer"
+
 #: methods/rred.cc
 msgid "Failed to set modification time"
 msgstr "No s'ha pogut establir l'hora de modificació"
 
-#: methods/rsh.cc
-msgid "Connection closed prematurely"
-msgstr "La connexió s'ha tancat prematurament"
-
 #: methods/store.cc
 msgid "Empty files can't be valid archives"
 msgstr "Els fitxers buits no poden ser arxius vàlids"
+
+# Si mai es tradueix el «apt-key»(8) canviar de DEPRECATION a la paraula feta servir al manual.
+#, fuzzy, c-format
+#~| msgid ""
+#~| "Key is stored in legacy trusted.gpg keyring (%s), see the DEPRECATION "
+#~| "section in apt-key(8) for details."
+#~ msgid ""
+#~ "Key is stored in legacy trusted.gpg keyring (%s). Use Signed-By instead. "
+#~ "See the USER CONFIGURATION section in apt-secure(8) for details."
+#~ msgstr ""
+#~ "La clau està desada en un antic anell de claus «trusted.gpg» (%s); per "
+#~ "més detalls, consulteu la secció DEPRECATION d'«apt-key»(8)."
+
+#, c-format
+#~ msgid ""
+#~ "The method '%s' is unsupported and disabled by default. Consider "
+#~ "switching to http(s). Set Dir::Bin::Methods::%s to \"%s\" to enable it "
+#~ "again."
+#~ msgstr ""
+#~ "No s'admet el mètode «%s» i està desactivat per defecte. Considereu "
+#~ "canviar a http(s). Establiu Dir::Bin::Methods::%s a «%s» per tornar-lo a "
+#~ "activar."
+
+#~ msgid "Logging in"
+#~ msgstr "S'està iniciant sessió"
+
+#~ msgid "Unable to determine the peer name"
+#~ msgstr "No es pot determinar el nom de la màquina distant"
+
+#~ msgid "Unable to determine the local name"
+#~ msgstr "No es pot determinar el nom local"
+
+#, c-format
+#~ msgid "The server refused the connection and said: %s"
+#~ msgstr "El servidor ha rebutjat la connexió i ha dit: %s"
+
+#, c-format
+#~ msgid "USER failed, server said: %s"
+#~ msgstr "USER ha fallat, el servidor ha dit: %s"
+
+#, c-format
+#~ msgid "PASS failed, server said: %s"
+#~ msgstr "PASS ha fallat, el servidor ha dit: %s"
+
+#~ msgid ""
+#~ "A proxy server was specified but no login script, "
+#~ "Acquire::ftp::ProxyLogin is empty."
+#~ msgstr ""
+#~ "S'ha especificat un servidor intermediari però no un script d'accés, "
+#~ "Acquire::ftp::ProxyLogin està buit."
+
+#, c-format
+#~ msgid "Login script command '%s' failed, server said: %s"
+#~ msgstr "L'ordre «%s» de l'script d'accés ha fallat, el servidor ha dit: %s"
+
+#, c-format
+#~ msgid "TYPE failed, server said: %s"
+#~ msgstr "TYPE ha fallat, el servidor ha dit: %s"
+
+#~ msgid "Connection timeout"
+#~ msgstr "S'ha esgotat el temps d'espera de la connexió"
+
+#~ msgid "Server closed the connection"
+#~ msgstr "El servidor ha tancat la connexió"
+
+#~ msgid "A response overflowed the buffer."
+#~ msgstr "Una resposta ha desbordat la memòria intermèdia."
+
+#~ msgid "Protocol corruption"
+#~ msgstr "Protocol malmès"
+
+#~ msgid "Could not create a socket"
+#~ msgstr "No s'ha pogut crear un sòcol"
+
+#~ msgid "Could not connect data socket, connection timed out"
+#~ msgstr ""
+#~ "No s'ha pogut connectar amb el sòcol de dades. El temps de connexió s'ha "
+#~ "excedit"
+
+#~ msgid "Could not connect passive socket."
+#~ msgstr "No s'ha pogut connectar amb el sòcol passiu."
+
+#~ msgid "getaddrinfo was unable to get a listening socket"
+#~ msgstr "gettaddrinfo no ha pogut obtenir un sòcol d'escolta"
+
+# abastar? huh? jm
+#~ msgid "Could not bind a socket"
+#~ msgstr "No s'ha pogut vincular a un sòcol"
+
+#~ msgid "Could not listen on the socket"
+#~ msgstr "No s'ha pogut escoltar al sòcol"
+
+#~ msgid "Could not determine the socket's name"
+#~ msgstr "No s'ha pogut determinar el nom del sòcol"
+
+#~ msgid "Unable to send PORT command"
+#~ msgstr "No es pot enviar l'ordre PORT"
+
+#, c-format
+#~ msgid "Unknown address family %u (AF_*)"
+#~ msgstr "La família d'adreces %u és desconeguda (AF_*)"
+
+#, c-format
+#~ msgid "EPRT failed, server said: %s"
+#~ msgstr "EPRT ha fallat, el servidor ha dit: %s"
+
+#~ msgid "Data socket connect timed out"
+#~ msgstr "S'ha esgotat el temps de connexió al sòcol de dades"
+
+#~ msgid "Unable to accept connection"
+#~ msgstr "No es pot acceptar la connexió"
+
+#, c-format
+#~ msgid "Unable to fetch file, server said '%s'"
+#~ msgstr "No és possible obtenir el fitxer, el servidor ha dit «%s»"
+
+#~ msgid "Data socket timed out"
+#~ msgstr "S'ha esgotat el temps d'espera per al sòcol de dades"
+
+#, c-format
+#~ msgid "Data transfer failed, server said '%s'"
+#~ msgstr "Ha fallat la transferència de dades, el servidor ha dit '%s'"
+
+#~ msgid "Query"
+#~ msgstr "Consulta"
+
+#~ msgid "Unable to invoke "
+#~ msgstr "No es pot invocar "
+
+#~ msgid "Connection closed prematurely"
+#~ msgstr "La connexió s'ha tancat prematurament"
 
 #, fuzzy, c-format
 #~| msgid "  Installed: "

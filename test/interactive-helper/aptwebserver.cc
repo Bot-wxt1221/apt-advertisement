@@ -744,6 +744,7 @@ static void * handleClient(int const client, size_t const id)		/*{{{*/
 	    for (::Configuration::Item *I = Overwrite->Child; I != NULL; I = I->Next)
 	    {
 	       regex_t *pattern = new regex_t;
+	       DEFER([&] { regfree(pattern); });
 	       int const res = regcomp(pattern, I->Tag.c_str(), REG_EXTENDED | REG_ICASE | REG_NOSUB);
 	       if (res != 0)
 	       {
@@ -764,20 +765,24 @@ static void * handleClient(int const client, size_t const id)		/*{{{*/
 		     filename.erase(0,1);
 		  if (filename.empty())
 		     filename = "./";
-		  regfree(pattern);
 		  break;
 	       }
-	       regfree(pattern);
 	    }
 	 }
 
 	 // automatic retry can be tested with this
 	 {
 	    int failrequests = _config->FindI("aptwebserver::failrequest::" + filename, 0);
+	    int retryafter = _config->FindI("aptwebserver::failrequest::retryafter", 0);
 	    if (failrequests != 0)
 	    {
 	       --failrequests;
 	       _config->Set(("aptwebserver::failrequest::" + filename).c_str(), failrequests);
+	       if (retryafter != 0)
+	       {
+		  std::string retryafter_hdr = "Retry-After: " + std::to_string(retryafter);
+		  headers.push_back(retryafter_hdr);
+	       }
 	       sendError(log, client, _config->FindI("aptwebserver::failrequest", 400), *m, sendContent, "Server is configured to fail this file.", headers);
 	       continue;
 	    }

@@ -178,9 +178,9 @@ class APT_PUBLIC pkgDepCache : protected pkgCache::Namespace
    {
    public:
      DefaultRootSetFunc() : Configuration::MatchAgainstConfig("APT::NeverAutoRemove") {};
-     virtual ~DefaultRootSetFunc() {};
+     ~DefaultRootSetFunc() override = default;
 
-     bool InRootSet(const pkgCache::PkgIterator &pkg) APT_OVERRIDE { return pkg.end() == false && Match(pkg.Name()); };
+     bool InRootSet(const pkgCache::PkgIterator &pkg) override { return pkg.end() == false && Match(pkg.Name()); };
    };
 
    struct APT_PUBLIC StateCache
@@ -491,7 +491,7 @@ class APT_PUBLIC pkgDepCache : protected pkgCache::Namespace
 
    bool CheckConsistency(char const *const msgtag = "");
 #ifdef APT_COMPILING_APT
-   double BootSize(bool initrdOnly);
+   unsigned long long BootSize(bool initrdOnly);
 #endif
    protected:
    // methods call by IsInstallOk

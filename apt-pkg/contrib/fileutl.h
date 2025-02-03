@@ -29,6 +29,7 @@
 
 #include <ctime>
 #include <set>
+#include <memory>
 #include <string>
 #include <vector>
 #include <sys/stat.h>
@@ -134,8 +135,8 @@ class APT_PUBLIC FileFd
 
    bool Open(std::string FileName,unsigned int const Mode,CompressMode Compress,unsigned long const AccessMode = 0666);
    bool Open(std::string FileName,unsigned int const Mode,APT::Configuration::Compressor const &compressor,unsigned long const AccessMode = 0666);
-   inline bool Open(std::string const &FileName,unsigned int const Mode, unsigned long const AccessMode = 0666) {
-      return Open(FileName, Mode, None, AccessMode);
+   inline bool Open(std::string FileName,unsigned int const Mode, unsigned long const AccessMode = 0666) {
+      return Open(std::move(FileName), Mode, None, AccessMode);
    };
    bool OpenDescriptor(int Fd, unsigned int const Mode, CompressMode Compress, bool AutoClose=false);
    bool OpenDescriptor(int Fd, unsigned int const Mode, APT::Configuration::Compressor const &compressor, bool AutoClose=false);
@@ -283,5 +284,33 @@ APT_PUBLIC bool Popen(const char *Args[], FileFd &Fd, pid_t &Child, FileFd::Open
 APT_HIDDEN bool OpenConfigurationFileFd(std::string const &File, FileFd &Fd);
 
 APT_HIDDEN int Inhibit(const char *what, const char *who, const char *why, const char *mode);
+
+
+namespace {
+   struct FILEFcloseDeleter {
+      void operator()(FILE *p) {
+         fclose(p);
+      }
+   };
+   struct FILEPcloseDeleter {
+      void operator()(FILE *p) {
+         pclose(p);
+      }
+   };
+
+   [[maybe_unused]] std::unique_ptr<FILE, FILEFcloseDeleter> make_unique_FILE(const char *const filename, char const *const mode)
+   {
+      return {fopen(filename, mode), {}};
+   }
+   [[maybe_unused]] std::unique_ptr<FILE, FILEFcloseDeleter> make_unique_FILE(std::string const &filename, char const *const mode)
+   {
+      return make_unique_FILE(filename.c_str(), mode);
+   }
+
+   [[maybe_unused]] std::unique_ptr<FILE, FILEPcloseDeleter> make_unique_popen(const char *program, char const *const mode)
+   {
+      return {popen(program, mode), {}};
+   }
+}
 
 #endif

@@ -1,11 +1,13 @@
-
 #include <config.h>
+#include <apt-pkg/macros.h>
 #include <apt-pkg/string_view.h>
 #include <string>
 
 #include <type_traits>
 
 #include "common.h"
+
+#if APT_PKG_ABI <= 600
 
 TEST(StringViewTest,EmptyString)
 {
@@ -35,7 +37,8 @@ TEST(StringViewTest,FooString)
    static_assert( 3 == defString.length(), "def right size");
    EXPECT_EQ(0, defString.to_string().compare(0, defString.length(), defString.data(), 3));
 
-   APT::StringView strString{std::string{"foo"}};
+   std::string strstr{"foo"};
+   APT::StringView strString{strstr};
    EXPECT_EQ(3u, strString.length());
    EXPECT_EQ(0, strString.to_string().compare(0, strString.length(), strString.data(), 3));
 
@@ -93,3 +96,4 @@ TEST(StringViewTest,RFind)
    EXPECT_EQ(defString.to_string().rfind('l',6), defString.rfind('l',6));
    EXPECT_EQ(defString.to_string().rfind('l',11), defString.rfind('l',11));
 }
+#endif

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt 0.9.7.3\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2024-07-30 04:29+0000\n"
+"POT-Creation-Date: 2025-01-28 18:52+0000\n"
 "PO-Revision-Date: 2024-07-08 17:53+0200\n"
 "Last-Translator: Michał Kułach <michal.kulach@gmail.com>\n"
 "Language-Team: Polish <debian-l10n-polish@lists.debian.org>\n"
@@ -62,11 +62,11 @@ msgstr "Repozytorium \"%s\" nie ma już pliku Release."
 
 #: apt-pkg/acquire-item.cc
 msgid ""
-"This is normally not allowed, but the option Acquire::"
-"AllowDowngradeToInsecureRepositories was given to override it."
+"This is normally not allowed, but the option "
+"Acquire::AllowDowngradeToInsecureRepositories was given to override it."
 msgstr ""
-"Zwykle nie byłoby to dopuszczalne, lecz podano opcję Acquire::"
-"AllowDowngradeToInsecureRepositories, aby to przesłonić."
+"Zwykle nie byłoby to dopuszczalne, lecz podano opcję "
+"Acquire::AllowDowngradeToInsecureRepositories, aby to przesłonić."
 
 #: apt-pkg/acquire-item.cc
 #, c-format
@@ -151,8 +151,8 @@ msgid ""
 "component '%s' (component misspelt in sources.list?)"
 msgstr ""
 "Pomijanie pozyskania skonfigurowanego pliku \"%s\", ponieważ repozytorium "
-"\"%s\" nie ma komponentu \"%s\" (pomyłka w nazwie komponentu w pliku sources."
-"list?)"
+"\"%s\" nie ma komponentu \"%s\" (pomyłka w nazwie komponentu w pliku "
+"sources.list?)"
 
 #: apt-pkg/acquire-item.cc
 #, c-format
@@ -170,8 +170,8 @@ msgid ""
 "provide it (sources.list entry misspelt?)"
 msgstr ""
 "Pomijanie pozyskania skonfigurowanego pliku \"%s\", ponieważ wydaje się, że "
-"repozytorium \"%s\" go nie zapewnia (literówka we wpisie w pliku sources."
-"list?)"
+"repozytorium \"%s\" go nie zapewnia (literówka we wpisie w pliku "
+"sources.list?)"
 
 #: apt-pkg/acquire-item.cc
 #, c-format
@@ -211,8 +211,7 @@ msgstr ""
 msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr "Nieprawidłowa dystrybucja: %s (oczekiwano %s, a otrzymano %s)"
 
-#. Both messages are reused from the ReleaseInfoChange feature in acquire-item.cc
-#: apt-pkg/acquire-item.cc apt-private/private-update.cc
+#: apt-pkg/acquire-item.cc
 #, c-format
 msgid "Repository '%s' changed its '%s' value from '%s' to '%s'"
 msgstr "Repozytorium \"%s\" zmieniło swoją wartość \"%s\" z \"%s\" na \"%s\""
@@ -224,7 +223,7 @@ msgstr ""
 "Repozytorium \"%s\" zmieniło swój domyślny priorytet dla %s z %hi na %hi."
 
 #. TRANSLATOR: the "this" refers to changes in the repository like a new release or owner change
-#: apt-pkg/acquire-item.cc apt-private/private-update.cc
+#: apt-pkg/acquire-item.cc
 #, c-format
 msgid ""
 "More information about this can be found online in the Release notes at: %s"
@@ -275,16 +274,6 @@ msgstr "Nie można znaleźć źródła do pobrania wersji \"%s\" pakietu \"%s\""
 #, c-format
 msgid "Changelog unavailable for %s=%s"
 msgstr "Dziennik zmian dla %s=%s jest niedostępny"
-
-#: apt-pkg/acquire-worker.cc
-#, c-format
-msgid ""
-"The method '%s' is unsupported and disabled by default. Consider switching "
-"to http(s). Set Dir::Bin::Methods::%s to \"%s\" to enable it again."
-msgstr ""
-"Metoda \"%s\" jest nieobsługiwana i domyślnie wyłączona. Proszę rozważyć "
-"przejście na http(s). Aby włączyć ją ponownie, konieczne jest ustawienie "
-"Dir::Bin::Methods::%s na \"%s\"."
 
 #: apt-pkg/acquire-worker.cc
 #, c-format
@@ -841,11 +830,11 @@ msgstr "Podproces %s zwrócił kod błędu (%u)"
 msgid "Sub-process %s exited unexpectedly"
 msgstr "Podproces %s zakończył się niespodziewanie"
 
-#: apt-pkg/contrib/fileutl.cc methods/ftp.cc methods/rsh.cc
+#: apt-pkg/contrib/fileutl.cc
 msgid "Read error"
 msgstr "Błąd odczytu"
 
-#: apt-pkg/contrib/fileutl.cc methods/ftp.cc methods/rsh.cc
+#: apt-pkg/contrib/fileutl.cc
 msgid "Write error"
 msgstr "Błąd zapisu"
 
@@ -1170,6 +1159,12 @@ msgstr ""
 #: apt-pkg/deb/debsystem.cc
 msgid "Not locked"
 msgstr "Niezablokowany"
+
+#: apt-pkg/deb/debsystem.cc
+msgid ""
+"The dpkg executable set in Dir::Bin::dpkg is missing, falling back to using "
+"default dpkg."
+msgstr ""
 
 #. we don't care for the difference
 #: apt-pkg/deb/dpkgpm.cc
@@ -2527,7 +2522,7 @@ msgid "Y"
 msgstr "T"
 
 #. TRANSLATOR: "No" answer printed for a yes/no question if --assume-no is set
-#: apt-private/private-output.cc
+#: apt-private/private-output.cc apt-private/private-sources.cc
 msgid "N"
 msgstr "N"
 
@@ -2715,11 +2710,11 @@ msgstr "%s nie ma zależności dla budowania.\n"
 #: apt-private/private-source.cc
 #, c-format
 msgid ""
-"No architecture information available for %s. See apt.conf(5) APT::"
-"Architectures for setup"
+"No architecture information available for %s. See apt.conf(5) "
+"APT::Architectures for setup"
 msgstr ""
-"Nie znaleziono informacji o architekturze dla %s. Proszę zapoznać się z apt."
-"conf(5) APT::Architectures"
+"Nie znaleziono informacji o architekturze dla %s. Proszę zapoznać się z "
+"apt.conf(5) APT::Architectures"
 
 #: apt-private/private-source.cc
 msgid "Must specify at least one package to check builddeps for"
@@ -2761,6 +2756,11 @@ msgstr "Nie udało się przeanalizować %s. Edytować ponownie? "
 msgid "Your '%s' file changed, please run 'apt-get update'.\n"
 msgstr "Plik \"%s\" uległ zmianie, proszę wykonać \"apt-get update\".\n"
 
+#: apt-private/private-sources.cc
+#, c-format
+msgid "Rewrite %zu sources?"
+msgstr ""
+
 #: apt-private/private-unmet.cc
 #, c-format
 msgid "Package %s version %s has an unmet dep:\n"
@@ -2783,8 +2783,39 @@ msgstr ""
 #. TRANSLATOR: the first is manpage reference, the last the URI from a sources.list
 #: apt-private/private-update.cc
 #, c-format
+msgid "The %s entry for '%s' should be upgraded to deb822 .sources"
+msgstr ""
+
+#. TRANSLATOR: the first is manpage reference, the last the URI from a sources.list
+#: apt-private/private-update.cc
+#, c-format
 msgid "Missing Signed-By in the %s entry for '%s'"
 msgstr "Brakuje Signed-By (podpisu) we wpisie %s dla \"%s\""
+
+#: apt-private/private-update.cc
+msgid ""
+"Consider migrating all sources.list(5) entries to the deb822 .sources format"
+msgstr ""
+
+#: apt-private/private-update.cc
+msgid ""
+"The deb822 .sources format supports both embedded as well as external "
+"OpenPGP keys"
+msgstr ""
+
+#: apt-private/private-update.cc
+#, fuzzy
+#| msgid ""
+#| "See apt-secure(8) manpage for repository creation and user configuration "
+#| "details."
+msgid "See apt-secure(8) for best practices in configuring repository signing."
+msgstr ""
+"Więcej informacji o tworzeniu repozytorium i szczegółach konfiguracji "
+"użytkownika znajduje się w podręczniku apt-secure(8)."
+
+#: apt-private/private-update.cc
+msgid "Some sources can be modernized. Run 'apt modernize-sources' to do so."
+msgstr ""
 
 #: apt-private/private-update.cc
 #, c-format
@@ -3188,6 +3219,12 @@ msgid "concatenate files, with automatic decompression"
 msgstr "łączy pliki, automatycznie je rozpakowując"
 
 #: cmdline/apt-helper.cc
+#, fuzzy
+#| msgid "Problem hashing file"
+msgid "hash file"
+msgstr "Nie udało się obliczyć skrótu pliku"
+
+#: cmdline/apt-helper.cc
 msgid "detect proxy using apt.conf"
 msgstr "wykrywa serwery pośredniczące za pomocą apt.conf"
 
@@ -3432,6 +3469,10 @@ msgid "edit the source information file"
 msgstr "edytuje plik z informacjami o źródłach"
 
 #: cmdline/apt.cc
+msgid "modernize .list files to .sources files"
+msgstr ""
+
+#: cmdline/apt.cc
 msgid "satisfy dependency strings"
 msgstr "spełnia łańcuchy zależności"
 
@@ -3636,7 +3677,7 @@ msgstr "Nieznany algorytm kompresji \"%s\""
 msgid "Compressed output %s needs a compression set"
 msgstr "Skompresowany plik wynikowy %s wymaga podania kompresji"
 
-#: ftparchive/multicompress.cc methods/rsh.cc
+#: ftparchive/multicompress.cc
 msgid "Failed to create IPC pipe to subprocess"
 msgstr "Nie udało się utworzyć potoku IPC do podprocesu"
 
@@ -3755,23 +3796,23 @@ msgstr "Archiwum nie posiadało pola pakietu"
 
 #: ftparchive/writer.cc
 #, c-format
-msgid "  %s has no override entry\n"
-msgstr "  %s nie posiada wpisu w pliku override\n"
+msgid "  %.*s has no override entry\n"
+msgstr "  %.*s nie posiada wpisu w pliku override\n"
 
 #: ftparchive/writer.cc
 #, c-format
-msgid "  %s maintainer is %s not %s\n"
-msgstr "  opiekunem %s jest %s, a nie %s\n"
+msgid "  %.*s maintainer is %.*s not %s\n"
+msgstr "  opiekunem %.*s jest %.*s, a nie %s\n"
 
 #: ftparchive/writer.cc
 #, c-format
-msgid "  %s has no source override entry\n"
-msgstr "  %s nie posiada wpisu w pliku override źródeł\n"
+msgid "  %.*s has no source override entry\n"
+msgstr "  %.*s nie posiada wpisu w pliku override źródeł\n"
 
 #: ftparchive/writer.cc
 #, c-format
-msgid "  %s has no binary override entry either\n"
-msgstr "  %s nie posiada również wpisu w pliku override binariów\n"
+msgid "  %.*s has no binary override entry either\n"
+msgstr "  %.*s nie posiada również wpisu w pliku override binariów\n"
 
 #: methods/basehttp.cc
 msgid "Waiting for headers"
@@ -3809,7 +3850,7 @@ msgstr "Błędne dane nagłówka"
 msgid "Connection failed"
 msgstr "Połączenie nie powiodło się"
 
-#: methods/basehttp.cc methods/ftp.cc methods/http.cc
+#: methods/basehttp.cc methods/http.cc
 #, c-format
 msgid "File has unexpected size (%llu != %llu). Mirror sync in progress?"
 msgstr ""
@@ -3855,7 +3896,7 @@ msgstr "Nie udało się odmontować CD-ROM-u w %s, być może wciąż jest używ
 msgid "Disk not found."
 msgstr "Nie odnaleziono dysku."
 
-#: methods/cdrom.cc methods/file.cc methods/rsh.cc
+#: methods/cdrom.cc methods/file.cc
 msgid "File not found"
 msgstr "Nie odnaleziono pliku"
 
@@ -3890,7 +3931,7 @@ msgstr "Nie udało się utworzyć gniazda dla %s (f=%u t=%u p=%u)"
 msgid "Cannot initiate the connection to %s:%s (%s)."
 msgstr "Nie udało się zainicjalizować połączenia z %s:%s (%s)."
 
-#: methods/connect.cc methods/ftp.cc methods/rsh.cc
+#: methods/connect.cc
 msgid "Failed"
 msgstr "Nie udało się"
 
@@ -3904,9 +3945,7 @@ msgstr "Nie udało się połączyć z %s:%s (%s)."
 msgid "Could not connect to %s:%s (%s), connection timed out"
 msgstr "Nie udało się połączyć z %s:%s (%s), przekroczenie czasu połączenia"
 
-#. We say this mainly because the pause here is for the
-#. ssh connection that is still going
-#: methods/connect.cc methods/rsh.cc
+#: methods/connect.cc
 #, c-format
 msgid "Connecting to %s"
 msgstr "Łączenie z %s"
@@ -3944,147 +3983,6 @@ msgstr "Nie udało się wykonać operacji stat"
 msgid "Invalid URI, local URIS must not start with //"
 msgstr "Nieprawidłowe URI, lokalne URI nie mogą zaczynać się od //"
 
-#. Login must be before getpeername otherwise dante won't work.
-#: methods/ftp.cc
-msgid "Logging in"
-msgstr "Logowanie się"
-
-#: methods/ftp.cc
-msgid "Unable to determine the peer name"
-msgstr "Nie można określić nazwy zdalnego systemu"
-
-#: methods/ftp.cc
-msgid "Unable to determine the local name"
-msgstr "Nie udało się określić nazwy lokalnego systemu"
-
-#: methods/ftp.cc
-#, c-format
-msgid "The server refused the connection and said: %s"
-msgstr "Serwer odrzucił połączenie, otrzymana odpowiedź: %s"
-
-#: methods/ftp.cc
-#, c-format
-msgid "USER failed, server said: %s"
-msgstr "Polecenie USER nie powiodło się, odpowiedź serwera: %s"
-
-#: methods/ftp.cc
-#, c-format
-msgid "PASS failed, server said: %s"
-msgstr "Polecenie PASS nie powiodło się, odpowiedź serwera: %s"
-
-#: methods/ftp.cc
-msgid ""
-"A proxy server was specified but no login script, Acquire::ftp::ProxyLogin "
-"is empty."
-msgstr ""
-"Określono serwer pośredniczący, ale nie określono skryptu rejestrowania, "
-"Acquire::ftp::ProxyLogin jest puste."
-
-#: methods/ftp.cc
-#, c-format
-msgid "Login script command '%s' failed, server said: %s"
-msgstr ""
-"Polecenie skryptu rejestrowania \"%s\" nie powiodło się, odpowiedź serwera: "
-"%s"
-
-#: methods/ftp.cc
-#, c-format
-msgid "TYPE failed, server said: %s"
-msgstr "Polecenie TYPE nie powiodło się, odpowiedź serwera: %s"
-
-#: methods/ftp.cc methods/rsh.cc
-msgid "Connection timeout"
-msgstr "Przekroczenie czasu połączenia"
-
-#: methods/ftp.cc
-msgid "Server closed the connection"
-msgstr "Serwer zamknął połączenie"
-
-#: methods/ftp.cc methods/rsh.cc
-msgid "A response overflowed the buffer."
-msgstr "Odpowiedź przepełniła bufor."
-
-#: methods/ftp.cc
-msgid "Protocol corruption"
-msgstr "Naruszenie zasad protokołu"
-
-#: methods/ftp.cc
-msgid "Could not create a socket"
-msgstr "Nie udało się utworzyć gniazda"
-
-#: methods/ftp.cc
-msgid "Could not connect data socket, connection timed out"
-msgstr "Nie udało się połączyć gniazda danych, przekroczenie czasu połączenia"
-
-#: methods/ftp.cc
-msgid "Could not connect passive socket."
-msgstr "Nie udało się połączyć pasywnego gniazda."
-
-#: methods/ftp.cc
-msgid "getaddrinfo was unable to get a listening socket"
-msgstr "getaddrinfo nie było w stanie uzyskać nasłuchującego gniazda"
-
-#: methods/ftp.cc
-msgid "Could not bind a socket"
-msgstr "Nie udało się przyłączyć gniazda"
-
-#: methods/ftp.cc
-msgid "Could not listen on the socket"
-msgstr "Nie udało się nasłuchiwać na gnieździe"
-
-#: methods/ftp.cc
-msgid "Could not determine the socket's name"
-msgstr "Nie udało się określić nazwy gniazda"
-
-#: methods/ftp.cc
-msgid "Unable to send PORT command"
-msgstr "Nie można wysłać polecenia PORT"
-
-#: methods/ftp.cc
-#, c-format
-msgid "Unknown address family %u (AF_*)"
-msgstr "Nieznana rodzina adresów %u (AF_*)"
-
-#: methods/ftp.cc
-#, c-format
-msgid "EPRT failed, server said: %s"
-msgstr "Polecenie EPRT nie powiodło się, odpowiedź serwera: %s"
-
-#: methods/ftp.cc
-msgid "Data socket connect timed out"
-msgstr "Przekroczono czas połączenia gniazda danych"
-
-#: methods/ftp.cc
-msgid "Unable to accept connection"
-msgstr "Nie udało się przyjąć połączenia"
-
-#: methods/ftp.cc methods/http.cc methods/rsh.cc
-msgid "Problem hashing file"
-msgstr "Nie udało się obliczyć skrótu pliku"
-
-#: methods/ftp.cc
-#, c-format
-msgid "Unable to fetch file, server said '%s'"
-msgstr "Nie można pobrać pliku, odpowiedź serwera: \"%s\""
-
-#: methods/ftp.cc methods/rsh.cc
-msgid "Data socket timed out"
-msgstr "Przekroczono czas oczekiwania na dane"
-
-#: methods/ftp.cc
-#, c-format
-msgid "Data transfer failed, server said '%s'"
-msgstr "Nie udało się przesłać danych, odpowiedź serwera: \"%s\""
-
-#. Get the files information
-#: methods/ftp.cc
-msgid "Query"
-msgstr "Info"
-
-#: methods/ftp.cc
-msgid "Unable to invoke "
-msgstr "Nie można wywołać "
-
 #: methods/gpgv.cc
 #, c-format
 msgid "untrusted public key algorithm: %s"
@@ -4116,24 +4014,19 @@ msgstr ""
 "klucza?!"
 
 #: methods/gpgv.cc
-msgid "Could not execute 'apt-key' to verify signature (is gnupg installed?)"
+#, fuzzy
+#| msgid ""
+#| "Could not execute 'apt-key' to verify signature (is gnupg installed?)"
+msgid "Could not execute 'gpgv' to verify signature (is gnupg installed?)"
 msgstr ""
 "Nie udało się uruchomić apt-key by zweryfikować podpis (czy gnupg jest "
 "zainstalowane?)"
 
 #: methods/gpgv.cc
-msgid "Unknown error executing apt-key"
+#, fuzzy
+#| msgid "Unknown error executing apt-key"
+msgid "Unknown error executing gpgv"
 msgstr "Nieznany błąd podczas uruchamiania apt-key"
-
-# FIXME: Skoordynować tłumaczenie DEPRECATION z apt-key(8)
-#: methods/gpgv.cc
-#, c-format
-msgid ""
-"Key is stored in legacy trusted.gpg keyring (%s), see the DEPRECATION "
-"section in apt-key(8) for details."
-msgstr ""
-"Klucz jest przechowywany w przestarzałym zbiorze kluczy trusted.gpg (%s), "
-"więcej informacji w rozdziale DEPRECATION w podręczniku apt-key(8)."
 
 #. TRANSLATORS: The second %s is the reason and is untranslated for repository owners.
 #: methods/gpgv.cc
@@ -4173,14 +4066,145 @@ msgstr "Operacja select nie powiodła się"
 msgid "Connection timed out"
 msgstr "Przekroczenie czasu połączenia"
 
+#: methods/http.cc
+msgid "Problem hashing file"
+msgstr "Nie udało się obliczyć skrótu pliku"
+
 #: methods/rred.cc
 msgid "Failed to set modification time"
 msgstr "Nie udało się ustawić czasu modyfikacji"
 
-#: methods/rsh.cc
-msgid "Connection closed prematurely"
-msgstr "Połączenie zostało przedwcześnie zamknięte"
-
 #: methods/store.cc
 msgid "Empty files can't be valid archives"
 msgstr "Puste pliki nie mogą być prawidłowymi archiwami"
+
+# FIXME: Skoordynować tłumaczenie DEPRECATION z apt-key(8)
+#, fuzzy, c-format
+#~| msgid ""
+#~| "Key is stored in legacy trusted.gpg keyring (%s), see the DEPRECATION "
+#~| "section in apt-key(8) for details."
+#~ msgid ""
+#~ "Key is stored in legacy trusted.gpg keyring (%s). Use Signed-By instead. "
+#~ "See the USER CONFIGURATION section in apt-secure(8) for details."
+#~ msgstr ""
+#~ "Klucz jest przechowywany w przestarzałym zbiorze kluczy trusted.gpg (%s), "
+#~ "więcej informacji w rozdziale DEPRECATION w podręczniku apt-key(8)."
+
+#, c-format
+#~ msgid ""
+#~ "The method '%s' is unsupported and disabled by default. Consider "
+#~ "switching to http(s). Set Dir::Bin::Methods::%s to \"%s\" to enable it "
+#~ "again."
+#~ msgstr ""
+#~ "Metoda \"%s\" jest nieobsługiwana i domyślnie wyłączona. Proszę rozważyć "
+#~ "przejście na http(s). Aby włączyć ją ponownie, konieczne jest ustawienie "
+#~ "Dir::Bin::Methods::%s na \"%s\"."
+
+#~ msgid "Logging in"
+#~ msgstr "Logowanie się"
+
+#~ msgid "Unable to determine the peer name"
+#~ msgstr "Nie można określić nazwy zdalnego systemu"
+
+#~ msgid "Unable to determine the local name"
+#~ msgstr "Nie udało się określić nazwy lokalnego systemu"
+
+#, c-format
+#~ msgid "The server refused the connection and said: %s"
+#~ msgstr "Serwer odrzucił połączenie, otrzymana odpowiedź: %s"
+
+#, c-format
+#~ msgid "USER failed, server said: %s"
+#~ msgstr "Polecenie USER nie powiodło się, odpowiedź serwera: %s"
+
+#, c-format
+#~ msgid "PASS failed, server said: %s"
+#~ msgstr "Polecenie PASS nie powiodło się, odpowiedź serwera: %s"
+
+#~ msgid ""
+#~ "A proxy server was specified but no login script, "
+#~ "Acquire::ftp::ProxyLogin is empty."
+#~ msgstr ""
+#~ "Określono serwer pośredniczący, ale nie określono skryptu rejestrowania, "
+#~ "Acquire::ftp::ProxyLogin jest puste."
+
+#, c-format
+#~ msgid "Login script command '%s' failed, server said: %s"
+#~ msgstr ""
+#~ "Polecenie skryptu rejestrowania \"%s\" nie powiodło się, odpowiedź "
+#~ "serwera: %s"
+
+#, c-format
+#~ msgid "TYPE failed, server said: %s"
+#~ msgstr "Polecenie TYPE nie powiodło się, odpowiedź serwera: %s"
+
+#~ msgid "Connection timeout"
+#~ msgstr "Przekroczenie czasu połączenia"
+
+#~ msgid "Server closed the connection"
+#~ msgstr "Serwer zamknął połączenie"
+
+#~ msgid "A response overflowed the buffer."
+#~ msgstr "Odpowiedź przepełniła bufor."
+
+#~ msgid "Protocol corruption"
+#~ msgstr "Naruszenie zasad protokołu"
+
+#~ msgid "Could not create a socket"
+#~ msgstr "Nie udało się utworzyć gniazda"
+
+#~ msgid "Could not connect data socket, connection timed out"
+#~ msgstr ""
+#~ "Nie udało się połączyć gniazda danych, przekroczenie czasu połączenia"
+
+#~ msgid "Could not connect passive socket."
+#~ msgstr "Nie udało się połączyć pasywnego gniazda."
+
+#~ msgid "getaddrinfo was unable to get a listening socket"
+#~ msgstr "getaddrinfo nie było w stanie uzyskać nasłuchującego gniazda"
+
+#~ msgid "Could not bind a socket"
+#~ msgstr "Nie udało się przyłączyć gniazda"
+
+#~ msgid "Could not listen on the socket"
+#~ msgstr "Nie udało się nasłuchiwać na gnieździe"
+
+#~ msgid "Could not determine the socket's name"
+#~ msgstr "Nie udało się określić nazwy gniazda"
+
+#~ msgid "Unable to send PORT command"
+#~ msgstr "Nie można wysłać polecenia PORT"
+
+#, c-format
+#~ msgid "Unknown address family %u (AF_*)"
+#~ msgstr "Nieznana rodzina adresów %u (AF_*)"
+
+#, c-format
+#~ msgid "EPRT failed, server said: %s"
+#~ msgstr "Polecenie EPRT nie powiodło się, odpowiedź serwera: %s"
+
+#~ msgid "Data socket connect timed out"
+#~ msgstr "Przekroczono czas połączenia gniazda danych"
+
+#~ msgid "Unable to accept connection"
+#~ msgstr "Nie udało się przyjąć połączenia"
+
+#, c-format
+#~ msgid "Unable to fetch file, server said '%s'"
+#~ msgstr "Nie można pobrać pliku, odpowiedź serwera: \"%s\""
+
+#~ msgid "Data socket timed out"
+#~ msgstr "Przekroczono czas oczekiwania na dane"
+
+#, c-format
+#~ msgid "Data transfer failed, server said '%s'"
+#~ msgstr "Nie udało się przesłać danych, odpowiedź serwera: \"%s\""
+
+#~ msgid "Query"
+#~ msgstr "Info"
+
+#~ msgid "Unable to invoke "
+#~ msgstr "Nie można wywołać "
+
+#~ msgid "Connection closed prematurely"
+#~ msgstr "Połączenie zostało przedwcześnie zamknięte"

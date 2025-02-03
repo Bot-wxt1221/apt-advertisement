@@ -25,7 +25,6 @@
 #include <apt-pkg/macros.h>
 #include <apt-pkg/packagemanager.h>
 #include <apt-pkg/pkgcache.h>
-#include <apt-pkg/string_view.h>
 #include <apt-pkg/strutl.h>
 #include <apt-pkg/version.h>
 
@@ -1380,8 +1379,7 @@ bool pkgProblemResolver::ResolveByKeepInternal()
 	       pkgCache::PkgIterator Pkg = Ver.ParentPkg();
 	       
 	       // It is not keepable
-	       if (Cache[Pkg].InstallVer == 0 ||
-		   Pkg->CurrentVer == 0)
+	       if (Pkg->CurrentVer == 0)
 		  continue;
 
 	       if (not Cache[Pkg].Protect())
@@ -1423,6 +1421,9 @@ bool pkgProblemResolver::ResolveByKeepInternal()
    }
 
    delete[] PList;
+
+   if (Cache.BrokenCount() != 0)
+      return _error->Error(_("Unable to correct problems, you have held broken packages."));
 
    if (Debug)
       Cache.CheckConsistency("keep done");

@@ -1,3 +1,53 @@
+apt (2.9.24) unstable; urgency=medium
+
+  /etc/apt/trusted.gpg is no longer trusted. Setting the Dir::Etc::trusted
+  option manually continues to work for some more time.
+
+  sources.list(5) entries without the Signed-By field are deprecated;
+  migrate any legacy entries to the deb822 .sources format. See the
+  apt-secure(8) manual page for best practices for signer configuration.
+  This deprecates the /etc/apt/trusted.gpg.d directory.
+
+ -- Julian Andres Klode <jak@debian.org>  Tue, 21 Jan 2025 12:17:36 +0100
+
+apt (2.9.19) unstable; urgency=medium
+
+  This release switches to OpenSSL for hashing and TLS, replacing the
+  GnuTLS and gcrypt libraries.
+
+  This release switches to Sequoia for OpenPGP verification on supported
+  Debian platforms. A Sequoia policy override enabling SHA1 self-signatures
+  until 2026 is included. To override the policy, the following environment
+  variables and files are considered:
+
+  * The APT_SEQUOIA_CRYPTO_POLICY environment variable, and failing that:
+    - /etc/crypto-policies/back-ends/apt-sequoia.config,
+    - /var/lib/crypto-config/profiles/current/apt-sequoia.config
+  * The SEQUOIA_CRYPTO_POLICY environment variable, and failing that:
+    - /etc/crypto-policies/back-ends/sequoia.config
+    - /var/lib/crypto-config/profiles/current/sequoia.config
+
+ -- Julian Andres Klode <jak@debian.org>  Mon, 23 Dec 2024 12:16:22 +0100
+
+apt (2.9.15) unstable; urgency=medium
+
+  This release stops using apt-key to verify the signatures.
+  Final call to stop using it before it's gone next week.
+
+ -- Julian Andres Klode <jak@debian.org>  Thu, 28 Nov 2024 19:31:24 +0100
+
+apt (2.9.11) unstable; urgency=medium
+
+  The ftp, rsh, and ssh methods have been removed. They have been unsupported
+  and disabled since 1.8. Please, migrate to http(s) instead, or contribute
+  an sftp method.
+
+  If you need ad hoc access to a remote repository, you can usually run
+  `python3 -m http.server` on that machine and use SSH port forwarding to
+  run HTTP over SSH.
+
+ -- Julian Andres Klode <jak@debian.org>  Thu, 07 Nov 2024 14:02:07 +0100
+
 apt (2.5.2) unstable; urgency=medium
 
   Installing or upgrading a binary package now upgrades other binaries from

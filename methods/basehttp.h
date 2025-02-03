@@ -54,9 +54,10 @@ struct RequestState
    time_t Date;
    HaveContent haveContent = HaveContent::TRI_UNKNOWN;
 
-   enum {Chunked,Stream,Closes} Encoding = Closes;
+   enum {Closes,Chunked,Stream} Encoding = Closes;
    enum {Header, Data} State = Header;
    std::string Location;
+   time_t RetryAfter = 0;
 
    FileFd File;
 
@@ -125,7 +126,7 @@ struct ServerState
 class BaseHttpMethod : public aptAuthConfMethod
 {
    protected:
-   virtual bool Fetch(FetchItem *) APT_OVERRIDE;
+   bool Fetch(FetchItem *) override;
 
    std::unique_ptr<ServerState> Server;
    std::string NextURI;
@@ -162,14 +163,14 @@ class BaseHttpMethod : public aptAuthConfMethod
    static std::string FailFile;
    static int FailFd;
    static time_t FailTime;
-   static APT_NORETURN void SigTerm(int);
+   [[noreturn]] static void SigTerm(int);
 
    int Loop();
 
    virtual void SendReq(FetchItem *Itm) = 0;
    virtual std::unique_ptr<ServerState> CreateServerState(URI const &uri) = 0;
    virtual void RotateDNS() = 0;
-   virtual bool Configuration(std::string Message) APT_OVERRIDE;
+   bool Configuration(std::string Message) override;
 
    bool AddProxyAuth(URI &Proxy, URI const &Server);
 

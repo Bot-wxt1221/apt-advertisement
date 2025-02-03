@@ -4,16 +4,16 @@
 /* ######################################################################
 
    String Util - These are some useful string functions
-   
+
    _strstrip is a function to remove whitespace from the front and end
    of a string.
-   
+
    This file had this historic note, but now includes further changes
    under the GPL-2.0+:
 
    This source is placed in the Public Domain, do with it what you will
-   It was originally written by Jason Gunthorpe <jgg@gpu.srv.ualberta.ca>   
-   
+   It was originally written by Jason Gunthorpe <jgg@gpu.srv.ualberta.ca>
+
    ##################################################################### */
 									/*}}}*/
 #ifndef STRUTL_H
@@ -26,9 +26,19 @@
 #include <iostream>
 #include <limits>
 #include <string>
+#include <string_view>
 #include <vector>
 
 #include "macros.h"
+
+
+namespace {
+   struct FreeDeleter {
+      void operator()(void *p) {
+         free(p);
+      }
+   };
+}
 
 
 namespace APT {
@@ -46,7 +56,7 @@ namespace APT {
 APT_PUBLIC bool UTF8ToCodeset(const char *codeset, const std::string &orig, std::string *dest);
 APT_PUBLIC char *_strstrip(char *String);
 APT_PUBLIC char *_strrstrip(char *String); // right strip only
-APT_DEPRECATED_MSG("Use SubstVar to avoid memory headaches") APT_PUBLIC char *_strtabexpand(char *String,size_t Len);
+[[deprecated("Use SubstVar to avoid memory headaches")]] APT_PUBLIC char *_strtabexpand(char *String,size_t Len);
 APT_PUBLIC bool ParseQuoteWord(const char *&String,std::string &Res);
 APT_PUBLIC bool ParseCWord(const char *&String,std::string &Res);
 APT_PUBLIC std::string QuoteString(const std::string &Str,const char *Bad);
@@ -59,6 +69,7 @@ APT_PUBLIC std::string DeEscapeString(const std::string &input);
 APT_PUBLIC std::string SizeToStr(double Bytes);
 APT_PUBLIC std::string TimeToStr(unsigned long Sec);
 APT_PUBLIC std::string Base64Encode(const std::string &Str);
+APT_PUBLIC std::string Base64Decode(const std::string_view in);
 APT_PUBLIC std::string OutputInDepth(const unsigned long Depth, const char* Separator="  ");
 APT_PUBLIC std::string URItoFileName(const std::string &URI);
 /** returns a datetime string as needed by HTTP/1.1 and Debian files.
@@ -86,8 +97,8 @@ APT_PUBLIC std::string TimeRFC1123(time_t Date, bool const NumericTimezone);
  *    parsing is successful, undefined otherwise.
  * @return \b true if parsing was successful, otherwise \b false.
  */
-APT_PUBLIC bool RFC1123StrToTime(const std::string &str,time_t &time) APT_MUSTCHECK;
-APT_PUBLIC bool FTPMDTMStrToTime(const char* const str,time_t &time) APT_MUSTCHECK;
+[[nodiscard]] APT_PUBLIC bool RFC1123StrToTime(const std::string &str,time_t &time);
+[[nodiscard, deprecated("Unused and untested in src:apt")]] APT_PUBLIC bool FTPMDTMStrToTime(const char *str, time_t &time);
 APT_PUBLIC std::string LookupTag(const std::string &Message,const char *Tag,const char *Default = 0);
 APT_PUBLIC int StringToBool(const std::string &Text,int Default = -1);
 APT_PUBLIC bool ReadMessages(int Fd, std::vector<std::string> &List);
@@ -112,13 +123,13 @@ APT_PUBLIC std::vector<std::string> VectorizeString(std::string const &haystack,
  *
  * \param maxsplit (optional) The maximum amount of splitting that
  * should be done .
- * 
+ *
  * The optional "maxsplit" argument can be used to limit the splitting,
  * if used the string is only split on maxsplit places and the last
  * item in the vector contains the remainder string.
  */
 APT_PUBLIC std::vector<std::string> StringSplit(std::string const &input,
-                                     std::string const &sep, 
+                                     std::string const &sep,
                                      unsigned int maxsplit=std::numeric_limits<unsigned int>::max()) APT_PURE;
 
 
@@ -220,7 +231,7 @@ class APT_PUBLIC URI
    std::string Host;
    std::string Path;
    unsigned int Port;
-   
+
    operator std::string();
    inline void operator =(const std::string &From) {CopyFrom(From);}
    inline bool empty() {return Access.empty();};
@@ -248,5 +259,16 @@ struct RxChoiceList
 };
 APT_PUBLIC unsigned long RegexChoice(RxChoiceList *Rxs,const char **ListBegin,
 		      const char **ListEnd);
+
+/**
+ * \brief Faster comparison for string views (compare size before data)
+ *
+ * Still stable, but faster than the normal ordering. */
+static inline int StringViewCompareFast(const std::string_view & a, const std::string_view & b) {
+    if (a.size() != b.size())
+        return a.size() - b.size();
+
+    return a.compare(b);
+}
 
 #endif

@@ -1,3 +1,377 @@
+apt (2.9.27) unstable; urgency=medium
+
+  [ Julian Andres Klode ]
+  * Symbols: Update for 2.9.23/2.9.25
+  * Updates for the '3.0' solver:
+    - Soft unit propagation for optional items
+    - Do not accidentally solve new Recommends before hard dependencies
+    - Use a propagation queue instead of recursively propagating facts
+  * Correctly calculate kernel size in /boot (Closes: #1085184)
+  * Measure BootSize as integer
+
+  [ Boyuan Yang ]
+  * po/zh_CN.po: Refresh Simplified Chinese translation for apt
+
+  [ Rafael Fontenelle ]
+  * Brazilian Portuguese program translation update (Closes: #1092563)
+
+  [ David Kalnischkies ]
+  * Cleanups and fixes for cache counters/size fields:
+    - Do not overflow ver/desc<->file relation counters
+    - Drop unused description size info from binary cache
+    - Drop unused version stanza size info from binary cache
+    - Do not create descriptions structs for each architecture
+    - Record all available sources for descriptions
+    - Include Extra in the size counted for Version struct
+
+  [ Samuel Thibault ]
+  * Also support debian-ports modernization
+
+ -- Julian Andres Klode <jak@debian.org>  Mon, 03 Feb 2025 13:44:58 +0100
+
+apt (2.9.26) unstable; urgency=medium
+
+  [ Sam Hartman ]
+  * Fix regression that prevented sending intermediate client certificates
+
+  [ Andreas Rönnquist ]
+  * apt-secure manual page is in manual section 8
+
+  [ Julian Andres Klode ]
+  * apt: Introduce the modernize-sources command
+  * Make notices about .list sources without signed-by less obnoxious
+    You get a single line telling you about modernize-sources now, unless
+    you run --audit (or have deb822 files without Signed-By).
+  * Documentation updates:
+    - Deprecate legacy one-line-style format harder. Removal not before 2029.
+    - Set signed-by/Signed-By in sources.list(5) short examples for Debian, Ubuntu
+    - Update Debian, Ubuntu example default sources to best practices:
+      We now ship debian.sources/ubuntu.sources instead of sources.list
+    - Update codenames for trixie, plucky as stable
+
+ -- Julian Andres Klode <jak@debian.org>  Tue, 28 Jan 2025 19:49:53 +0100
+
+apt (2.9.25) unstable; urgency=medium
+
+  * sqv, gpgv: Do not fail if Dir::Etc::Trusted is set and trusted.gpg.d is missing
+
+ -- Julian Andres Klode <jak@debian.org>  Wed, 22 Jan 2025 11:07:01 +0100
+
+apt (2.9.24) unstable; urgency=medium
+
+  * gitlab-ci: Use platform: linux/i386 instead of i386/debian image
+  * Warn about missing Signed-By in .list format, this deprecates
+    /etc/apt/trusted.gpg.d.
+  * Remove superseded warning about trusted.gpg fallback
+  * Unset Dir::Etc::trusted, this removes /etc/apt/trusted.gpg from
+    the trusted path.
+
+ -- Julian Andres Klode <jak@debian.org>  Tue, 21 Jan 2025 12:17:24 +0100
+
+apt (2.9.23) unstable; urgency=high
+
+  [ David Kalnischkies ]
+  * Write Pre-Depends with a dash again in EDSP (Closes: #1093254)
+  * Grep for more evil in test as a signature can contain evil
+
+  [ Julian Andres Klode ]
+  * Workaround gcc 14.2.0-9 regression in no-tree-slp-vectorize on Graviton;
+    this prevented https connections from working.
+
+ -- Julian Andres Klode <jak@debian.org>  Fri, 17 Jan 2025 20:37:48 +0100
+
+apt (2.9.22) unstable; urgency=medium
+
+  [ Balint Reczey ]
+  * apt-pkg/deb/debsystem.cc: Fall back to "dpkg" when Dir::Bin::dpkg is not found
+
+  [ Julian Andres Klode ]
+  * debian/changelog: v3 signature packet, not v3 subkey
+  * Ensure we can build with APT_PKG_ABI > 601
+  * ssl: Set an error when we receive SSL_ERROR_SYSCALL
+  * ssl: Explictly return -1 (error) or 0 (server closed connection)
+  * abicheck: Add some workarounds to avoid errors
+  * t/i/test-method-gpgv-legacy-keyring: Switch to http, extend
+  * proxy: Avoids triggering bounds check in std::string_view
+  * methods/connect: Avoid unused argument warning
+
+  [ David Kalnischkies ]
+  * Resolve autopkgtest failures caused by dpkg >= 1.22.12 (Closes: #1092090)
+  * Try stomping a little less on global macro namespace
+  * Add pkgCache::{Priority,DepType}_NoL10n to avoid duplication
+  * Replaces macros with C++ attributes: APT_OVERRIDE, APT_ARRAY_SIZE, APT_NORETURN,
+    APT_DEPRECATED, APT_UNUSED, APT_MUSTCHECK, APT_IGNORE_DEPRECATED
+  * Drop SourceListWarnings::NonFreeFirmware messages
+  * Remove leftovers of the apt-key removal
+  * Move apt-extractexamples desc line from apt-utils to apt (Closes: #1091344)
+  * Remove leftovers from ftp and rsh/ssh methods removal
+  * Change multi sources.list entry example from FTP to HTTPS
+
+  [ Sergio Durigan Junior ]
+  * d/t/control: Don't depend on gdb-minimal.
+
+ -- Julian Andres Klode <jak@debian.org>  Tue, 14 Jan 2025 18:33:08 +0100
+
+apt (2.9.21) unstable; urgency=medium
+
+  [ Simon McVittie ]
+  * sources.list(5): Suggest VENDOR.sources for new systems
+
+  [ Guillem Jover ]
+  * Remove non-US leftovers in code and documentation
+  * Remove obsolete references to ftp://ftp.debian.org
+  * Use deb.debian.org instead of ftp.debian.org URLs
+
+  [ Julian Andres Klode ]
+  * Extend v3 signature packet expiry to 2026, owing to OBS use
+  * sqv: Avoid propagating errors between files (Closes: #1091679)
+  * http: seccomp: Allow reading directories (Closes: #1091351)
+  * test: Check "${METHODSDIR}/sqv" not "/usr/bin/sqv"
+  * Unfuzzy documentation translations
+  * Run update-po4a
+
+ -- Julian Andres Klode <jak@debian.org>  Wed, 01 Jan 2025 22:48:55 +0100
+
+apt (2.9.20) unstable; urgency=medium
+
+  * symbols: Merge 2.9.19 and fix version for InsertErrno
+  * Re-include std:: symbols in the symbols file as optional again
+
+ -- Julian Andres Klode <jak@debian.org>  Sat, 28 Dec 2024 22:59:50 +0100
+
+apt (2.9.19) unstable; urgency=medium
+
+  * Replace GnuTLS and gcrypt with OpenSSL
+  * Replace GnuPG with Sequoia on supported Debian platforms
+    - methods: Add new sqv method
+    - debian: Add default policy to allow SHA-1 self-signatures until 2026
+    - debian: Plug sqv into the package build
+  * Smaller bits:
+    - apt-helper: Add a hash-file helper to debug file hashing
+    - Use sq in the test suite, remove apt-key
+    - abicheck: Add symbol-merge.py helper
+    - Symbols: Merge stable, noble, testing, unstable
+
+ -- Julian Andres Klode <jak@debian.org>  Mon, 23 Dec 2024 12:16:19 +0100
+
+apt (2.9.18) unstable; urgency=medium
+
+  * Fix out-of-bounds read in `apt show :` (Closes: #1090068)
+  * Introduce git-like automatic pager for apt(8), emulating git behavior.
+    It is enabled for the show, list, search, policy, showsrc commands.
+    The pager can be set using APT_PAGER or PAGER and defaults to `pager`
+  * Add initial pinning information to apt show --full.
+    The fields `APT-Pin`, `APT-Candidate`, and `APT-Release` provide
+    pinning information. It is not yet possible to see multiple sources,
+    and the per-source pinning is not shown.
+  * gpgv: Extract VerifyDetachedSignatureFile()
+
+ -- Julian Andres Klode <jak@debian.org>  Thu, 19 Dec 2024 18:38:04 +0100
+
+apt (2.9.17) unstable; urgency=medium
+
+  * solver3:
+    - Fix intransitivity of version comparison on upgrade, this
+      means no-strict-pinning gets the correct order now.
+    - Add a missing debug level check
+    - Reject all non-candidates outright for strict pinning
+  * gpgv: Merge all keyrings into a single one again. This fixes
+    issues with arbitrary gpgv restrictions, such as strange
+    filenames or more than 40 keys
+  * Stop installing apt-key, make it a test suite helper
+    - gpgv: Drop references to apt-key
+    - Remove the apt-key manual page and add documentation to apt-secure
+
+ -- Julian Andres Klode <jak@debian.org>  Sat, 07 Dec 2024 17:12:51 +0100
+
+apt (2.9.16) unstable; urgency=medium
+
+  * Avoid extension check for .gpg in Signed-By keyrings (Closes: #1088656)
+    A warning for extensions other than .pgp and .gpg will be introduced at
+    a later point, but not now as we try to be bug compatible.
+
+ -- Julian Andres Klode <jak@debian.org>  Fri, 29 Nov 2024 09:45:11 +0100
+
+apt (2.9.15) unstable; urgency=medium
+
+  [ David Kalnischkies ]
+  * Collect unprinted Ign errors for display in Err output
+
+  [ Julian Andres Klode ]
+  * Stop using apt-key for signature verification
+    - test-apt-cdrom: Hande assert-pubkey-algo like other gpgv messages
+    - Fix accidental ABI break in debListParser::ParseDepends
+    - tagfile: Avoid uninitialized variable warnings
+    - gpgv: Generalize apt_error to apt_msg(), add apt_warning()
+    - Do not implode key file name vector for calling gpgv
+    - apt-key: Only cat supported keyrings into the merged one
+    - apt-key: Temporarily accept 'pub' as an extension for binary gpg keys
+    - gpgv: Explictly pass all the keyrings to gpgv from apt
+    - gpgv: Use std::string instead of const char *
+    - strutl: Add Base64Decode
+    - gpgv: Verify keyrings and dearmor outside apt-key
+    - Directly call gpgv instead of apt-key
+    - gpgv: Add direct support for --assert-pubkey-algo
+    - fileutl: Use execvp() in Popen() instead of execv()
+    - Detect working gpgv using gpgv --dump-options
+
+ -- Julian Andres Klode <jak@debian.org>  Thu, 28 Nov 2024 19:33:03 +0100
+
+apt (2.9.14) unstable; urgency=medium
+
+  [ Julian Andres Klode ]
+  * test: Do not fail if valgrind is not available
+  * test: Handle gpgv-sq differeces and test with it
+  * apt-key: Prefer gpgv-sq if installed
+
+  [ Frans Spiesschaert ]
+  * Dutch program translation update (Closes: #1087458)
+  * Dutch manpages translation update (Closes: #1087461)
+
+  [ Алексей Шилин ]
+  * Russian program translation update (Closes: #1087804)
+
+  [ Luca Vercelli ]
+  * Italian program translation update (Closes: #1081992)
+
+  [ David Kalnischkies ]
+  * Fixes for several compile-time warnings:
+    - Acknowledge non-erase usage of remove_if for volatile sources
+    - Fix expired std::string usage in APT::StringView testcase
+    - Add a virtual destructor to private CacheSet Matcher
+    - Avoid unnormalized paths for CMake install destinations
+    - Tag hidden acquire classes as final for devirtualization
+  * Support uncompressed indexes from partial file:/ mirrors, and
+    other fixes for the acquire system:
+    - Show hashes calculated by main thread in error messages
+    - Alternatively calculate alternative file hashes in file method
+    - Rewrite hidden config option checker for more patterns
+    - Allow AutoDetectProxy to work with more than just http(s)
+    - Do not assume mirror-URIs end in a filename causing a hang
+    - Do not change UsedMirror on local copy of InRelease
+    - Clear previous ignored errors before processing acquire item again
+    - Never consider file/copy/cdrom sources bad sites due to errors
+    - Allow HashSum mismatches to fallback to other mirrors
+    - Look at non by-hash paths in copy and file methods
+
+ -- Julian Andres Klode <jak@debian.org>  Fri, 22 Nov 2024 17:13:23 +0100
+
+apt (2.9.13) unstable; urgency=medium
+
+  * Add a --comment option to record Comment: in history
+  * Hardening: Add -Wp,-D_GLIBCXX_ASSERTIONS to CXXFLAGS to enable bounds
+    checking for all STL containers.
+  * patterns: Avoid out-of-bounds std::string_view read.
+    We only pass NUL-terminated strings to the function, and the code expects
+    that but we pass through an interface which doesn't guarantee that, so
+    we trigger an index < size() assertion when accessing the terminating
+    NUL byte when compiled with -Wp,-D_GLIBCXX_ASSERTIONS.
+  * ftparchive: Remove fixed size buffers on trusted inputs (LP: #2087848)
+    - ftparchive: override: Remove fixed-size line buffers in override files
+    - ftparchive: cachedb: Remove 600-byte key (and hence file path) limit
+    - ftparchive: writer: Remove line length limit on file lists
+  * tests: Temporarily disable valgrind-if-available on armhf and ppc64el
+    to avoid having to wait for a new valgrind without those architectures
+
+ -- Julian Andres Klode <jak@debian.org>  Wed, 20 Nov 2024 15:59:46 +0100
+
+apt (2.9.12) unstable; urgency=medium
+
+  [ наб ]
+  * More refactorings for string_view
+  * Provide a DEFER() macro for cleanup of local variables
+
+  [ Julian Andres Klode ]
+  * string_view: Include missing headers, fixes rust-rust-apt failure
+  * Handle Retry-After by default
+
+  [ Felix Moessbauer ]
+  * http: use Retry-After HTTP header to optimize retries
+  * http: add test for Retry-After handling
+
+ -- Julian Andres Klode <jak@debian.org>  Mon, 18 Nov 2024 15:03:10 +0100
+
+apt (2.9.11) unstable; urgency=medium
+
+  [ Julian Andres Klode ]
+  * Various refactorings to the 3.0 solver
+  * Remove ftp, rsh, ssh methods (disabled since 1.8)
+  * Apply messaging fixes from Robert Krátký
+  * Fix keeping back removals of obsolete packages (LP: #2078720)
+  * Return an error if ResolveByKeep() is unsuccessful (LP: #2078720)
+  * Move apt-extracttemplates to /usr/lib/apt in 'apt' package
+  * json: Add "options" array to JSON hooks; adjust test cases accordingly
+
+  [ наб ]
+  * Refactor buffers into std::array and bump sizes, improving performance:
+    - Bump various buffer sizes to the default APT_BUFFER_SIZE
+    - Turn char[APT_BUFFER_SIZE] buffers into std::array<char, APT_BUFFER_SIZE>
+    - Turn std::unique_ptr<char[]/std::array<char>>(APT_BUFFER_SIZE) buffers into std::array<char, APT_BUFFER_SIZE>
+    - dpkgpm: use sysconf(_SC_GETPW_R_SIZE_MAX)-sized + growing buffer for getpwuid_r() instead of 255
+    - dpkgpm: use std::array<unsigned char, APT_BUFFER_SIZE> for I/O copy buffers
+  * File reading changes, fixing static line size limitations:
+    - dpkgpm: lift out CopyIndented() and make_unique_*() for FILEs; use getline() for reading lines instead of 1k buffer
+    - dpkgpm: use getline() for Apport var/crash lines
+    - dpkgpm: fdopen() failing doesn't close the fd
+  * Only run valgrind in tests if valgrind available on host
+  * ReportMirrorFailureToCentral: fix use-after-free
+  * Non-functional changes:
+    - Replace constant-size never-reallicated getservbyport_r() std::vector buffer with std::array
+    - FileFd::Open: don't needlessly copy filename in three-arg constructor
+    - Replace std::bind with lambdas
+    - Turn unique_ptr<decltype(fclose and free)> into real deleter types (warnings now, UB in C++20)
+    - dpkgpm: append ":$printarchitecture" instead of ':'+${#printarchitecture} to package name
+    - Prepare for APT::StringView -> std::string_view
+
+  [ Américo Monteiro ]
+  * Portuguese manpages translation update (Closes: #1086336)
+
+  [ Miroslav Kure ]
+  * Czech program translation update (Closes: #1087220)
+
+ -- Julian Andres Klode <jak@debian.org>  Thu, 14 Nov 2024 18:29:35 +0100
+
+apt (2.9.10) unstable; urgency=medium
+
+  [ Rafael Marian ]
+  * Fixed missing spaces in apt-mark(8) (Closes: #959854)
+  * Update manual link in apt-secure(8) (Closes: #1050616)
+  * Fix misspeling in italian apt --help (Closes: #967973)
+
+  [ David Kalnischkies ]
+  * Ignore pending input before confirmation prompts (Closes: #1082956)
+  * Show prompt reply if input is from non-terminal
+
+  [ Julian Andres Klode ]
+  * extracttar: Move large buffer to heap for valgrind
+
+  [ Christopher Bock ]
+  * apt-patterns(7): document recommends
+
+  [ Raziel Anarki ]
+  * Support --target-release in `apt list`
+
+ -- Julian Andres Klode <jak@debian.org>  Tue, 22 Oct 2024 18:47:04 +0200
+
+apt (2.9.9) unstable; urgency=medium
+
+  [ Chongyun Lee ]
+  * Fix compilation error with clang/libc++ 18
+
+  [ Julian Andres Klode ]
+  * Implement 'Pin: source-version <foo>'
+  * Fix buffer overflow, stack overflow, exponential complexity in
+    apt-ftparchive Contents generation (LP: #2083697)
+    - ftparchive: Mystrdup: Add safety check and bump buffer size
+    - ftparchive: contents: Avoid exponential complexity and overflows
+    - test framework: Improve valgrind support
+    - test: Check that apt-ftparchive handles deep paths
+
+  [ Remus-Gabriel Chelu ]
+  * Romanian program translation update (Closes: #1080210)
+
+ -- Julian Andres Klode <jak@debian.org>  Thu, 17 Oct 2024 09:41:18 +0200
+
 apt (2.9.8) unstable; urgency=medium
 
   [ Aristo Chen ]

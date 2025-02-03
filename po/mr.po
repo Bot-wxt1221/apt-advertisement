@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: apt 1.0.5\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2024-07-30 04:29+0000\n"
+"POT-Creation-Date: 2025-01-28 18:52+0000\n"
 "PO-Revision-Date: 2008-11-20 23:27+0530\n"
 "Last-Translator: Sampada <sampadanakhare@gmail.com>\n"
 "Language-Team: Marathi, janabhaaratii, C-DAC, Mumbai, India "
@@ -52,8 +52,8 @@ msgstr "%s संचिका डायव्हर्ट केली आहे
 
 #: apt-pkg/acquire-item.cc
 msgid ""
-"This is normally not allowed, but the option Acquire::"
-"AllowDowngradeToInsecureRepositories was given to override it."
+"This is normally not allowed, but the option "
+"Acquire::AllowDowngradeToInsecureRepositories was given to override it."
 msgstr ""
 
 #: apt-pkg/acquire-item.cc
@@ -182,8 +182,7 @@ msgstr ""
 msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr ""
 
-#. Both messages are reused from the ReleaseInfoChange feature in acquire-item.cc
-#: apt-pkg/acquire-item.cc apt-private/private-update.cc
+#: apt-pkg/acquire-item.cc
 #, c-format
 msgid "Repository '%s' changed its '%s' value from '%s' to '%s'"
 msgstr ""
@@ -194,7 +193,7 @@ msgid "Repository '%s' changed its default priority for %s from %hi to %hi."
 msgstr ""
 
 #. TRANSLATOR: the "this" refers to changes in the repository like a new release or owner change
-#: apt-pkg/acquire-item.cc apt-private/private-update.cc
+#: apt-pkg/acquire-item.cc
 #, c-format
 msgid ""
 "More information about this can be found online in the Release notes at: %s"
@@ -239,13 +238,6 @@ msgstr ""
 #, fuzzy, c-format
 msgid "Changelog unavailable for %s=%s"
 msgstr "%s (%s) ला जोडत आहे"
-
-#: apt-pkg/acquire-worker.cc
-#, c-format
-msgid ""
-"The method '%s' is unsupported and disabled by default. Consider switching "
-"to http(s). Set Dir::Bin::Methods::%s to \"%s\" to enable it again."
-msgstr ""
 
 #: apt-pkg/acquire-worker.cc
 #, c-format
@@ -764,11 +756,11 @@ msgstr "%s उपक्रियेने (%u) त्रुटी कोड द�
 msgid "Sub-process %s exited unexpectedly"
 msgstr "%s उपक्रिया अचानकपणे बाहेर पडली"
 
-#: apt-pkg/contrib/fileutl.cc methods/ftp.cc methods/rsh.cc
+#: apt-pkg/contrib/fileutl.cc
 msgid "Read error"
 msgstr "त्रुटी वाचा"
 
-#: apt-pkg/contrib/fileutl.cc methods/ftp.cc methods/rsh.cc
+#: apt-pkg/contrib/fileutl.cc
 msgid "Write error"
 msgstr "लिहिण्यात त्रुटी"
 
@@ -1073,6 +1065,12 @@ msgstr "संचयिका यादीला कुलुप लावण्
 
 #: apt-pkg/deb/debsystem.cc
 msgid "Not locked"
+msgstr ""
+
+#: apt-pkg/deb/debsystem.cc
+msgid ""
+"The dpkg executable set in Dir::Bin::dpkg is missing, falling back to using "
+"default dpkg."
 msgstr ""
 
 #. we don't care for the difference
@@ -2378,7 +2376,7 @@ msgid "Y"
 msgstr "होय"
 
 #. TRANSLATOR: "No" answer printed for a yes/no question if --assume-no is set
-#: apt-private/private-output.cc
+#: apt-private/private-output.cc apt-private/private-sources.cc
 msgid "N"
 msgstr ""
 
@@ -2552,8 +2550,8 @@ msgstr "%s ला बांधणी डिपेंडन्स नाहीत
 #: apt-private/private-source.cc
 #, c-format
 msgid ""
-"No architecture information available for %s. See apt.conf(5) APT::"
-"Architectures for setup"
+"No architecture information available for %s. See apt.conf(5) "
+"APT::Architectures for setup"
 msgstr ""
 
 #: apt-private/private-source.cc
@@ -2590,6 +2588,11 @@ msgstr "%s ला पुनर्नामांकन %s करण्यास 
 msgid "Your '%s' file changed, please run 'apt-get update'.\n"
 msgstr ""
 
+#: apt-private/private-sources.cc
+#, c-format
+msgid "Rewrite %zu sources?"
+msgstr ""
+
 #: apt-private/private-unmet.cc
 #, c-format
 msgid "Package %s version %s has an unmet dep:\n"
@@ -2610,7 +2613,32 @@ msgstr ""
 #. TRANSLATOR: the first is manpage reference, the last the URI from a sources.list
 #: apt-private/private-update.cc
 #, c-format
+msgid "The %s entry for '%s' should be upgraded to deb822 .sources"
+msgstr ""
+
+#. TRANSLATOR: the first is manpage reference, the last the URI from a sources.list
+#: apt-private/private-update.cc
+#, c-format
 msgid "Missing Signed-By in the %s entry for '%s'"
+msgstr ""
+
+#: apt-private/private-update.cc
+msgid ""
+"Consider migrating all sources.list(5) entries to the deb822 .sources format"
+msgstr ""
+
+#: apt-private/private-update.cc
+msgid ""
+"The deb822 .sources format supports both embedded as well as external "
+"OpenPGP keys"
+msgstr ""
+
+#: apt-private/private-update.cc
+msgid "See apt-secure(8) for best practices in configuring repository signing."
+msgstr ""
+
+#: apt-private/private-update.cc
+msgid "Some sources can be modernized. Run 'apt modernize-sources' to do so."
 msgstr ""
 
 #: apt-private/private-update.cc
@@ -2985,6 +3013,12 @@ msgid "concatenate files, with automatic decompression"
 msgstr ""
 
 #: cmdline/apt-helper.cc
+#, fuzzy
+#| msgid "Problem hashing file"
+msgid "hash file"
+msgstr "फाईल हॅश करण्यात त्रुटी"
+
+#: cmdline/apt-helper.cc
 msgid "detect proxy using apt.conf"
 msgstr ""
 
@@ -3232,6 +3266,10 @@ msgid "edit the source information file"
 msgstr "स्थिती माहिती वाचत आहे"
 
 #: cmdline/apt.cc
+msgid "modernize .list files to .sources files"
+msgstr ""
+
+#: cmdline/apt.cc
 #, fuzzy
 #| msgid "Failed to satisfy %s dependency for %s: %s"
 msgid "satisfy dependency strings"
@@ -3437,7 +3475,7 @@ msgstr "माहित नसलेली/ले संक्षेप पद�
 msgid "Compressed output %s needs a compression set"
 msgstr "%s संकलित आऊटपुट/निर्गत साठी संक्षेप संचाची गरज"
 
-#: ftparchive/multicompress.cc methods/rsh.cc
+#: ftparchive/multicompress.cc
 msgid "Failed to create IPC pipe to subprocess"
 msgstr "उपक्रियेचा आयपीसी वाहिनी तयार करण्यास असमर्थ"
 
@@ -3556,23 +3594,23 @@ msgstr "अर्काईव्ह ला पॅकेज जागा ना�
 
 #: ftparchive/writer.cc
 #, c-format
-msgid "  %s has no override entry\n"
-msgstr "%s ला ओव्हरराईड/दुर्लक्षित जागा नाही\n"
+msgid "  %.*s has no override entry\n"
+msgstr "%.*s ला ओव्हरराईड/दुर्लक्षित जागा नाही\n"
 
 #: ftparchive/writer.cc
 #, c-format
-msgid "  %s maintainer is %s not %s\n"
-msgstr "%s देखभालकर्ता हा %s आणि %s नाही \n"
+msgid "  %.*s maintainer is %.*s not %s\n"
+msgstr "%.*s देखभालकर्ता हा %.*s आणि %s नाही \n"
 
 #: ftparchive/writer.cc
 #, c-format
-msgid "  %s has no source override entry\n"
-msgstr "%s ला उगम ओव्हरराईड/दुर्लक्षित जागा नाही\n"
+msgid "  %.*s has no source override entry\n"
+msgstr "%.*s ला उगम ओव्हरराईड/दुर्लक्षित जागा नाही\n"
 
 #: ftparchive/writer.cc
 #, c-format
-msgid "  %s has no binary override entry either\n"
-msgstr "%s ला द्वयंक ओव्हरराईड जागा नाही\n"
+msgid "  %.*s has no binary override entry either\n"
+msgstr "%.*s ला द्वयंक ओव्हरराईड जागा नाही\n"
 
 #: methods/basehttp.cc
 msgid "Waiting for headers"
@@ -3610,7 +3648,7 @@ msgstr "चुकीचा शीर्षक डाटा"
 msgid "Connection failed"
 msgstr "जोडणी अयशस्वी"
 
-#: methods/basehttp.cc methods/ftp.cc methods/http.cc
+#: methods/basehttp.cc methods/http.cc
 #, c-format
 msgid "File has unexpected size (%llu != %llu). Mirror sync in progress?"
 msgstr ""
@@ -3652,7 +3690,7 @@ msgstr "%s मधील सीडी-रॉम अनमाऊंट करण�
 msgid "Disk not found."
 msgstr "डिस्क सापडत नाही"
 
-#: methods/cdrom.cc methods/file.cc methods/rsh.cc
+#: methods/cdrom.cc methods/file.cc
 msgid "File not found"
 msgstr "फाईल सापडली नाही"
 
@@ -3688,7 +3726,7 @@ msgstr "%s (f=%u t=%u p=%u) साठी सॉकेट तयार करू 
 msgid "Cannot initiate the connection to %s:%s (%s)."
 msgstr "%s:%s (%s). साठी जोडणी इनिशिएट/पुढाकारीत करू शकत नाही"
 
-#: methods/connect.cc methods/ftp.cc methods/rsh.cc
+#: methods/connect.cc
 msgid "Failed"
 msgstr "असमर्थ"
 
@@ -3702,9 +3740,7 @@ msgstr "%s:%s (%s) ला जोडू शकत नाही"
 msgid "Could not connect to %s:%s (%s), connection timed out"
 msgstr "%s:%s (%s) ला जोडू शकत नाही,जोडणी वेळेअभावी तुटली"
 
-#. We say this mainly because the pause here is for the
-#. ssh connection that is still going
-#: methods/connect.cc methods/rsh.cc
+#: methods/connect.cc
 #, c-format
 msgid "Connecting to %s"
 msgstr "%s ला जोडत आहे"
@@ -3742,145 +3778,6 @@ msgstr "स्टॅट करण्यास असमर्थ"
 msgid "Invalid URI, local URIS must not start with //"
 msgstr "अवैध यू आर एल, स्थानिक यू आर आय एस सुरू होऊ नये यापासून //"
 
-#. Login must be before getpeername otherwise dante won't work.
-#: methods/ftp.cc
-msgid "Logging in"
-msgstr "लॉग इन करत आहे"
-
-#: methods/ftp.cc
-msgid "Unable to determine the peer name"
-msgstr "पिअर नाव सांगण्यास/सापडण्यास असमर्थ"
-
-#: methods/ftp.cc
-msgid "Unable to determine the local name"
-msgstr "स्थानिक नाव सांगण्यास असमर्थ"
-
-#: methods/ftp.cc
-#, c-format
-msgid "The server refused the connection and said: %s"
-msgstr "सर्व्हर ने संबंध जोडण्यास नकार दिला व सांगितले: %s"
-
-#: methods/ftp.cc
-#, c-format
-msgid "USER failed, server said: %s"
-msgstr "सर्व्हरने %s सांगितले,यूजर असमर्थ:"
-
-#: methods/ftp.cc
-#, c-format
-msgid "PASS failed, server said: %s"
-msgstr "सर्व्हरने %s सांगितले, पास असमर्थ:"
-
-#: methods/ftp.cc
-msgid ""
-"A proxy server was specified but no login script, Acquire::ftp::ProxyLogin "
-"is empty."
-msgstr ""
-"प्रॉक्सी सर्व्हर निर्देशित केला पण लॉगीन स्क्रिप्ट नाही, प्राप्त केलेले ::ftp:: प्रॉक्सीलॉगीन "
-"निरर्थक आहे."
-
-#: methods/ftp.cc
-#, c-format
-msgid "Login script command '%s' failed, server said: %s"
-msgstr "सर्व्हरने %s सांगितले, '%s' लॉग इन स्क्रिप्ट आज्ञावली असमर्थ:"
-
-#: methods/ftp.cc
-#, c-format
-msgid "TYPE failed, server said: %s"
-msgstr "सर्व्हरने %s सांगितले: टाईप असमर्थ:"
-
-#: methods/ftp.cc methods/rsh.cc
-msgid "Connection timeout"
-msgstr "वेळेअभावी संबंध जोडता येत नाही"
-
-#: methods/ftp.cc
-msgid "Server closed the connection"
-msgstr "सर्व्हरने संबंध जोडणी बंद केली"
-
-#: methods/ftp.cc methods/rsh.cc
-msgid "A response overflowed the buffer."
-msgstr "प्रतिसाधाने बफर भरुन गेले."
-
-#: methods/ftp.cc
-msgid "Protocol corruption"
-msgstr "प्रोटोकॉल खराब झाले"
-
-#: methods/ftp.cc
-msgid "Could not create a socket"
-msgstr "सॉकेट तयार करू शकत नाही"
-
-#: methods/ftp.cc
-msgid "Could not connect data socket, connection timed out"
-msgstr "डेटा सॉकेट जोडू शकत नाही,जोडणी वेळेअभावी बंद केली"
-
-#: methods/ftp.cc
-msgid "Could not connect passive socket."
-msgstr "पॅसिव्ह सॉकेट जोडता येत नाही"
-
-#: methods/ftp.cc
-msgid "getaddrinfo was unable to get a listening socket"
-msgstr "गेटऍड्रेसइनफो लिसनिंग सॉकेट घेण्यास असमर्थ होते"
-
-#: methods/ftp.cc
-msgid "Could not bind a socket"
-msgstr "सॉकेट चिकटवता येत नाही"
-
-#: methods/ftp.cc
-msgid "Could not listen on the socket"
-msgstr "सॉकेट वर ऐकता येत नाही"
-
-#: methods/ftp.cc
-msgid "Could not determine the socket's name"
-msgstr "सॉकेटचे नाव सांगता येत नाही"
-
-#: methods/ftp.cc
-msgid "Unable to send PORT command"
-msgstr "पोर्ट आज्ञा पाठवता येत नाही/पोर्ट आज्ञा  पाठविण्यास असमर्थ"
-
-#: methods/ftp.cc
-#, c-format
-msgid "Unknown address family %u (AF_*)"
-msgstr "माहित नसलेला पत्ता फॅमिली %u (AF_*)"
-
-#: methods/ftp.cc
-#, c-format
-msgid "EPRT failed, server said: %s"
-msgstr "ई.पी.आर.टी. चुकले,सर्व्हरने %s सांगितले"
-
-#: methods/ftp.cc
-msgid "Data socket connect timed out"
-msgstr "डेटा सॉकेट जोडणी वेळेअभावी तुटली"
-
-#: methods/ftp.cc
-msgid "Unable to accept connection"
-msgstr "जोडणी स्विकारण्यास असमर्थ"
-
-#: methods/ftp.cc methods/http.cc methods/rsh.cc
-msgid "Problem hashing file"
-msgstr "फाईल हॅश करण्यात त्रुटी"
-
-#: methods/ftp.cc
-#, c-format
-msgid "Unable to fetch file, server said '%s'"
-msgstr "सर्व्हरने %s सांगितले, फाईल मिळवण्यास असमर्थ"
-
-#: methods/ftp.cc methods/rsh.cc
-msgid "Data socket timed out"
-msgstr "डेटा सॉकेट वेळेअभावी तुटले"
-
-#: methods/ftp.cc
-#, c-format
-msgid "Data transfer failed, server said '%s'"
-msgstr "सर्व्हरने %s सांगितले, डेटा स्थानांतरण चुकले"
-
-#. Get the files information
-#: methods/ftp.cc
-msgid "Query"
-msgstr "प्रश्न"
-
-#: methods/ftp.cc
-msgid "Unable to invoke "
-msgstr "जारी करण्यास करण्यास असमर्थ"
-
 #: methods/gpgv.cc
 #, c-format
 msgid "untrusted public key algorithm: %s"
@@ -3909,20 +3806,15 @@ msgstr "अंतर्गत त्रुटी: चांगली सही, 
 
 #: methods/gpgv.cc
 #, fuzzy
-msgid "Could not execute 'apt-key' to verify signature (is gnupg installed?)"
+msgid "Could not execute 'gpgv' to verify signature (is gnupg installed?)"
 msgstr ""
 "सहीची खात्री करण्यासाठी '%s' कार्यान्वित करू शकत नाही (gnupg संस्थापित केले आहे का?)"
 
 #: methods/gpgv.cc
-msgid "Unknown error executing apt-key"
+#, fuzzy
+#| msgid "Unknown error executing apt-key"
+msgid "Unknown error executing gpgv"
 msgstr "apt-key कार्यान्वित होत असताना अपरिचित त्रुटी"
-
-#: methods/gpgv.cc
-#, c-format
-msgid ""
-"Key is stored in legacy trusted.gpg keyring (%s), see the DEPRECATION "
-"section in apt-key(8) for details."
-msgstr ""
 
 #. TRANSLATORS: The second %s is the reason and is untranslated for repository owners.
 #: methods/gpgv.cc
@@ -3960,17 +3852,123 @@ msgstr "चुकले/असमर्थ निवड करा"
 msgid "Connection timed out"
 msgstr "जोडणी वेळेअभावी तुटली"
 
+#: methods/http.cc
+msgid "Problem hashing file"
+msgstr "फाईल हॅश करण्यात त्रुटी"
+
 #: methods/rred.cc
 msgid "Failed to set modification time"
 msgstr "बदलण्याचा वेळ निश्चित करण्यास असमर्थ"
 
-#: methods/rsh.cc
-msgid "Connection closed prematurely"
-msgstr "जोडणी अकाली बंद झाली"
-
 #: methods/store.cc
 msgid "Empty files can't be valid archives"
 msgstr ""
+
+#~ msgid "Logging in"
+#~ msgstr "लॉग इन करत आहे"
+
+#~ msgid "Unable to determine the peer name"
+#~ msgstr "पिअर नाव सांगण्यास/सापडण्यास असमर्थ"
+
+#~ msgid "Unable to determine the local name"
+#~ msgstr "स्थानिक नाव सांगण्यास असमर्थ"
+
+#, c-format
+#~ msgid "The server refused the connection and said: %s"
+#~ msgstr "सर्व्हर ने संबंध जोडण्यास नकार दिला व सांगितले: %s"
+
+#, c-format
+#~ msgid "USER failed, server said: %s"
+#~ msgstr "सर्व्हरने %s सांगितले,यूजर असमर्थ:"
+
+#, c-format
+#~ msgid "PASS failed, server said: %s"
+#~ msgstr "सर्व्हरने %s सांगितले, पास असमर्थ:"
+
+#~ msgid ""
+#~ "A proxy server was specified but no login script, "
+#~ "Acquire::ftp::ProxyLogin is empty."
+#~ msgstr ""
+#~ "प्रॉक्सी सर्व्हर निर्देशित केला पण लॉगीन स्क्रिप्ट नाही, प्राप्त केलेले ::ftp:: "
+#~ "प्रॉक्सीलॉगीन निरर्थक आहे."
+
+#, c-format
+#~ msgid "Login script command '%s' failed, server said: %s"
+#~ msgstr "सर्व्हरने %s सांगितले, '%s' लॉग इन स्क्रिप्ट आज्ञावली असमर्थ:"
+
+#, c-format
+#~ msgid "TYPE failed, server said: %s"
+#~ msgstr "सर्व्हरने %s सांगितले: टाईप असमर्थ:"
+
+#~ msgid "Connection timeout"
+#~ msgstr "वेळेअभावी संबंध जोडता येत नाही"
+
+#~ msgid "Server closed the connection"
+#~ msgstr "सर्व्हरने संबंध जोडणी बंद केली"
+
+#~ msgid "A response overflowed the buffer."
+#~ msgstr "प्रतिसाधाने बफर भरुन गेले."
+
+#~ msgid "Protocol corruption"
+#~ msgstr "प्रोटोकॉल खराब झाले"
+
+#~ msgid "Could not create a socket"
+#~ msgstr "सॉकेट तयार करू शकत नाही"
+
+#~ msgid "Could not connect data socket, connection timed out"
+#~ msgstr "डेटा सॉकेट जोडू शकत नाही,जोडणी वेळेअभावी बंद केली"
+
+#~ msgid "Could not connect passive socket."
+#~ msgstr "पॅसिव्ह सॉकेट जोडता येत नाही"
+
+#~ msgid "getaddrinfo was unable to get a listening socket"
+#~ msgstr "गेटऍड्रेसइनफो लिसनिंग सॉकेट घेण्यास असमर्थ होते"
+
+#~ msgid "Could not bind a socket"
+#~ msgstr "सॉकेट चिकटवता येत नाही"
+
+#~ msgid "Could not listen on the socket"
+#~ msgstr "सॉकेट वर ऐकता येत नाही"
+
+#~ msgid "Could not determine the socket's name"
+#~ msgstr "सॉकेटचे नाव सांगता येत नाही"
+
+#~ msgid "Unable to send PORT command"
+#~ msgstr "पोर्ट आज्ञा पाठवता येत नाही/पोर्ट आज्ञा  पाठविण्यास असमर्थ"
+
+#, c-format
+#~ msgid "Unknown address family %u (AF_*)"
+#~ msgstr "माहित नसलेला पत्ता फॅमिली %u (AF_*)"
+
+#, c-format
+#~ msgid "EPRT failed, server said: %s"
+#~ msgstr "ई.पी.आर.टी. चुकले,सर्व्हरने %s सांगितले"
+
+#~ msgid "Data socket connect timed out"
+#~ msgstr "डेटा सॉकेट जोडणी वेळेअभावी तुटली"
+
+#~ msgid "Unable to accept connection"
+#~ msgstr "जोडणी स्विकारण्यास असमर्थ"
+
+#, c-format
+#~ msgid "Unable to fetch file, server said '%s'"
+#~ msgstr "सर्व्हरने %s सांगितले, फाईल मिळवण्यास असमर्थ"
+
+#~ msgid "Data socket timed out"
+#~ msgstr "डेटा सॉकेट वेळेअभावी तुटले"
+
+#, c-format
+#~ msgid "Data transfer failed, server said '%s'"
+#~ msgstr "सर्व्हरने %s सांगितले, डेटा स्थानांतरण चुकले"
+
+#~ msgid "Query"
+#~ msgstr "प्रश्न"
+
+#~ msgid "Unable to invoke "
+#~ msgstr "जारी करण्यास करण्यास असमर्थ"
+
+#~ msgid "Connection closed prematurely"
+#~ msgstr "जोडणी अकाली बंद झाली"
 
 #, fuzzy
 #~| msgid "The following held packages will be changed:"

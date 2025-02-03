@@ -10,14 +10,14 @@
 # Carlos Z.F. Liu <carlosliu@users.sourceforge.net>, 2004, 2006.
 # Aron Xu <happyaron.xu@gmail.com>, 2009, 2010.
 # Mo Zhou <cdluminate@gmail.com>, 2014, 2015, 2016, 2017, 2019.
-# Boyuan Yang <073plan@gmail.com>, 2018, 2020, 2022, 2024.
+# Boyuan Yang <073plan@gmail.com>, 2018, 2020, 2022, 2024, 2025.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: apt 2.9.1\n"
+"Project-Id-Version: apt 2.9.26\n"
 "Report-Msgid-Bugs-To: APT Development Team <deity@lists.debian.org>\n"
-"POT-Creation-Date: 2024-07-30 04:29+0000\n"
-"PO-Revision-Date: 2024-04-16 13:15-0400\n"
+"POT-Creation-Date: 2025-01-28 18:52+0000\n"
+"PO-Revision-Date: 2025-01-28 16:26-0500\n"
 "Last-Translator: Boyuan Yang <073plan@gmail.com>\n"
 "Language-Team: Chinese (simplified) <debian-l10n-chinese@lists.debian.org>\n"
 "Language: zh_CN\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 2.4.3\n"
+"X-Generator: Poedit 3.5\n"
 
 #: apt-pkg/acquire-item.cc
 msgid ""
@@ -57,8 +57,8 @@ msgstr "仓库 “%s” 不再含有 Release 文件。"
 
 #: apt-pkg/acquire-item.cc
 msgid ""
-"This is normally not allowed, but the option Acquire::"
-"AllowDowngradeToInsecureRepositories was given to override it."
+"This is normally not allowed, but the option "
+"Acquire::AllowDowngradeToInsecureRepositories was given to override it."
 msgstr ""
 "一般不可以这样做，但选项 Acquire:: AllowDowngradeToInsecureRepositories 可以"
 "用于覆盖默认设置。"
@@ -142,8 +142,8 @@ msgid ""
 "Skipping acquire of configured file '%s' as repository '%s' doesn't have the "
 "component '%s' (component misspelt in sources.list?)"
 msgstr ""
-"鉴于仓库 '%2$s' 不含有 '%3$s' 组件，跳过配置文件 '%1$s' 的获取。(sources."
-"list 中的组件名称是否拼写错误？)"
+"鉴于仓库 '%2$s' 不含有 '%3$s' 组件，跳过配置文件 '%1$s' 的获取。"
+"(sources.list 中的组件名称是否拼写错误？)"
 
 #: apt-pkg/acquire-item.cc
 #, c-format
@@ -194,8 +194,7 @@ msgstr "%s 的 Release 文件已经过期(已经过期了 %s)。该仓库的更�
 msgid "Conflicting distribution: %s (expected %s but got %s)"
 msgstr "冲突的发行版：%s (期望 %s 但得到 %s)"
 
-#. Both messages are reused from the ReleaseInfoChange feature in acquire-item.cc
-#: apt-pkg/acquire-item.cc apt-private/private-update.cc
+#: apt-pkg/acquire-item.cc
 #, c-format
 msgid "Repository '%s' changed its '%s' value from '%s' to '%s'"
 msgstr "仓库'%s'将其'%s'值从'%s'修改到了'%s'"
@@ -206,7 +205,7 @@ msgid "Repository '%s' changed its default priority for %s from %hi to %hi."
 msgstr "仓库'%s'将其'%s'的默认优先级从'%hi'修改到了'%hi'。"
 
 #. TRANSLATOR: the "this" refers to changes in the repository like a new release or owner change
-#: apt-pkg/acquire-item.cc apt-private/private-update.cc
+#: apt-pkg/acquire-item.cc
 #, c-format
 msgid ""
 "More information about this can be found online in the Release notes at: %s"
@@ -231,7 +230,7 @@ msgstr "无法下载 %s  %s"
 msgid ""
 "Repositories should provide a clear-signed InRelease file, but none found at "
 "%s."
-msgstr ""
+msgstr "仓库应当提供明文签署的 InRelease 文件，但在 %s 中并未找到。"
 
 #: apt-pkg/acquire-item.cc
 #, c-format
@@ -252,15 +251,6 @@ msgstr "没有源可以用来下载 %s 版本的 %s"
 #, c-format
 msgid "Changelog unavailable for %s=%s"
 msgstr "%s=%s 的 Changelog 不可用"
-
-#: apt-pkg/acquire-worker.cc
-#, c-format
-msgid ""
-"The method '%s' is unsupported and disabled by default. Consider switching "
-"to http(s). Set Dir::Bin::Methods::%s to \"%s\" to enable it again."
-msgstr ""
-"目前“%s”方法不受支持且默认禁用。请考虑切换至 http(s)。您可以将 Dir::Bin::"
-"Methods::%s 设置为“%s”来重新启用。"
 
 #: apt-pkg/acquire-worker.cc
 #, c-format
@@ -652,26 +642,26 @@ msgstr "语法错误 %s:%u：文件尾部有多余的无意义的数据"
 #. TRANSLATOR: This is a warning level displayed before the message
 #: apt-pkg/contrib/error.cc
 msgid "Error:"
-msgstr ""
+msgstr "错误："
 
 #. TRANSLATOR: This is a warning level displayed before the message
 #: apt-pkg/contrib/error.cc
 msgid "Warning:"
-msgstr ""
+msgstr "警告："
 
 #. TRANSLATOR: This is a warning level displayed before the message
 #: apt-pkg/contrib/error.cc
 msgid "Notice:"
-msgstr ""
+msgstr "注意："
 
 #: apt-pkg/contrib/error.cc
 msgid "Audit:"
-msgstr ""
+msgstr "审计："
 
 #. TRANSLATOR: This is a warning level displayed before the message
 #: apt-pkg/contrib/error.cc
 msgid "Debug:"
-msgstr ""
+msgstr "调试："
 
 #: apt-pkg/contrib/extracttar.cc
 #, c-format
@@ -780,11 +770,11 @@ msgstr "子进程 %s 返回了一个错误号 (%u)"
 msgid "Sub-process %s exited unexpectedly"
 msgstr "子进程 %s 异常退出"
 
-#: apt-pkg/contrib/fileutl.cc methods/ftp.cc methods/rsh.cc
+#: apt-pkg/contrib/fileutl.cc
 msgid "Read error"
 msgstr "读错误"
 
-#: apt-pkg/contrib/fileutl.cc methods/ftp.cc methods/rsh.cc
+#: apt-pkg/contrib/fileutl.cc
 msgid "Write error"
 msgstr "写出错"
 
@@ -1022,7 +1012,7 @@ msgstr "软件包仓库 Release 文件 %s 内无哈希条目"
 msgid ""
 "No Hash entry in Release file %s which is considered strong enough for "
 "security purposes"
-msgstr "Release 文件 %s 中不含散列项，该文件用于保证足够的安全性。"
+msgstr "Release 文件 %s 中不含散列项，该文件用于保证足够的安全性"
 
 #: apt-pkg/deb/debmetaindex.cc
 #, c-format
@@ -1089,6 +1079,13 @@ msgstr "无法对状态列表目录加锁(%s)，请查看您是否正以 root �
 #: apt-pkg/deb/debsystem.cc
 msgid "Not locked"
 msgstr "未锁定"
+
+#: apt-pkg/deb/debsystem.cc
+msgid ""
+"The dpkg executable set in Dir::Bin::dpkg is missing, falling back to using "
+"default dpkg."
+msgstr ""
+"由 Dir::Bin::dpkg 所设置的 dpkg 可执行文件缺失，回退到使用默认的 dpkg。"
 
 #. we don't care for the difference
 #: apt-pkg/deb/dpkgpm.cc
@@ -1275,10 +1272,8 @@ msgid "Calculating upgrade"
 msgstr "正在计算更新"
 
 #: apt-pkg/edsp.cc
-#, fuzzy
-#| msgid "Installing dependencies:"
 msgid "Solving dependencies"
-msgstr "将要安装的依赖："
+msgstr "正在解析依赖"
 
 #: apt-pkg/edsp.cc
 msgid "Execute external solver"
@@ -1371,8 +1366,8 @@ msgid ""
 "you really want to do it, activate the APT::Force-LoopBreak option."
 msgstr ""
 "由于这次安装存在着一个 Conflicts/Pre-Depends 循环，因而需要暂时删除一个必不可"
-"少的软件包 %s。通常并不建议这样做，但是如果您确实希望如此，可以打开 APT::"
-"Force-LoopBreak 选项。"
+"少的软件包 %s。通常并不建议这样做，但是如果您确实希望如此，可以打开 "
+"APT::Force-LoopBreak 选项。"
 
 #: apt-pkg/pkgcache.cc
 msgid "Empty package cache"
@@ -2130,7 +2125,7 @@ msgstr "正在列表"
 msgid "There is %i additional version. Please use the '-a' switch to see it"
 msgid_plural ""
 "There are %i additional versions. Please use the '-a' switch to see them."
-msgstr[0] "还有 %i 个版本。请使用 -a 选项来查看它(它们)。"
+msgstr[0] "还有 %i 个版本。请使用 -a 选项来查看它(它们)"
 
 #. TRANSLATORS: placeholder is a binary name like apt or apt-get
 #: apt-private/private-main.cc
@@ -2361,7 +2356,7 @@ msgid "Y"
 msgstr "Y"
 
 #. TRANSLATOR: "No" answer printed for a yes/no question if --assume-no is set
-#: apt-private/private-output.cc
+#: apt-private/private-output.cc apt-private/private-sources.cc
 msgid "N"
 msgstr "N"
 
@@ -2533,13 +2528,13 @@ msgstr "无法获得 %s 的构建依赖关系信息"
 #: apt-private/private-source.cc
 #, c-format
 msgid "%s has no build depends.\n"
-msgstr " %s 没有构建依赖关系信息。\n"
+msgstr "%s 没有构建依赖关系信息。\n"
 
 #: apt-private/private-source.cc
 #, c-format
 msgid ""
-"No architecture information available for %s. See apt.conf(5) APT::"
-"Architectures for setup"
+"No architecture information available for %s. See apt.conf(5) "
+"APT::Architectures for setup"
 msgstr ""
 "找不到关于 %s 的有效体系结构信息。请参见 apt.conf(5) APT::Architectures for "
 "setup"
@@ -2573,12 +2568,17 @@ msgstr "无法处理构建依赖关系"
 #: apt-private/private-sources.cc
 #, c-format
 msgid "Failed to parse %s. Edit again? "
-msgstr "解析 %s 失败。请重新编辑之后再试。"
+msgstr "解析 %s 失败。要重新编辑之后再试吗？"
 
 #: apt-private/private-sources.cc
 #, c-format
 msgid "Your '%s' file changed, please run 'apt-get update'.\n"
 msgstr "您的 %s 文件有过改动，请执行 ‘apt-get update’。\n"
+
+#: apt-private/private-sources.cc
+#, c-format
+msgid "Rewrite %zu sources?"
+msgstr "重新写入 %zu 个软件源配置吗？"
 
 #: apt-private/private-unmet.cc
 #, c-format
@@ -2587,7 +2587,7 @@ msgstr "版本为 %2$s 的软件包 %1$s 有未满足的依赖关系：\n"
 
 #: apt-private/private-update.cc
 msgid "The update command takes no arguments"
-msgstr " update 命令不需要参数"
+msgstr "update 命令不接受参数"
 
 #. TRANSLATOR: the first two are manpage references, the last the URI from a sources.list
 #: apt-private/private-update.cc
@@ -2600,8 +2600,35 @@ msgstr "您应当优先考虑使用 %s 而非直接把账户信息直接写在 %
 #. TRANSLATOR: the first is manpage reference, the last the URI from a sources.list
 #: apt-private/private-update.cc
 #, c-format
+msgid "The %s entry for '%s' should be upgraded to deb822 .sources"
+msgstr "%s 用于“%s”的条目应当被升级为 deb822 .sources 格式"
+
+#. TRANSLATOR: the first is manpage reference, the last the URI from a sources.list
+#: apt-private/private-update.cc
+#, c-format
 msgid "Missing Signed-By in the %s entry for '%s'"
 msgstr "对‘%2$s’在 %1$s 一项中缺失了 Signed-By"
+
+#: apt-private/private-update.cc
+msgid ""
+"Consider migrating all sources.list(5) entries to the deb822 .sources format"
+msgstr "请考虑将所有 sources.list(5) 的条目迁移到 deb822 .sources 格式"
+
+#: apt-private/private-update.cc
+msgid ""
+"The deb822 .sources format supports both embedded as well as external "
+"OpenPGP keys"
+msgstr "deb822 .sources 格式同时支持嵌入式和外部的 OpenPGP 密钥"
+
+#: apt-private/private-update.cc
+msgid "See apt-secure(8) for best practices in configuring repository signing."
+msgstr "参见 apt-secure(8) 手册以了解配置仓库签名的最佳实践。"
+
+#: apt-private/private-update.cc
+msgid "Some sources can be modernized. Run 'apt modernize-sources' to do so."
+msgstr ""
+"一些软件源配置可被改进为现代化的配置方法。请运行“apt modernize-sources”来进行"
+"此操作。"
 
 #: apt-private/private-update.cc
 #, c-format
@@ -2985,6 +3012,10 @@ msgid "concatenate files, with automatic decompression"
 msgstr "自动解压并连接文件"
 
 #: cmdline/apt-helper.cc
+msgid "hash file"
+msgstr "散列文件"
+
+#: cmdline/apt-helper.cc
 msgid "detect proxy using apt.conf"
 msgstr "用 apt.conf 检测代理设置"
 
@@ -3217,6 +3248,10 @@ msgid "edit the source information file"
 msgstr "编辑软件源信息文件"
 
 #: cmdline/apt.cc
+msgid "modernize .list files to .sources files"
+msgstr "将 .list 文件现代化并改写为 .sources 文件"
+
+#: cmdline/apt.cc
 msgid "satisfy dependency strings"
 msgstr "使系统满足依赖关系字符串"
 
@@ -3412,7 +3447,7 @@ msgstr "未知的压缩算法“%s”"
 msgid "Compressed output %s needs a compression set"
 msgstr "压缩后的输出文件 %s 要求有一个压缩文件集合"
 
-#: ftparchive/multicompress.cc methods/rsh.cc
+#: ftparchive/multicompress.cc
 msgid "Failed to create IPC pipe to subprocess"
 msgstr "无法为子进程创建 IPC 管道"
 
@@ -3531,23 +3566,23 @@ msgstr "归档文件没有包含 package 字段"
 
 #: ftparchive/writer.cc
 #, c-format
-msgid "  %s has no override entry\n"
-msgstr "  %s 中没有 override 项\n"
+msgid "  %.*s has no override entry\n"
+msgstr "  %.*s 中没有 override 项\n"
 
 #: ftparchive/writer.cc
 #, c-format
-msgid "  %s maintainer is %s not %s\n"
-msgstr "  %s 的维护者 %s 并非 %s\n"
+msgid "  %.*s maintainer is %.*s not %s\n"
+msgstr "  %.*s 的维护者 %.*s 并非 %s\n"
 
 #: ftparchive/writer.cc
 #, c-format
-msgid "  %s has no source override entry\n"
-msgstr "  %s 没有源代码的 override 项\n"
+msgid "  %.*s has no source override entry\n"
+msgstr "  %.*s 没有源代码的 override 项\n"
 
 #: ftparchive/writer.cc
 #, c-format
-msgid "  %s has no binary override entry either\n"
-msgstr "  %s 中没有二进制文件的 override 项\n"
+msgid "  %.*s has no binary override entry either\n"
+msgstr "  %.*s 中没有二进制文件的 override 项\n"
 
 #: methods/basehttp.cc
 msgid "Waiting for headers"
@@ -3585,7 +3620,7 @@ msgstr "错误的报头数据"
 msgid "Connection failed"
 msgstr "连接失败"
 
-#: methods/basehttp.cc methods/ftp.cc methods/http.cc
+#: methods/basehttp.cc methods/http.cc
 #, c-format
 msgid "File has unexpected size (%llu != %llu). Mirror sync in progress?"
 msgstr "文件尺寸不符(%llu != %llu)。您使用的镜像正在同步中？"
@@ -3627,7 +3662,7 @@ msgstr "无法卸载挂载于 %s 的 CD-ROM，它可能正被使用。"
 msgid "Disk not found."
 msgstr "找不到盘片。"
 
-#: methods/cdrom.cc methods/file.cc methods/rsh.cc
+#: methods/cdrom.cc methods/file.cc
 msgid "File not found"
 msgstr "无法找到文件"
 
@@ -3662,7 +3697,7 @@ msgstr "无法为 %s 创建套接字(f=%u t=%u p=%u)"
 msgid "Cannot initiate the connection to %s:%s (%s)."
 msgstr "无法发起与 %s:%s (%s) 的连接。"
 
-#: methods/connect.cc methods/ftp.cc methods/rsh.cc
+#: methods/connect.cc
 msgid "Failed"
 msgstr "失败"
 
@@ -3676,9 +3711,7 @@ msgstr "无法连接上 %s:%s (%s)。"
 msgid "Could not connect to %s:%s (%s), connection timed out"
 msgstr "无法连接上 %s:%s (%s)，连接超时"
 
-#. We say this mainly because the pause here is for the
-#. ssh connection that is still going
-#: methods/connect.cc methods/rsh.cc
+#: methods/connect.cc
 #, c-format
 msgid "Connecting to %s"
 msgstr "正在连接 %s"
@@ -3716,144 +3749,6 @@ msgstr "无法读取状态"
 msgid "Invalid URI, local URIS must not start with //"
 msgstr "无效的 URI，本地 URI 不能以 // 开头"
 
-#. Login must be before getpeername otherwise dante won't work.
-#: methods/ftp.cc
-msgid "Logging in"
-msgstr "正在登录"
-
-#: methods/ftp.cc
-msgid "Unable to determine the peer name"
-msgstr "无法获知对方主机名"
-
-#: methods/ftp.cc
-msgid "Unable to determine the local name"
-msgstr "无法获知本地主机名"
-
-#: methods/ftp.cc
-#, c-format
-msgid "The server refused the connection and said: %s"
-msgstr "服务器拒绝了我们的连接，响应信息为：%s"
-
-#: methods/ftp.cc
-#, c-format
-msgid "USER failed, server said: %s"
-msgstr "USER 指令出错，服务器响应信息为：%s"
-
-#: methods/ftp.cc
-#, c-format
-msgid "PASS failed, server said: %s"
-msgstr "PASS 指令出错，服务器响应信息为：%s"
-
-#: methods/ftp.cc
-msgid ""
-"A proxy server was specified but no login script, Acquire::ftp::ProxyLogin "
-"is empty."
-msgstr ""
-"您指定了代理服务器，但是没有登陆脚本，Acquire::ftp::ProxyLogin 设置为空。"
-
-#: methods/ftp.cc
-#, c-format
-msgid "Login script command '%s' failed, server said: %s"
-msgstr "登录脚本命令“%s”出错，服务器响应信息为：%s"
-
-#: methods/ftp.cc
-#, c-format
-msgid "TYPE failed, server said: %s"
-msgstr "TYPE 指令出错，服务器响应信息为：%s"
-
-#: methods/ftp.cc methods/rsh.cc
-msgid "Connection timeout"
-msgstr "连接超时"
-
-#: methods/ftp.cc
-msgid "Server closed the connection"
-msgstr "服务器关闭了连接"
-
-#: methods/ftp.cc methods/rsh.cc
-msgid "A response overflowed the buffer."
-msgstr "回应超出了缓存区大小。"
-
-#: methods/ftp.cc
-msgid "Protocol corruption"
-msgstr "协议有误"
-
-#: methods/ftp.cc
-msgid "Could not create a socket"
-msgstr "无法创建套接字"
-
-#: methods/ftp.cc
-msgid "Could not connect data socket, connection timed out"
-msgstr "无法连接数据套接字，连接超时"
-
-#: methods/ftp.cc
-msgid "Could not connect passive socket."
-msgstr "无法连接被动模式的套接字。"
-
-#: methods/ftp.cc
-msgid "getaddrinfo was unable to get a listening socket"
-msgstr "getaddrinfo 无法得到监听套接字"
-
-#: methods/ftp.cc
-msgid "Could not bind a socket"
-msgstr "无法绑定套接字"
-
-#: methods/ftp.cc
-msgid "Could not listen on the socket"
-msgstr "无法在套接字上监听"
-
-#: methods/ftp.cc
-msgid "Could not determine the socket's name"
-msgstr "无法确定套接字的名字"
-
-#: methods/ftp.cc
-msgid "Unable to send PORT command"
-msgstr "无法发出 PORT 指令"
-
-#: methods/ftp.cc
-#, c-format
-msgid "Unknown address family %u (AF_*)"
-msgstr "无法识别的地址族 %u (AF_*)"
-
-#: methods/ftp.cc
-#, c-format
-msgid "EPRT failed, server said: %s"
-msgstr "EPRT 指令失败，服务器响应为：%s"
-
-#: methods/ftp.cc
-msgid "Data socket connect timed out"
-msgstr "数据套接字连接超时"
-
-#: methods/ftp.cc
-msgid "Unable to accept connection"
-msgstr "无法接受连接"
-
-#: methods/ftp.cc methods/http.cc methods/rsh.cc
-msgid "Problem hashing file"
-msgstr "把文件加入哈希表时出错"
-
-#: methods/ftp.cc
-#, c-format
-msgid "Unable to fetch file, server said '%s'"
-msgstr "无法获取文件，服务器响应为“%s”"
-
-#: methods/ftp.cc methods/rsh.cc
-msgid "Data socket timed out"
-msgstr "数据套接字超时"
-
-#: methods/ftp.cc
-#, c-format
-msgid "Data transfer failed, server said '%s'"
-msgstr "数据传送出错，服务器响应为“%s”"
-
-#. Get the files information
-#: methods/ftp.cc
-msgid "Query"
-msgstr "查询"
-
-#: methods/ftp.cc
-msgid "Unable to invoke "
-msgstr "无法调用 "
-
 #: methods/gpgv.cc
 #, c-format
 msgid "untrusted public key algorithm: %s"
@@ -3862,7 +3757,7 @@ msgstr "不受信任的公钥算法：%s"
 #: methods/gpgv.cc
 #, c-format
 msgid "%s will be deprecated in a future release"
-msgstr ""
+msgstr "%s 将会在未来的版本中被弃用"
 
 #. TRANSLATORS: %s is a single techy word like 'NODATA'
 #: methods/gpgv.cc
@@ -3881,21 +3776,12 @@ msgid ""
 msgstr "内部错误：签名正确无误，但是无法确认密钥指纹？！"
 
 #: methods/gpgv.cc
-msgid "Could not execute 'apt-key' to verify signature (is gnupg installed?)"
-msgstr "无法运行 apt-key 以验证签名(您安装了 gnupg 吗？)"
+msgid "Could not execute 'gpgv' to verify signature (is gnupg installed?)"
+msgstr "无法运行 'gpgv' 以验证签名（您安装了 gnupg 吗？）"
 
 #: methods/gpgv.cc
-msgid "Unknown error executing apt-key"
-msgstr "运行 apt-key 时发生未知错误"
-
-#: methods/gpgv.cc
-#, c-format
-msgid ""
-"Key is stored in legacy trusted.gpg keyring (%s), see the DEPRECATION "
-"section in apt-key(8) for details."
-msgstr ""
-"密钥存储在过时的 trusted.gpg 密钥环中（%s），请参见 apt-key(8) 的 "
-"DEPRECATION 一节以了解详情。"
+msgid "Unknown error executing gpgv"
+msgstr "运行 gpgv 时发生未知错误"
 
 #. TRANSLATORS: The second %s is the reason and is untranslated for repository owners.
 #: methods/gpgv.cc
@@ -3933,17 +3819,142 @@ msgstr "Select 调用出错"
 msgid "Connection timed out"
 msgstr "连接超时"
 
+#: methods/http.cc
+msgid "Problem hashing file"
+msgstr "把文件加入哈希表时出错"
+
 #: methods/rred.cc
 msgid "Failed to set modification time"
 msgstr "无法设置文件的修改日期"
 
-#: methods/rsh.cc
-msgid "Connection closed prematurely"
-msgstr "连接被永久关闭"
-
 #: methods/store.cc
 msgid "Empty files can't be valid archives"
 msgstr "空文件不是有效归档"
+
+#, fuzzy, c-format
+#~| msgid ""
+#~| "Key is stored in legacy trusted.gpg keyring (%s), see the DEPRECATION "
+#~| "section in apt-key(8) for details."
+#~ msgid ""
+#~ "Key is stored in legacy trusted.gpg keyring (%s). Use Signed-By instead. "
+#~ "See the USER CONFIGURATION section in apt-secure(8) for details."
+#~ msgstr ""
+#~ "密钥存储在过时的 trusted.gpg 密钥环中（%s），请参见 apt-key(8) 的 "
+#~ "DEPRECATION 一节以了解详情。"
+
+#, c-format
+#~ msgid ""
+#~ "The method '%s' is unsupported and disabled by default. Consider "
+#~ "switching to http(s). Set Dir::Bin::Methods::%s to \"%s\" to enable it "
+#~ "again."
+#~ msgstr ""
+#~ "目前“%s”方法不受支持且默认禁用。请考虑切换至 http(s)。您可以将 "
+#~ "Dir::Bin::Methods::%s 设置为“%s”来重新启用。"
+
+#~ msgid "Logging in"
+#~ msgstr "正在登录"
+
+#~ msgid "Unable to determine the peer name"
+#~ msgstr "无法获知对方主机名"
+
+#~ msgid "Unable to determine the local name"
+#~ msgstr "无法获知本地主机名"
+
+#, c-format
+#~ msgid "The server refused the connection and said: %s"
+#~ msgstr "服务器拒绝了我们的连接，响应信息为：%s"
+
+#, c-format
+#~ msgid "USER failed, server said: %s"
+#~ msgstr "USER 指令出错，服务器响应信息为：%s"
+
+#, c-format
+#~ msgid "PASS failed, server said: %s"
+#~ msgstr "PASS 指令出错，服务器响应信息为：%s"
+
+#~ msgid ""
+#~ "A proxy server was specified but no login script, "
+#~ "Acquire::ftp::ProxyLogin is empty."
+#~ msgstr ""
+#~ "您指定了代理服务器，但是没有登陆脚本，Acquire::ftp::ProxyLogin 设置为空。"
+
+#, c-format
+#~ msgid "Login script command '%s' failed, server said: %s"
+#~ msgstr "登录脚本命令“%s”出错，服务器响应信息为：%s"
+
+#, c-format
+#~ msgid "TYPE failed, server said: %s"
+#~ msgstr "TYPE 指令出错，服务器响应信息为：%s"
+
+#~ msgid "Connection timeout"
+#~ msgstr "连接超时"
+
+#~ msgid "Server closed the connection"
+#~ msgstr "服务器关闭了连接"
+
+#~ msgid "A response overflowed the buffer."
+#~ msgstr "回应超出了缓存区大小。"
+
+#~ msgid "Protocol corruption"
+#~ msgstr "协议有误"
+
+#~ msgid "Could not create a socket"
+#~ msgstr "无法创建套接字"
+
+#~ msgid "Could not connect data socket, connection timed out"
+#~ msgstr "无法连接数据套接字，连接超时"
+
+#~ msgid "Could not connect passive socket."
+#~ msgstr "无法连接被动模式的套接字。"
+
+#~ msgid "getaddrinfo was unable to get a listening socket"
+#~ msgstr "getaddrinfo 无法得到监听套接字"
+
+#~ msgid "Could not bind a socket"
+#~ msgstr "无法绑定套接字"
+
+#~ msgid "Could not listen on the socket"
+#~ msgstr "无法在套接字上监听"
+
+#~ msgid "Could not determine the socket's name"
+#~ msgstr "无法确定套接字的名字"
+
+#~ msgid "Unable to send PORT command"
+#~ msgstr "无法发出 PORT 指令"
+
+#, c-format
+#~ msgid "Unknown address family %u (AF_*)"
+#~ msgstr "无法识别的地址族 %u (AF_*)"
+
+#, c-format
+#~ msgid "EPRT failed, server said: %s"
+#~ msgstr "EPRT 指令失败，服务器响应为：%s"
+
+#~ msgid "Data socket connect timed out"
+#~ msgstr "数据套接字连接超时"
+
+#~ msgid "Unable to accept connection"
+#~ msgstr "无法接受连接"
+
+#, c-format
+#~ msgid "Unable to fetch file, server said '%s'"
+#~ msgstr "无法获取文件，服务器响应为“%s”"
+
+#~ msgid "Data socket timed out"
+#~ msgstr "数据套接字超时"
+
+#, c-format
+#~ msgid "Data transfer failed, server said '%s'"
+#~ msgstr "数据传送出错，服务器响应为“%s”"
+
+#~ msgid "Query"
+#~ msgstr "查询"
+
+#~ msgid "Unable to invoke "
+#~ msgstr "无法调用 "
+
+#~ msgid "Connection closed prematurely"
+#~ msgstr "连接被永久关闭"
 
 #, fuzzy, c-format
 #~| msgid "  Installed: "
@@ -4478,8 +4489,8 @@ msgstr "空文件不是有效归档"
 #~ "Could not perform immediate configuration on already unpacked '%s'. "
 #~ "Please see man 5 apt.conf under APT::Immediate-Configure for details."
 #~ msgstr ""
-#~ "无法立即对已经解压的 %s 进行配置。请查看 man 5 apt.conf 中的 APT::"
-#~ "Immediate-Configure。"
+#~ "无法立即对已经解压的 %s 进行配置。请查看 man 5 apt.conf 中的 "
+#~ "APT::Immediate-Configure。"
 
 #~ msgid "Error occurred while processing %s (NewPackage)"
 #~ msgstr "处理 %s (NewPackage)时出错"

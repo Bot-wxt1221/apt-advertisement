@@ -63,12 +63,12 @@ class PackageNameMatcher : public Matcher
          filters.push_back(cachefilter);
       }
    }
-   virtual ~PackageNameMatcher()
+   ~PackageNameMatcher() override
    {
       for(J=filters.begin(); J != filters.end(); ++J)
          delete *J;
    }
-   virtual bool operator () (const pkgCache::PkgIterator &P) APT_OVERRIDE
+   bool operator()(const pkgCache::PkgIterator &P) override
    {
       for(J=filters.begin(); J != filters.end(); ++J)
       {
@@ -131,6 +131,10 @@ bool DoList(CommandLine &Cmd)
    GetLocalitySortedVersionSet(CacheFile, &bag, matcher, &progress);
    bool const ShowAllVersions = _config->FindB("APT::Cmd::All-Versions", false);
    std::map<std::string, std::string> output_map;
+
+   if (not InitOutputPager())
+      return false;
+
    for (LocalitySortedVersionSet::iterator V = bag.begin(); V != bag.end(); ++V)
    {
       std::stringstream outs;

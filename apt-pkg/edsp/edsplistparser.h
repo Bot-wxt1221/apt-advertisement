@@ -18,19 +18,16 @@
 #include <string>
 
 
-namespace APT {
-   class StringView;
-}
 class APT_HIDDEN edspLikeListParser : public debListParser
 {
    public:
-   virtual bool NewVersion(pkgCache::VerIterator &Ver) APT_OVERRIDE;
-   virtual std::vector<std::string> AvailableDescriptionLanguages() APT_OVERRIDE;
-   virtual APT::StringView Description_md5() APT_OVERRIDE;
-   virtual uint32_t VersionHash() APT_OVERRIDE;
+   bool NewVersion(pkgCache::VerIterator &Ver) override;
+   std::vector<std::string> AvailableDescriptionLanguages() override;
+   std::string_view Description_md5() override;
+   uint32_t VersionHash() override;
 
    explicit edspLikeListParser(FileFd *File);
-   virtual ~edspLikeListParser();
+   ~edspLikeListParser() override;
 };
 
 class APT_HIDDEN edspListParser : public edspLikeListParser
@@ -39,20 +36,20 @@ class APT_HIDDEN edspListParser : public edspLikeListParser
    FileFd preferences;
 
 protected:
-   virtual bool ParseStatus(pkgCache::PkgIterator &Pkg,pkgCache::VerIterator &Ver) APT_OVERRIDE;
+   bool ParseStatus(pkgCache::PkgIterator &Pkg, pkgCache::VerIterator &Ver) override;
 
 public:
    explicit edspListParser(FileFd *File);
-   virtual ~edspListParser();
+   ~edspListParser() override;
 };
 
 class APT_HIDDEN eippListParser : public edspLikeListParser
 {
 protected:
-   virtual bool ParseStatus(pkgCache::PkgIterator &Pkg,pkgCache::VerIterator &Ver) APT_OVERRIDE;
+   bool ParseStatus(pkgCache::PkgIterator &Pkg,pkgCache::VerIterator &Ver) override;
 
 public:
    explicit eippListParser(FileFd *File);
-   virtual ~eippListParser();
+   ~eippListParser() override;
 };
 #endif
